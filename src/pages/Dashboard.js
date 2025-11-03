@@ -29,13 +29,26 @@ const Dashboard = () => {
     async () => {
       const response = await api.get('/enrollments');
       return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: 2 * 60 * 1000, // 2 minutes
     }
   );
 
-  const { data: notificationsData } = useQuery('notifications', async () => {
-    const response = await api.get('/notifications?limit=5');
-    return response.data;
-  });
+  const { data: notificationsData } = useQuery(
+    'notifications',
+    async () => {
+      const response = await api.get('/notifications?limit=5');
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: 1 * 60 * 1000, // 1 minute
+    }
+  );
 
   const enrollments = enrollmentsData?.data || [];
   const notifications = notificationsData?.data || [];

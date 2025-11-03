@@ -2,10 +2,18 @@ import { useQuery, useMutation, useQueryClient } from 'react-query';
 import api from '../utils/api';
 
 export const useNotifications = () => {
-  const { data: notificationsData } = useQuery('notifications', async () => {
-    const response = await api.get('/notifications');
-    return response.data;
-  });
+  const { data: notificationsData } = useQuery(
+    'notifications',
+    async () => {
+      const response = await api.get('/notifications');
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: 1 * 60 * 1000, // 1 minute
+    }
+  );
 
   const unreadCount = notificationsData?.data?.filter(n => !n.isRead).length || 0;
 

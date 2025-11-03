@@ -19,7 +19,18 @@ import {
   Tabs,
   Divider,
 } from '@mui/material';
-import { PlayArrow, Person, Schedule, School } from '@mui/icons-material';
+import { 
+  PlayArrow, 
+  Person, 
+  Schedule, 
+  School, 
+  CheckCircle,
+  Star,
+  Language,
+  Description,
+  Assignment,
+  VerifiedUser
+} from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
@@ -60,8 +71,21 @@ const CourseDetail = () => {
     },
     {
       onSuccess: () => {
+        // Invalidate and refetch all related queries
         queryClient.invalidateQueries(['course', id]);
-        toast.success('Enrolled successfully!');
+        queryClient.invalidateQueries('my-enrollments');
+        queryClient.invalidateQueries('featured-courses');
+        queryClient.invalidateQueries(['courses']);
+        queryClient.invalidateQueries('notifications');
+        
+        toast.success('Enrolled successfully! You can now access the course content.');
+        
+        // Navigate to first lesson if available
+        if (lessons.length > 0) {
+          setTimeout(() => {
+            navigate(`/courses/${id}/lessons/${lessons[0]._id}`);
+          }, 1000);
+        }
       },
       onError: (error) => {
         toast.error(error.response?.data?.message || 'Enrollment failed');
@@ -77,9 +101,30 @@ const CourseDetail = () => {
     enrollmentMutation.mutate();
   };
 
-  const isEnrolled = user && course?.enrolledStudents?.some(
-    (student) => student._id === user.id || student.toString() === user.id
+  // Check enrollment status - check both enrolledStudents array and actual enrollment record
+  const { data: enrollmentData } = useQuery(
+    ['enrollment-check', id, user?.id],
+    async () => {
+      if (!user) return null;
+      const response = await api.get('/enrollments');
+      const enrollments = response.data.data || [];
+      return enrollments.find(e => 
+        e.course._id === id || e.course === id
+      );
+    },
+    {
+      enabled: !!user,
+      refetchOnWindowFocus: false,
+      retry: false,
+    }
   );
+
+  const isEnrolled = enrollmentData || (user && course?.enrolledStudents?.some(
+    (student) => student._id === user.id || student?._id?.toString() === user.id || student?.toString() === user.id
+  ));
+
+  // Get completed lessons for enrolled users
+  const completedLessons = enrollmentData?.completedLessons || [];
 
   if (isLoading) {
     return (
@@ -131,30 +176,219 @@ const CourseDetail = () => {
 
           <Paper sx={{ mb: 3 }}>
             <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)}>
-              <Tab label="Description" />
+              <Tab label="About" />
               <Tab label={`Lessons (${lessons.length})`} />
+              <Tab label="What You'll Learn" />
+              <Tab label="Instructor" />
             </Tabs>
             <Box sx={{ p: 3 }}>
               {tab === 0 && (
-                <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
-                  {course.description}
-                </Typography>
+                <Box>
+                  <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+                    About This Course
+                  </Typography>
+                  <Typography variant="body1" paragraph sx={{ whiteSpace: 'pre-line', mb: 3 }}>
+                    {course.description || course.shortDescription || 'No description available.'}
+                  </Typography>
+                  
+                  {course.courseOutcome && (
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <VerifiedUser color="primary" />
+                        Course Outcome
+                      </Typography>
+                      <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+                        {course.courseOutcome}
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {course.learningObjectives && course.learningObjectives.length > 0 && (
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Assignment color="primary" />
+                        Learning Objectives
+                      </Typography>
+                      <List>
+                        {course.learningObjectives.map((objective, index) => (
+                          <ListItem key={index} sx={{ py: 0.5 }}>
+                            <CheckCircle color="success" sx={{ mr: 1, fontSize: 20 }} />
+                            <ListItemText primary={objective} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
+                  )}
+
+                  {course.prerequisites && course.prerequisites.length > 0 && (
+                    <Box>
+                      <Typography variant="h6" gutterBottom>
+                        Prerequisites
+                      </Typography>
+                      <List>
+                        {course.prerequisites.map((prereq, index) => (
+                          <ListItem key={index} sx={{ py: 0.5 }}>
+                            <Typography variant="body2" color="text.secondary">
+                              • {prereq}
+                            </Typography>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
+                  )}
+                </Box>
               )}
               {tab === 1 && (
                 <List>
                   {lessons.length === 0 ? (
                     <Typography>No lessons available yet.</Typography>
                   ) : (
-                    lessons.map((lesson, index) => (
-                      <ListItem key={lesson._id}>
-                        <ListItemText
-                          primary={`${index + 1}. ${lesson.title}`}
-                          secondary={lesson.description}
-                        />
-                      </ListItem>
-                    ))
+                    lessons.map((lesson, index) => {
+                      const isCompleted = isEnrolled && completedLessons.some(
+                        (id) => id === lesson._id || id._id === lesson._id || id.toString() === lesson._id
+                      );
+                      
+                      return (
+                        <ListItem
+                          key={lesson._id}
+                          sx={{
+                            bgcolor: isCompleted ? 'success.light' : 'transparent',
+                            borderRadius: 1,
+                            mb: 1,
+                          }}
+                        >
+                          <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                            {isCompleted ? (
+                              <CheckCircle
+                                color="success"
+                                sx={{ mr: 2, fontSize: 24 }}
+                              />
+                            ) : (
+                              <Box
+                                sx={{
+                                  width: 24,
+                                  height: 24,
+                                  borderRadius: '50%',
+                                  border: '2px solid',
+                                  borderColor: 'text.secondary',
+                                  mr: 2,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                }}
+                              >
+                                <Typography variant="caption" color="text.secondary">
+                                  {index + 1}
+                                </Typography>
+                              </Box>
+                            )}
+                            <ListItemText
+                              primary={
+                                <Typography
+                                  variant="body1"
+                                  sx={{
+                                    fontWeight: isCompleted ? 'bold' : 'normal',
+                                    color: isCompleted ? 'success.dark' : 'text.primary',
+                                  }}
+                                >
+                                  Chapter {index + 1}: {lesson.title}
+                                  {isCompleted && (
+                                    <Chip
+                                      label="Completed"
+                                      size="small"
+                                      color="success"
+                                      sx={{ ml: 1 }}
+                                    />
+                                  )}
+                                </Typography>
+                              }
+                              secondary={lesson.description || `${lesson.duration || 0} min`}
+                            />
+                          </Box>
+                        </ListItem>
+                      );
+                    })
+                  )}
+                  {isEnrolled && lessons.length > 0 && (
+                    <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Progress: {enrollmentData?.progress || 0}%
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {completedLessons.length} of {lessons.length} chapters completed
+                      </Typography>
+                    </Box>
                   )}
                 </List>
+              )}
+              {tab === 2 && (
+                <Box>
+                  <Typography variant="h6" gutterBottom sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <School color="primary" />
+                    What You'll Learn
+                  </Typography>
+                  {course.whatYouWillLearn && course.whatYouWillLearn.length > 0 ? (
+                    <Grid container spacing={2}>
+                      {course.whatYouWillLearn.map((item, index) => (
+                        <Grid item xs={12} sm={6} key={index}>
+                          <Box sx={{ display: 'flex', alignItems: 'start', gap: 1 }}>
+                            <CheckCircle color="success" sx={{ mt: 0.5, fontSize: 20 }} />
+                            <Typography variant="body1">{item}</Typography>
+                          </Box>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      No learning outcomes specified yet.
+                    </Typography>
+                  )}
+                </Box>
+              )}
+              {tab === 3 && (
+                <Box>
+                  <Typography variant="h6" gutterBottom sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Person color="primary" />
+                    About the Instructor
+                  </Typography>
+                  {course.trainer && (
+                    <Box sx={{ mb: 3 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                        <Box
+                          sx={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: '50%',
+                            bgcolor: 'primary.main',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontSize: '2rem',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          {course.trainer.name?.charAt(0) || 'T'}
+                        </Box>
+                        <Box>
+                          <Typography variant="h6">{course.trainer.name || 'Trainer'}</Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {course.trainer.email || 'trainer@iremecorner.com'}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      {course.instructorBio ? (
+                        <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+                          {course.instructorBio}
+                        </Typography>
+                      ) : (
+                        <Typography variant="body1" color="text.secondary">
+                          Experienced instructor passionate about sharing knowledge and helping students achieve their goals.
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
+                </Box>
               )}
             </Box>
           </Paper>
@@ -168,10 +402,21 @@ const CourseDetail = () => {
               </Typography>
               <Divider sx={{ my: 2 }} />
               <Box sx={{ mb: 2 }}>
+                {course.averageRating > 0 && (
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, p: 1.5, bgcolor: 'grey.100', borderRadius: 1 }}>
+                    <Star sx={{ color: 'warning.main', mr: 1 }} />
+                    <Typography variant="h6" sx={{ mr: 1 }}>
+                      {course.averageRating.toFixed(1)}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      ({course.totalRatings || 0} ratings)
+                    </Typography>
+                  </Box>
+                )}
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <Person sx={{ mr: 1, color: 'text.secondary' }} />
                   <Typography variant="body2">
-                    Trainer: {course.trainer?.name || 'N/A'}
+                    Instructor: {course.trainer?.name || 'N/A'}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -183,7 +428,25 @@ const CourseDetail = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <School sx={{ mr: 1, color: 'text.secondary' }} />
                   <Typography variant="body2">
+                    {course.totalLessons || lessons.length} lessons
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Language sx={{ mr: 1, color: 'text.secondary' }} />
+                  <Typography variant="body2">
+                    Language: {course.language || 'English'}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <School sx={{ mr: 1, color: 'text.secondary' }} />
+                  <Typography variant="body2">
                     {course.enrolledStudents?.length || 0} students enrolled
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <CheckCircle sx={{ mr: 1, color: 'success.main' }} />
+                  <Typography variant="body2" color="success.main">
+                    Certificate of Completion
                   </Typography>
                 </Box>
               </Box>
@@ -192,23 +455,26 @@ const CourseDetail = () => {
                   fullWidth
                   variant="contained"
                   component={Link}
-                  to={`/courses/${id}/lessons/${lessons[0]?._id}`}
+                  to={`/courses/${id}/lessons/${lessons[0]?._id || ''}`}
                   startIcon={<PlayArrow />}
+                  disabled={!lessons || lessons.length === 0}
                 >
-                  Continue Learning
+                  {lessons && lessons.length > 0 ? 'Continue Learning' : 'Course Content Coming Soon'}
                 </Button>
               ) : (
                 <Button
                   fullWidth
                   variant="contained"
                   onClick={handleEnroll}
-                  disabled={enrollmentMutation.isLoading || course.status !== 'approved'}
+                  disabled={enrollmentMutation.isLoading || course.status !== 'approved' || !user}
                   startIcon={<PlayArrow />}
                 >
-                  {enrollmentMutation.isLoading
+                  {!user
+                    ? 'Login to Enroll'
+                    : enrollmentMutation.isLoading
                     ? 'Enrolling...'
-                    : isEnrolled
-                    ? 'Continue Learning'
+                    : course.status !== 'approved'
+                    ? 'Course Not Available'
                     : 'Enroll Now'}
                 </Button>
               )}

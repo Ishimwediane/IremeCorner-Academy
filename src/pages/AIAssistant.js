@@ -56,6 +56,11 @@ const AIAssistant = () => {
     async () => {
       const response = await api.get('/ai-assistant/recommendations');
       return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: 10 * 60 * 1000, // 10 minutes
     }
   );
 

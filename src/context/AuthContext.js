@@ -16,33 +16,41 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
 
-    if (token && savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-        // Verify token is still valid
-        api.get('/auth/me')
-          .then((response) => {
+      if (token && savedUser) {
+        try {
+          // Set user immediately from localStorage to prevent flash
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+          
+          // Verify token is still valid
+          try {
+            const response = await api.get('/auth/me');
             setUser(response.data.data);
             localStorage.setItem('user', JSON.stringify(response.data.data));
-          })
-          .catch(() => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            setUser(null);
-          })
-          .finally(() => setLoading(false));
-      } catch (error) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
-        setLoading(false);
+          } catch (error) {
+            // If token is invalid, clear it but don't redirect here
+            // Let the interceptor handle redirect if needed
+            if (error.response?.status === 401) {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              setUser(null);
+            }
+          }
+        } catch (error) {
+          // Invalid user data in localStorage
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+        }
       }
-    } else {
       setLoading(false);
-    }
+    };
+
+    checkAuth();
   }, []);
 
   const login = async (email, password) => {

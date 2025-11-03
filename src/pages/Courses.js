@@ -37,6 +37,11 @@ const Courses = () => {
 
       const response = await api.get(`/courses?${params.toString()}`);
       return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     }
   );
 

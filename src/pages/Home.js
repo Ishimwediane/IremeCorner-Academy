@@ -19,10 +19,18 @@ import { useAuth } from '../context/AuthContext';
 const Home = () => {
   const { user } = useAuth();
 
-  const { data: coursesData } = useQuery('featured-courses', async () => {
-    const response = await api.get('/courses?status=approved&limit=6');
-    return response.data;
-  });
+  const { data: coursesData } = useQuery(
+    'featured-courses',
+    async () => {
+      const response = await api.get('/courses?status=approved&limit=6');
+      return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    }
+  );
 
   const courses = coursesData?.data || [];
 

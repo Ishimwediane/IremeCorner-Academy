@@ -23,6 +23,11 @@ const MyCourses = () => {
     async () => {
       const response = await api.get('/enrollments');
       return response.data;
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: 2 * 60 * 1000, // 2 minutes
     }
   );
 

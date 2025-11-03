@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -28,7 +28,22 @@ const LessonView = () => {
   const { courseId, lessonId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [completed, setCompleted] = useState(false);
+
+  // Get enrollment data to check completed lessons
+  const { data: enrollmentData } = useQuery(
+    ['enrollment', courseId],
+    async () => {
+      const response = await api.get('/enrollments');
+      const enrollments = response.data.data || [];
+      return enrollments.find(e => 
+        e.course._id === courseId || e.course === courseId
+      );
+    },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+    }
+  );
 
   const { data: lessonsData } = useQuery(
     ['lessons', courseId],
@@ -52,35 +67,39 @@ const LessonView = () => {
   const nextLesson = lessons[currentIndex + 1];
   const prevLesson = lessons[currentIndex - 1];
 
+  // Check if current lesson is completed
+  const completedLessons = enrollmentData?.completedLessons || [];
+  const isLessonCompleted = completedLessons.some(
+    (id) => id === lessonId || id._id === lessonId || id.toString() === lessonId
+  );
+
   const progressMutation = useMutation(
     async () => {
-      const enrollment = await api.get('/enrollments').then((res) =>
-        res.data.data.find((e) => e.course._id === courseId || e.course === courseId)
-      );
-
-      if (enrollment) {
-        await api.put(`/enrollments/${enrollment._id}/progress`, {
-          lessonId,
-          progress: Math.min(
-            100,
-            Math.round(
-              ((currentIndex + 1) / lessons.length) * 100
-            )
-          ),
-        });
+      if (!enrollmentData) {
+        throw new Error('You must be enrolled in this course');
       }
+
+      // Mark this specific lesson as complete
+      await api.put(`/enrollments/${enrollmentData._id}/progress`, {
+        lessonId: lessonId,
+      });
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['enrollments']);
-        setCompleted(true);
-        toast.success('Progress updated!');
+        // Invalidate all related queries
+        queryClient.invalidateQueries(['enrollment', courseId]);
+        queryClient.invalidateQueries('my-enrollments');
+        queryClient.invalidateQueries(['lessons', courseId]);
+        toast.success(`Lesson ${currentIndex + 1} marked as complete!`);
+      },
+      onError: (error) => {
+        toast.error(error.response?.data?.message || 'Failed to mark lesson as complete');
       },
     }
   );
 
   const handleComplete = () => {
-    if (!completed) {
+    if (!isLessonCompleted) {
       progressMutation.mutate();
     }
   };
@@ -168,20 +187,32 @@ const LessonView = () => {
               </Box>
             )}
 
-            <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
-              {completed && (
+            <Divider sx={{ my: 3 }} />
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mt: 3 }}>
+              {isLessonCompleted ? (
                 <Alert severity="success" sx={{ flexGrow: 1 }}>
-                  Lesson completed!
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <CheckCircle />
+                    <Typography variant="body1">
+                      Chapter {currentIndex + 1} Completed!
+                    </Typography>
+                  </Box>
                 </Alert>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  onClick={handleComplete}
+                  disabled={progressMutation.isLoading || !enrollmentData}
+                  startIcon={<CheckCircle />}
+                  sx={{ flexGrow: 1 }}
+                >
+                  {progressMutation.isLoading
+                    ? 'Marking as Complete...'
+                    : `Mark Chapter ${currentIndex + 1} as Complete`}
+                </Button>
               )}
-              <Button
-                variant="contained"
-                onClick={handleComplete}
-                disabled={completed || progressMutation.isLoading}
-                startIcon={<CheckCircle />}
-              >
-                {completed ? 'Completed' : 'Mark as Complete'}
-              </Button>
             </Box>
           </Paper>
 
@@ -215,21 +246,69 @@ const LessonView = () => {
               Course Lessons
             </Typography>
             <List>
-              {lessons.map((l, index) => (
-                <ListItem
-                  key={l._id}
-                  button
-                  component={Link}
-                  to={`/courses/${courseId}/lessons/${l._id}`}
-                  selected={l._id === lessonId}
-                >
-                  <ListItemText
-                    primary={`${index + 1}. ${l.title}`}
-                    secondary={l.duration ? `${l.duration} min` : ''}
-                  />
-                </ListItem>
-              ))}
+              {lessons.map((l, index) => {
+                const isCompleted = completedLessons.some(
+                  (id) => id === l._id || id._id === l._id || id.toString() === l._id
+                );
+                const isCurrent = l._id === lessonId;
+                
+                return (
+                  <ListItem
+                    key={l._id}
+                    button
+                    component={Link}
+                    to={`/courses/${courseId}/lessons/${l._id}`}
+                    selected={isCurrent}
+                    sx={{
+                      backgroundColor: isCurrent ? 'action.selected' : 'transparent',
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                      {isCompleted ? (
+                        <CheckCircle
+                          color="success"
+                          sx={{ mr: 1, fontSize: 20 }}
+                        />
+                      ) : (
+                        <Box
+                          sx={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: '50%',
+                            border: '2px solid',
+                            borderColor: 'text.secondary',
+                            mr: 1,
+                          }}
+                        />
+                      )}
+                      <ListItemText
+                        primary={
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Typography
+                              variant="body1"
+                              sx={{ fontWeight: isCurrent ? 'bold' : 'normal' }}
+                            >
+                              Chapter {index + 1}: {l.title}
+                            </Typography>
+                          </Box>
+                        }
+                        secondary={l.duration ? `${l.duration} min` : ''}
+                      />
+                    </Box>
+                  </ListItem>
+                );
+              })}
             </List>
+            {enrollmentData && (
+              <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Progress: {enrollmentData.progress}%
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {completedLessons.length} of {lessons.length} chapters completed
+                </Typography>
+              </Box>
+            )}
           </Paper>
         </Grid>
       </Grid>
