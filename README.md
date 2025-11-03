@@ -11,13 +11,17 @@ npm install
 
 2. Configure environment variables in `.env`:
 ```env
-REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_API_URL=http://localhost:5001/api
 ```
 
 3. Start the development server:
 ```bash
 npm start
+# OR
+npm run dev
 ```
+
+Both commands do the same thing - start the React development server.
 
 The app will open at `http://localhost:3000`
 
