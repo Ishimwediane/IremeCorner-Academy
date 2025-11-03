@@ -15,7 +15,6 @@ import {
   Grid,
 } from '@mui/material';
 import {
-  PlayArrow,
   CheckCircle,
   ArrowBack,
   ArrowForward,
@@ -30,14 +29,6 @@ const LessonView = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [completed, setCompleted] = useState(false);
-
-  const { data: courseData } = useQuery(
-    ['course', courseId],
-    async () => {
-      const response = await api.get(`/courses/${courseId}`);
-      return response.data;
-    }
-  );
 
   const { data: lessonsData } = useQuery(
     ['lessons', courseId],
@@ -134,7 +125,7 @@ const LessonView = () => {
             {lesson.videoUrl || lesson.videoFile ? (
               <Box sx={{ mb: 3 }}>
                 <ReactPlayer
-                  url={lesson.videoUrl || `http://localhost:5001${lesson.videoFile}`}
+                  url={lesson.videoUrl || `http://localhost:5000${lesson.videoFile}`}
                   controls
                   width="100%"
                   height="400px"
@@ -166,7 +157,7 @@ const LessonView = () => {
                       />
                       <Button
                         size="small"
-                        href={`http://localhost:5001${material.filePath}`}
+                        href={`http://localhost:5000${material.filePath}`}
                         target="_blank"
                       >
                         Download

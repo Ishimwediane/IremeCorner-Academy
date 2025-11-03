@@ -8,7 +8,6 @@ import {
   Box,
   List,
   ListItem,
-  ListItemText,
   Avatar,
   CircularProgress,
   Card,
@@ -178,4 +177,5 @@ const AIAssistant = () => {
 };
 
 export default AIAssistant;
+
 

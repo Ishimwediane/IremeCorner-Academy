@@ -18,16 +18,12 @@ import {
   School,
   CheckCircle,
   Assignment,
-  Quiz,
   TrendingUp,
 } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import api from '../utils/api';
-import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
-  const { user } = useAuth();
-
   const { data: enrollmentsData, isLoading } = useQuery(
     'my-enrollments',
     async () => {
@@ -179,4 +175,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 

@@ -6,7 +6,6 @@ import {
   TextField,
   Button,
   Typography,
-  Box,
   Grid,
   MenuItem,
   Alert,
@@ -210,4 +209,5 @@ const CreateCourse = () => {
 };
 
 export default CreateCourse;
+
 

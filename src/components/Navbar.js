@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import {
   Notifications as NotificationsIcon,
-  AccountCircle,
   Dashboard as DashboardIcon,
   School as SchoolIcon,
   AdminPanelSettings,
@@ -137,4 +136,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
