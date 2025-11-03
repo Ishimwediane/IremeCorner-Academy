@@ -1,0 +1,34 @@
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import api from '../utils/api';
+
+export const useNotifications = () => {
+  const { data: notificationsData } = useQuery('notifications', async () => {
+    const response = await api.get('/notifications');
+    return response.data;
+  });
+
+  const unreadCount = notificationsData?.data?.filter(n => !n.isRead).length || 0;
+
+  return {
+    notifications: notificationsData?.data || [],
+    unreadCount,
+    isLoading: !notificationsData,
+  };
+};
+
+export const useMarkNotificationRead = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (id) => {
+      const response = await api.put(`/notifications/${id}/read`);
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('notifications');
+      },
+    }
+  );
+};
+
