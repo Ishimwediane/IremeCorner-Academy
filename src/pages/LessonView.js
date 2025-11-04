@@ -144,7 +144,7 @@ const LessonView = () => {
             {lesson.videoUrl || lesson.videoFile ? (
               <Box sx={{ mb: 3 }}>
                 <ReactPlayer
-                  url={lesson.videoUrl || `http://localhost:5000${lesson.videoFile}`}
+                  url={lesson.videoUrl || `https://academy-server-f60a.onrender.com${lesson.videoFile}`}
                   controls
                   width="100%"
                   height="400px"
@@ -176,7 +176,7 @@ const LessonView = () => {
                       />
                       <Button
                         size="small"
-                        href={`http://localhost:5000${material.filePath}`}
+                        href={`https://academy-server-f60a.onrender.com${material.filePath}`}
                         target="_blank"
                       >
                         Download
