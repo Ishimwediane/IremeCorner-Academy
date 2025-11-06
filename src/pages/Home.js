@@ -7,6 +7,7 @@ import Hero from '../components/Hero';
 import AllCoursesSection from '../components/AllCoursesSection';
 import BecomeInstructorCTA from '../components/BecomeInstructorCTA';
 import HowItWorks from '../components/HowItWorks';
+import TestimonialsSection from '../components/TestimonialsSection';
 
 const Home = () => {
   const { user } = useAuth();
@@ -33,6 +34,7 @@ const Home = () => {
       {/* All Courses Section */}
       <AllCoursesSection />
       <HowItWorks totalCourses={totalApprovedCourses} />
+      <TestimonialsSection />
       <BecomeInstructorCTA />
     </Box>
   );
