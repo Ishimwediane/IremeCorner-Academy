@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Container, Box, Typography, Grid, TextField, Button, Paper, MenuItem, Checkbox, FormControlLabel } from '@mui/material';
+import { Container, Box, Typography, Grid, TextField, Button, Paper, MenuItem, Checkbox, FormControlLabel, Link as MuiLink } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
@@ -179,7 +180,17 @@ const DropInformation = () => {
                 <FormControlLabel control={<Checkbox name="agreeAccurate" checked={form.agreeAccurate} onChange={onChange} />} label="I confirm all information is accurate" />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel control={<Checkbox name="agreeTerms" checked={form.agreeTerms} onChange={onChange} />} label="I agree to the IremeCorner Tutor Terms" />
+                <FormControlLabel
+                  control={<Checkbox name="agreeTerms" checked={form.agreeTerms} onChange={onChange} />}
+                  label={
+                    <span>
+                      I agree to the{' '}
+                      <MuiLink component={Link} to="/terms" target="_blank" underline="hover" sx={{ color: '#A84836', fontWeight: 600 }}>
+                        IremeCorner Tutor Terms
+                      </MuiLink>
+                    </span>
+                  }
+                />
               </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" sx={{ px: 4, py: 1.5, fontWeight: 700 }}>Submit</Button>
