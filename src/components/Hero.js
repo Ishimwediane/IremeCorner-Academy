@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Box, Container, Typography, Button, Chip } from '@mui/material';
 import { ArrowForward, PlayArrow, Verified } from '@mui/icons-material';
 
-const Hero = ({ user }) => {
+const Hero = ({ user, totalCourses = 0 }) => {
   return (
     <Box>
       {/* Hero Section */}
@@ -194,6 +194,37 @@ const Hero = ({ user }) => {
             >
               <Verified sx={{ color: 'white', fontSize: '1.6rem' }} />
             </Box>
+
+            {/* Total Courses Circle */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: '8%',
+                right: '4%',
+                width: 96,
+                height: 96,
+                bgcolor: '#2E7D32',
+                color: 'white',
+                borderRadius: '50%',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 4,
+              }}
+            >
+              <Box sx={{ textAlign: 'center', lineHeight: 1 }}>
+                <Typography sx={{ fontWeight: 800, fontSize: '1.25rem', color: 'white' }}>
+                  {new Intl.NumberFormat().format(totalCourses)}
+                </Typography>
+                <Typography sx={{ fontSize: '0.75rem', opacity: 0.95, color: 'white' }}>
+                  courses
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* subtle arrow-like stroke near the badge */}
+            <Box sx={{ position: 'absolute', top: '18%', right: '10%', width: 60, height: 60, borderRight: '3px solid rgba(46,125,50,0.5)', borderBottom: '3px solid rgba(46,125,50,0.5)', borderRadius: '0 0 60px 0', transform: 'rotate(20deg)', zIndex: 3 }} />
 
             {/* Small Dots */}
             <Box sx={{ position: 'absolute', top: '6%', left: '22%', width: '10px', height: '10px', bgcolor: '#A84836', borderRadius: '50%', zIndex: 4 }} />

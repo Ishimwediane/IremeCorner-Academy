@@ -40,10 +40,11 @@ const Home = () => {
   );
 
   const courses = coursesData?.data || [];
+  const totalApprovedCourses = coursesData?.count || courses.length || 0;
 
   return (
     <Box>
-      <Hero user={user} />
+      <Hero user={user} totalCourses={totalApprovedCourses} />
 
       {/* About Us Section */}
       <Box sx={{ bgcolor: 'white', py: 12 }}>
