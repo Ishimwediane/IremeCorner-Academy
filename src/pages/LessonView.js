@@ -201,7 +201,7 @@ const LessonView = () => {
               ) : (
                 <Button
                   variant="contained"
-                  color="success"
+                  color="secondary"
                   size="large"
                   onClick={handleComplete}
                   disabled={progressMutation.isLoading || !enrollmentData}
@@ -266,7 +266,7 @@ const LessonView = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                       {isCompleted ? (
                         <CheckCircle
-                          color="success"
+                          color="secondary"
                           sx={{ mr: 1, fontSize: 20 }}
                         />
                       ) : (
@@ -300,7 +300,7 @@ const LessonView = () => {
               })}
             </List>
             {enrollmentData && (
-              <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+              <Box sx={{ mt: 2, p: 2, bgcolor: 'primary.light', borderRadius: 1 }}>
                 <Typography variant="body2" color="text.secondary">
                   Progress: {enrollmentData.progress}%
                 </Typography>
@@ -317,4 +317,7 @@ const LessonView = () => {
 };
 
 export default LessonView;
+
+
+
 

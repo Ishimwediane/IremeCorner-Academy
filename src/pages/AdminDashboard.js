@@ -87,7 +87,7 @@ const AdminDashboard = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <TrendingUp color="success" sx={{ mr: 1 }} />
+                <TrendingUp color="secondary" sx={{ mr: 1 }} />
                 <Typography variant="h6">Enrollments</Typography>
               </Box>
               <Typography variant="h4">
@@ -211,5 +211,8 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+
+
 
 

@@ -96,7 +96,7 @@ const AIAssistant = () => {
                 >
                   <Avatar
                     sx={{
-                      bgcolor: msg.type === 'user' ? 'primary.main' : 'secondary.main',
+                      bgcolor: msg.type === 'user' ? 'secondary.main' : 'primary.main',
                       mx: 1,
                     }}
                   >
@@ -105,7 +105,7 @@ const AIAssistant = () => {
                   <Paper
                     sx={{
                       p: 2,
-                      bgcolor: msg.type === 'user' ? 'primary.light' : 'grey.100',
+                      bgcolor: msg.type === 'user' ? 'secondary.light' : 'primary.light',
                       maxWidth: '70%',
                     }}
                   >
@@ -182,3 +182,6 @@ const AIAssistant = () => {
 };
 
 export default AIAssistant;
+
+
+

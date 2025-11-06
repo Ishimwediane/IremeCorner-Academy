@@ -28,10 +28,51 @@ const queryClient = new QueryClient({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#202F32',
+      light: '#2d3f43',
+      dark: '#151f21',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#A84836',
+      light: '#b86d5a',
+      dark: '#7d3328',
+      contrastText: '#ffffff',
+    },
+    // Remove other colors - use only primary and secondary
+    success: {
+      main: '#A84836',
+      light: '#b86d5a',
+      dark: '#7d3328',
+    },
+    error: {
+      main: '#A84836',
+      light: '#b86d5a',
+      dark: '#7d3328',
+    },
+    warning: {
+      main: '#A84836',
+      light: '#b86d5a',
+      dark: '#7d3328',
+    },
+    info: {
+      main: '#202F32',
+      light: '#2d3f43',
+      dark: '#151f21',
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&.MuiButton-contained': {
+            backgroundColor: '#A84836',
+            '&:hover': {
+              backgroundColor: '#7d3328',
+            },
+          },
+        },
+      },
     },
   },
 });
@@ -49,3 +90,5 @@ root.render(
     </QueryClientProvider>
   </React.StrictMode>
 );
+
+

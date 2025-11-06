@@ -94,7 +94,7 @@ const Dashboard = () => {
             <Card>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <CheckCircle color="success" sx={{ mr: 1 }} />
+                  <CheckCircle color="secondary" sx={{ mr: 1 }} />
                   <Typography variant="h6">Completed</Typography>
                 </Box>
                 <Typography variant="h4">{completedCourses.length}</Typography>
@@ -188,3 +188,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+

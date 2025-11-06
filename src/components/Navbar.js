@@ -96,7 +96,7 @@ const Navbar = () => {
               component={Link}
               to="/dashboard"
             >
-              <Badge badgeContent={unreadCount} color="error">
+              <Badge badgeContent={unreadCount} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -136,3 +136,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

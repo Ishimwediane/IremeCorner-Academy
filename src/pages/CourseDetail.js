@@ -167,7 +167,7 @@ const CourseDetail = () => {
             <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
               <Chip label={course.category} />
               <Chip label={course.level} color="primary" />
-              {course.isFree && <Chip label="Free" color="success" />}
+              {course.isFree && <Chip label="Free" color="secondary" />}
             </Box>
             <Typography variant="body1" paragraph>
               {course.description}
@@ -212,7 +212,7 @@ const CourseDetail = () => {
                       <List>
                         {course.learningObjectives.map((objective, index) => (
                           <ListItem key={index} sx={{ py: 0.5 }}>
-                            <CheckCircle color="success" sx={{ mr: 1, fontSize: 20 }} />
+                            <CheckCircle color="secondary" sx={{ mr: 1, fontSize: 20 }} />
                             <ListItemText primary={objective} />
                           </ListItem>
                         ))}
@@ -252,7 +252,7 @@ const CourseDetail = () => {
                         <ListItem
                           key={lesson._id}
                           sx={{
-                            bgcolor: isCompleted ? 'success.light' : 'transparent',
+                            bgcolor: isCompleted ? 'secondary.light' : 'transparent',
                             borderRadius: 1,
                             mb: 1,
                           }}
@@ -260,7 +260,7 @@ const CourseDetail = () => {
                           <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                             {isCompleted ? (
                               <CheckCircle
-                                color="success"
+                                color="secondary"
                                 sx={{ mr: 2, fontSize: 24 }}
                               />
                             ) : (
@@ -288,7 +288,7 @@ const CourseDetail = () => {
                                   variant="body1"
                                   sx={{
                                     fontWeight: isCompleted ? 'bold' : 'normal',
-                                    color: isCompleted ? 'success.dark' : 'text.primary',
+                                    color: isCompleted ? 'secondary.dark' : 'text.primary',
                                   }}
                                 >
                                   Chapter {index + 1}: {lesson.title}
@@ -296,7 +296,7 @@ const CourseDetail = () => {
                                     <Chip
                                       label="Completed"
                                       size="small"
-                                      color="success"
+                                      color="secondary"
                                       sx={{ ml: 1 }}
                                     />
                                   )}
@@ -310,7 +310,7 @@ const CourseDetail = () => {
                     })
                   )}
                   {isEnrolled && lessons.length > 0 && (
-                    <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+                    <Box sx={{ mt: 2, p: 2, bgcolor: 'primary.light', borderRadius: 1 }}>
                       <Typography variant="body2" color="text.secondary">
                         Progress: {enrollmentData?.progress || 0}%
                       </Typography>
@@ -332,7 +332,7 @@ const CourseDetail = () => {
                       {course.whatYouWillLearn.map((item, index) => (
                         <Grid item xs={12} sm={6} key={index}>
                           <Box sx={{ display: 'flex', alignItems: 'start', gap: 1 }}>
-                            <CheckCircle color="success" sx={{ mt: 0.5, fontSize: 20 }} />
+                            <CheckCircle color="secondary" sx={{ mt: 0.5, fontSize: 20 }} />
                             <Typography variant="body1">{item}</Typography>
                           </Box>
                         </Grid>
@@ -403,8 +403,8 @@ const CourseDetail = () => {
               <Divider sx={{ my: 2 }} />
               <Box sx={{ mb: 2 }}>
                 {course.averageRating > 0 && (
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, p: 1.5, bgcolor: 'grey.100', borderRadius: 1 }}>
-                    <Star sx={{ color: 'warning.main', mr: 1 }} />
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, p: 1.5, bgcolor: 'primary.light', borderRadius: 1 }}>
+                    <Star sx={{ color: 'secondary.main', mr: 1 }} />
                     <Typography variant="h6" sx={{ mr: 1 }}>
                       {course.averageRating.toFixed(1)}
                     </Typography>
@@ -444,8 +444,8 @@ const CourseDetail = () => {
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <CheckCircle sx={{ mr: 1, color: 'success.main' }} />
-                  <Typography variant="body2" color="success.main">
+                  <CheckCircle sx={{ mr: 1, color: 'secondary.main' }} />
+                  <Typography variant="body2" color="secondary.main">
                     Certificate of Completion
                   </Typography>
                 </Box>
@@ -487,3 +487,5 @@ const CourseDetail = () => {
 };
 
 export default CourseDetail;
+
+

@@ -108,8 +108,8 @@ const MyCourses = () => {
                     </Box>
                     {enrollment.status === 'completed' && (
                       <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
-                        <CheckCircle color="success" sx={{ mr: 1 }} />
-                        <Typography variant="body2" color="success.main">
+                        <CheckCircle color="secondary" sx={{ mr: 1 }} />
+                        <Typography variant="body2" color="secondary.main">
                           Course Completed
                         </Typography>
                       </Box>
@@ -137,3 +137,7 @@ const MyCourses = () => {
 };
 
 export default MyCourses;
+
+
+
+
