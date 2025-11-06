@@ -1,11 +1,9 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  AppBar,
-  Toolbar,
+  Box,
   Typography,
   Button,
-  Box,
   Avatar,
   Menu,
   MenuItem,
@@ -42,100 +40,230 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography
-          variant="h6"
+    <Box
+      sx={{
+        position: 'relative',
+        height: 70,
+        display: 'flex',
+        alignItems: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      {/* White background (left ~65%) */}
+      <Box
+        sx={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '65%',
+          height: '100%',
+          bgcolor: 'white',
+          zIndex: 0,
+        }}
+      />
+
+      {/* Gradient background (right ~35%) */}
+      <Box
+        sx={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          width: '35%',
+          height: '100%',
+          background: 'linear-gradient(135deg, rgba(168,72,54,0.9) 0%, rgba(32,47,50,0.95) 100%)',
+          zIndex: 0,
+        }}
+      />
+
+      {/* Content */}
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          px: { xs: 2, md: 4 },
+        }}
+      >
+        {/* Logo (Left) */}
+        <Box
           component={Link}
           to="/"
-          sx={{ flexGrow: 0, textDecoration: 'none', color: 'inherit', mr: 3 }}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            textDecoration: 'none',
+            mr: 4,
+          }}
         >
-          IremeCorner Academy
-        </Typography>
-
-        <Box sx={{ flexGrow: 1, display: 'flex', gap: 2 }}>
-          <Button color="inherit" component={Link} to="/courses">
-            Courses
-          </Button>
-          {user && (
-            <>
-              <Button color="inherit" component={Link} to="/my-courses">
-                My Courses
-              </Button>
-              <Button color="inherit" component={Link} to="/ai-assistant">
-                AI Assistant
-              </Button>
-            </>
-          )}
+          <SchoolIcon sx={{ color: '#202F32', fontSize: 32 }} />
+          <Typography
+            variant="h6"
+            sx={{
+              color: '#202F32',
+              fontWeight: 800,
+              fontSize: { xs: '0.9rem', md: '1.1rem' },
+            }}
+          >
+            IremeCorner
+            <br />
+            Academy
+          </Typography>
         </Box>
 
-        {user ? (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {user.role === 'admin' && (
-              <Button
-                color="inherit"
+        {/* Navigation Links (Center - White section) */}
+        <Box
+          sx={{
+            flex: 1,
+            display: { xs: 'none', md: 'flex' },
+            gap: 3,
+            alignItems: 'center',
+          }}
+        >
+          <Button
+            component={Link}
+            to="/"
+            sx={{
+              color: '#202F32',
+              fontWeight: 500,
+              textTransform: 'none',
+              '&:hover': { color: '#A84836' },
+            }}
+          >
+            Home
+          </Button>
+          <Button
+            component={Link}
+            to="/courses"
+            sx={{
+              color: '#202F32',
+              fontWeight: 500,
+              textTransform: 'none',
+              '&:hover': { color: '#A84836' },
+            }}
+          >
+            Courses
+          </Button>
+          <Button
+            component={Link}
+            to="/#about"
+            sx={{
+              color: '#202F32',
+              fontWeight: 500,
+              textTransform: 'none',
+              '&:hover': { color: '#A84836' },
+            }}
+          >
+            About Us
+          </Button>
+          <Button
+            component={Link}
+            to="/#contact"
+            sx={{
+              color: '#202F32',
+              fontWeight: 500,
+              textTransform: 'none',
+              '&:hover': { color: '#A84836' },
+            }}
+          >
+            Contact Us
+          </Button>
+        </Box>
+
+        {/* Right Section (Gradient area) */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            ml: 'auto',
+          }}
+        >
+          {user ? (
+            <>
+              {user.role === 'admin' && (
+                <Button
+                  component={Link}
+                  to="/admin"
+                  startIcon={<AdminPanelSettings />}
+                  sx={{
+                    color: 'white',
+                    textTransform: 'none',
+                    '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+                  }}
+                >
+                  Admin
+                </Button>
+              )}
+              {(user.role === 'trainer' || user.role === 'admin') && (
+                <Button
+                  component={Link}
+                  to="/create-course"
+                  startIcon={<SchoolIcon />}
+                  sx={{
+                    color: 'white',
+                    textTransform: 'none',
+                    '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+                  }}
+                >
+                  Create Course
+                </Button>
+              )}
+              <IconButton
                 component={Link}
-                to="/admin"
-                startIcon={<AdminPanelSettings />}
+                to="/dashboard"
+                sx={{ color: 'white' }}
               >
-                Admin
-              </Button>
-            )}
-            {(user.role === 'trainer' || user.role === 'admin') && (
-              <Button
-                color="inherit"
-                component={Link}
-                to="/create-course"
-                startIcon={<SchoolIcon />}
+                <Badge badgeContent={unreadCount} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <IconButton onClick={handleMenu} sx={{ color: 'white' }}>
+                <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)' }}>
+                  {user.name?.charAt(0)?.toUpperCase()}
+                </Avatar>
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
               >
-                Create Course
-              </Button>
-            )}
-            <IconButton
-              color="inherit"
+                <MenuItem component={Link} to="/profile" onClick={handleClose}>
+                  Profile
+                </MenuItem>
+                <MenuItem component={Link} to="/dashboard" onClick={handleClose}>
+                  <DashboardIcon sx={{ mr: 1 }} />
+                  Dashboard
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button
               component={Link}
-              to="/dashboard"
+              to="/login"
+              sx={{
+                bgcolor: 'white',
+                color: '#202F32',
+                borderRadius: '20px',
+                px: 3,
+                py: 1,
+                fontWeight: 600,
+                textTransform: 'none',
+                '&:hover': {
+                  bgcolor: 'rgba(255,255,255,0.9)',
+                },
+              }}
             >
-              <Badge badgeContent={unreadCount} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton onClick={handleMenu} color="inherit">
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
-                {user.name?.charAt(0)?.toUpperCase()}
-              </Avatar>
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem component={Link} to="/profile" onClick={handleClose}>
-                Profile
-              </MenuItem>
-              <MenuItem component={Link} to="/dashboard" onClick={handleClose}>
-                <DashboardIcon sx={{ mr: 1 }} />
-                Dashboard
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
-          </Box>
-        ) : (
-          <Box>
-            <Button color="inherit" component={Link} to="/login">
-              Login
+              Sign in
             </Button>
-            <Button color="inherit" component={Link} to="/register">
-              Register
-            </Button>
-          </Box>
-        )}
-      </Toolbar>
-    </AppBar>
+          )}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
 export default Navbar;
-
-
-

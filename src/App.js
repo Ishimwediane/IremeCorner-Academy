@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Courses from './pages/Courses';
@@ -91,6 +92,7 @@ function App() {
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <Footer />
         <ToastContainer
           position="top-right"
           autoClose={3000}
