@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Stack, Button } from '@mui/material';
+import { Box, Container, Grid, Typography, Stack, Button, Paper } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const WelcomeSection = () => {
@@ -7,8 +7,36 @@ const WelcomeSection = () => {
     <Box sx={{ bgcolor: '#202F32', py: { xs: 8, md: 10 } }}>
       <Container>
         <Grid container spacing={6} alignItems="center" justifyContent="center">
-          {/* Content only (no images) */}
-          <Grid item xs={12} md={10} lg={8}>
+          {/* Left visuals: main image + small overlay image */}
+          <Grid item xs={12} md={6}>
+            <Box sx={{ position: 'relative', width: '100%', maxWidth: 520 }}>
+              {/* decorative blob */}
+              <Box sx={{ position: 'absolute', left: -30, top: -30, width: 160, height: 160, bgcolor: 'rgba(255,255,255,0.08)', borderRadius: '36% 64% 60% 40% / 38% 29% 71% 62%', filter: 'blur(1px)' }} />
+
+              {/* main image */}
+              <Paper elevation={0} sx={{ overflow: 'hidden', borderRadius: '16px' }}>
+                <Box component="img" src="/learn.jpg" alt="Learning" sx={{ width: '100%', height: 340, objectFit: 'cover' }} />
+              </Paper>
+
+              {/* secondary image card overlay (replacing previous video) */}
+              <Paper elevation={3} sx={{ position: 'absolute', right: -20, top: 30, borderRadius: '14px', p: 1.5, bgcolor: 'white' }}>
+                <Box sx={{ width: 180, height: 100, borderRadius: '10px', overflow: 'hidden' }}>
+                  <Box component="img" src="/testimonies.png" alt="Students" sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </Box>
+              </Paper>
+
+              {/* awards badge */}
+              <Paper elevation={2} sx={{ position: 'absolute', left: 24, bottom: -16, px: 2.5, py: 1.25, borderRadius: '12px', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{ width: 28, height: 28, bgcolor: 'rgba(46,125,50,0.15)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Box sx={{ width: 14, height: 14, bgcolor: '#2E7D32', borderRadius: '50%' }} />
+                </Box>
+                <Typography sx={{ color: '#202F32', fontWeight: 700 }}>29+ Awards</Typography>
+              </Paper>
+            </Box>
+          </Grid>
+
+          {/* Right content */}
+          <Grid item xs={12} md={6} lg={6}>
             <Typography sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 700, letterSpacing: 1, mb: 1 }}>ABOUT US</Typography>
             <Typography variant="h3" sx={{ color: '#ffffff', fontWeight: 800, mb: 2 }}>
               Learn & Grow Your Skills
