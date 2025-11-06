@@ -28,9 +28,12 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Only redirect if not already on login/register page to prevent loops
+      // Only redirect if not on public pages to prevent loops
       const currentPath = window.location.pathname;
-      if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+      const publicPages = ['/login', '/register', '/terms', '/drop-information', '/', '/courses'];
+      const isPublicPage = publicPages.some(page => currentPath === page || currentPath.startsWith(page + '/'));
+      
+      if (!isPublicPage) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         // Use setTimeout to prevent multiple rapid redirects

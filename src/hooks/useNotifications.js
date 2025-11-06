@@ -1,7 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import api from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 export const useNotifications = () => {
+  const { user } = useAuth();
+  
   const { data: notificationsData } = useQuery(
     'notifications',
     async () => {
@@ -9,6 +12,7 @@ export const useNotifications = () => {
       return response.data;
     },
     {
+      enabled: !!user, // Only fetch if user is logged in
       refetchOnWindowFocus: false,
       retry: false,
       staleTime: 1 * 60 * 1000, // 1 minute
@@ -39,3 +43,4 @@ export const useMarkNotificationRead = () => {
     }
   );
 };
+
