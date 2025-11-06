@@ -22,6 +22,7 @@ import { useQuery } from 'react-query';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import Hero from '../components/Hero';
+import AllCoursesSection from '../components/AllCoursesSection';
 
 const Home = () => {
   const { user } = useAuth();
@@ -295,6 +296,9 @@ const Home = () => {
           </Box>
         </Container>
       </Box>
+
+      {/* All Courses Section */}
+      <AllCoursesSection />
     </Box>
   );
 };
