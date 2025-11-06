@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,7 +27,8 @@ function App() {
     <AuthProvider>
       <div className="App">
         <Navbar />
-        <Routes>
+        <Box sx={{ pt: '70px' }}>
+          <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Auth />} />
           <Route path="/register" element={<Auth />} />
@@ -91,7 +93,8 @@ function App() {
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+          </Routes>
+        </Box>
         <Footer />
         <ToastContainer
           position="top-right"

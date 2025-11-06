@@ -73,7 +73,7 @@ const Footer = () => {
             </Box>
           </Grid>
 
-          {/* Navigation Links - Horizontal */}
+          {/* Navigation Links - Horizontal (matching navbar) */}
           <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', alignItems: 'center' }}>
               <Typography
@@ -99,31 +99,7 @@ const Footer = () => {
                   '&:hover': { color: 'white' },
                 }}
               >
-                Shop
-              </Typography>
-              <Typography
-                component={Link}
-                to="/courses"
-                sx={{
-                  color: 'rgba(255,255,255,0.8)',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  '&:hover': { color: 'white' },
-                }}
-              >
-                Lookbook
-              </Typography>
-              <Typography
-                component={Link}
-                to="/courses"
-                sx={{
-                  color: 'rgba(255,255,255,0.8)',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  '&:hover': { color: 'white' },
-                }}
-              >
-                Sale
+                Courses
               </Typography>
               <Typography
                 component={Link}
@@ -135,7 +111,7 @@ const Footer = () => {
                   '&:hover': { color: 'white' },
                 }}
               >
-                Blog
+                About Us
               </Typography>
               <Typography
                 component={Link}
@@ -147,7 +123,7 @@ const Footer = () => {
                   '&:hover': { color: 'white' },
                 }}
               >
-                Contact
+                Contact Us
               </Typography>
             </Box>
           </Grid>

@@ -42,7 +42,11 @@ const Navbar = () => {
   return (
     <Box
       sx={{
-        position: 'relative',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
         height: 70,
         display: 'flex',
         alignItems: 'center',
