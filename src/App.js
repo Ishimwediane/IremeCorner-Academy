@@ -7,8 +7,7 @@ import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Auth from './pages/Auth';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
 import Dashboard from './pages/Dashboard';
@@ -28,8 +27,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/register" element={<Auth />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/courses/:id" element={<CourseDetail />} />
           <Route
