@@ -31,26 +31,30 @@ import { useQuery } from 'react-query';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 
+const categories = [
+  'Digital Tools',
+  'Marketing',
+  'Financial Literacy',
+  'Business Management',
+  'Technical Skills',
+  'Other',
+];
+
+const levels = ['Beginner', 'Intermediate', 'Advanced'];
+
+const languages = ['English', 'French', 'Spanish', 'Portuguese', 'Arabic', 'Swahili'];
+
 const Courses = () => {
   const { user } = useAuth();
   const [filters, setFilters] = useState({
     search: '',
     categories: [],
     levels: [],
+    languages: [],
   });
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [showMoreLevels, setShowMoreLevels] = useState(false);
-
-  const categories = [
-    'Digital Tools',
-    'Marketing',
-    'Financial Literacy',
-    'Business Management',
-    'Technical Skills',
-    'Other',
-  ];
-
-  const levels = ['Beginner', 'Intermediate', 'Advanced'];
+  const [showMoreLanguages, setShowMoreLanguages] = useState(false);
 
   const { data: coursesData, isLoading } = useQuery(
     ['courses', filters],
@@ -72,14 +76,15 @@ const Courses = () => {
   const allCourses = coursesData?.data || [];
   const totalCourses = coursesData?.count || allCourses.length;
 
-  // Filter courses client-side based on selected categories and levels
+  // Filter courses client-side based on selected categories, levels, and languages
   const courses = allCourses.filter((course) => {
     const matchesCategory = filters.categories.length === 0 || filters.categories.includes(course.category);
     const matchesLevel = filters.levels.length === 0 || filters.levels.includes(course.level);
-    return matchesCategory && matchesLevel;
+    const matchesLanguage = filters.languages.length === 0 || (course.language && filters.languages.includes(course.language));
+    return matchesCategory && matchesLevel && matchesLanguage;
   });
 
-  // Calculate counts for each category and level
+  // Calculate counts for each category, level, and language
   const categoryCounts = categories.reduce((acc, cat) => {
     acc[cat] = allCourses.filter((c) => c.category === cat).length;
     return acc;
@@ -87,6 +92,11 @@ const Courses = () => {
 
   const levelCounts = levels.reduce((acc, level) => {
     acc[level] = allCourses.filter((c) => c.level === level).length;
+    return acc;
+  }, {});
+
+  const languageCounts = languages.reduce((acc, lang) => {
+    acc[lang] = allCourses.filter((c) => c.language === lang).length;
     return acc;
   }, {});
 
@@ -105,6 +115,15 @@ const Courses = () => {
       levels: prev.levels.includes(level)
         ? prev.levels.filter((l) => l !== level)
         : [...prev.levels, level],
+    }));
+  };
+
+  const handleLanguageChange = (language) => {
+    setFilters((prev) => ({
+      ...prev,
+      languages: prev.languages.includes(language)
+        ? prev.languages.filter((l) => l !== language)
+        : [...prev.languages, language],
     }));
   };
 
@@ -196,7 +215,7 @@ const Courses = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
             <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32' }}>
               {courses.length} {courses.length === 1 ? 'Course' : 'Courses'} Available
-              {(filters.categories.length > 0 || filters.levels.length > 0) && (
+              {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0) && (
                 <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', fontWeight: 400, ml: 1 }}>
                   (of {totalCourses})
                 </Box>
@@ -384,12 +403,71 @@ const Courses = () => {
                   )}
                 </Box>
 
+                {/* Language Filter */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 2 }}>
+                    <Typography
+                      sx={{
+                        color: '#202F32',
+                        fontWeight: 700,
+                        fontSize: '1rem',
+                      }}
+                    >
+                      Language
+                    </Typography>
+                    <Info sx={{ fontSize: 16, color: 'rgba(32,47,50,0.5)' }} />
+                  </Box>
+                  <FormGroup>
+                    {(showMoreLanguages ? languages : languages.slice(0, 4)).map((lang) => (
+                      <FormControlLabel
+                        key={lang}
+                        control={
+                          <Checkbox
+                            checked={filters.languages.includes(lang)}
+                            onChange={() => handleLanguageChange(lang)}
+                            sx={{
+                              color: '#202F32',
+                              '&.Mui-checked': {
+                                color: '#A84836',
+                              },
+                            }}
+                          />
+                        }
+                        label={
+                          <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+                            {lang} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({languageCounts[lang] || 0})</Box>
+                          </Typography>
+                        }
+                        sx={{ mb: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                  {languages.length > 4 && (
+                    <MuiLink
+                      component="button"
+                      onClick={() => setShowMoreLanguages(!showMoreLanguages)}
+                      sx={{
+                        color: '#A84836',
+                        textDecoration: 'underline',
+                        fontSize: '0.9rem',
+                        mt: 1,
+                        cursor: 'pointer',
+                        border: 'none',
+                        background: 'none',
+                        '&:hover': { color: '#8f3b2d' },
+                      }}
+                    >
+                      {showMoreLanguages ? 'Show less' : 'Show more'}
+                    </MuiLink>
+                  )}
+                </Box>
+
                 {/* Clear Button */}
-                {(filters.categories.length > 0 || filters.levels.length > 0 || filters.search) && (
+                {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 || filters.search) && (
                   <Button
                     fullWidth
                     variant="outlined"
-                    onClick={() => setFilters({ search: '', categories: [], levels: [] })}
+                    onClick={() => setFilters({ search: '', categories: [], levels: [], languages: [] })}
                     sx={{
                       borderColor: '#202F32',
                       color: '#202F32',
