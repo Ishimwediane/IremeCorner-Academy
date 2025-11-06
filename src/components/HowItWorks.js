@@ -76,7 +76,7 @@ const Arrow = (props) => (
 
 const HowItWorks = ({ totalCourses = 0 }) => {
   return (
-    <Box sx={{ py: 10 }}>
+    <Box id="how-it-works" sx={{ py: 10 }}>
       <Container>
         <Typography sx={{ color: '#2E7D32', fontWeight: 700, textAlign: 'center', mb: 1 }}>
           Over {new Intl.NumberFormat().format(totalCourses)}+ Course

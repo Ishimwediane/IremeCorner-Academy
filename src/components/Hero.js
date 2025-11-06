@@ -133,8 +133,10 @@ const Hero = ({ user, totalCourses = 0 }) => {
               <Button
                 variant="text"
                 size="large"
-                component={Link}
-                to="/courses"
+                onClick={() => {
+                  const el = document.getElementById('how-it-works');
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
                 startIcon={
                   <Box
                     sx={{
@@ -203,7 +205,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
                 right: '4%',
                 width: 96,
                 height: 96,
-                bgcolor: '#2E7D32',
+                bgcolor: '#A84836',
                 color: 'white',
                 borderRadius: '50%',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
