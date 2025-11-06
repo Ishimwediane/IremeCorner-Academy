@@ -21,6 +21,7 @@ import CreateCourse from './pages/CreateCourse';
 import AIAssistant from './pages/AIAssistant';
 import DropInformation from './pages/DropInformation';
 import TermsAndConditions from './pages/TermsAndConditions';
+import Contact from './pages/Contact';
 
 function App() {
   return (
@@ -84,6 +85,7 @@ function App() {
           />
           <Route path="/drop-information" element={<DropInformation />} />
           <Route path="/terms" element={<TermsAndConditions />} />
+          <Route path="/contact" element={<Contact />} />
           <Route
             path="/ai-assistant"
             element={
