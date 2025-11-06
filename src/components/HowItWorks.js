@@ -85,8 +85,9 @@ const HowItWorks = ({ totalCourses = 0 }) => {
           How It <Box component="span" sx={{ color: '#2E7D32' }}>Work?</Box>
         </Typography>
 
-        <Grid container alignItems="center" justifyContent="center">
-          <Grid item xs={12} md={3.5}>
+        <Box sx={{ position: 'relative' }}>
+        <Grid container spacing={3} alignItems="stretch" justifyContent="center">
+          <Grid item xs={12} md={4}>
             <StepCard
               icon={<SearchIcon sx={{ color: '#2E7D32' }} />}
               title="Find Your Course"
@@ -94,20 +95,14 @@ const HowItWorks = ({ totalCourses = 0 }) => {
               corner="tl"
             />
           </Grid>
-          <Grid item xs={12} md={1} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-            <Arrow />
-          </Grid>
-          <Grid item xs={12} md={3.5}>
+          <Grid item xs={12} md={4}>
             <StepCard
               icon={<EventSeatIcon sx={{ color: '#2E7D32' }} />}
               title="Book A Seat"
               description="It has survived not only centuries also leap into electronic."
             />
           </Grid>
-          <Grid item xs={12} md={1} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-            <Arrow />
-          </Grid>
-          <Grid item xs={12} md={3.5}>
+          <Grid item xs={12} md={4}>
             <StepCard
               icon={<EmojiEventsIcon sx={{ color: '#2E7D32' }} />}
               title="Get Certificate"
@@ -116,6 +111,10 @@ const HowItWorks = ({ totalCourses = 0 }) => {
             />
           </Grid>
         </Grid>
+        {/* connector arrows (only on md+) */}
+        <Arrow sx={{ display: { xs: 'none', md: 'block' }, position: 'absolute', left: '33.3%', top: '50%', transform: 'translate(-50%, -50%) rotate(-45deg)' }} />
+        <Arrow sx={{ display: { xs: 'none', md: 'block' }, position: 'absolute', left: '66.6%', top: '50%', transform: 'translate(-50%, -50%) rotate(-45deg)' }} />
+        </Box>
       </Container>
     </Box>
   );
