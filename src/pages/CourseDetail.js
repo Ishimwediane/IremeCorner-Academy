@@ -143,25 +143,74 @@ const CourseDetail = () => {
   }
 
   return (
-    <Container sx={{ py: 4 }}>
+    <Box>
+      {/* Header section with brand gradient and meta */}
+      <Box
+        sx={{
+          bgcolor: 'rgba(168,72,54,0.08)',
+          background: 'linear-gradient(180deg, rgba(168,72,54,0.08) 0%, rgba(32,47,50,0.04) 100%)',
+          py: 6,
+          mb: 2,
+        }}
+      >
+        <Container>
+          <Typography variant="h3" sx={{ textAlign: 'center', fontWeight: 800, color: '#202F32', mb: 2 }}>
+            {course.title}
+          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, flexWrap: 'wrap', color: '#202F32' }}>
+            {course.averageRating > 0 && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Star sx={{ color: '#2E7D32' }} />
+                <Typography sx={{ fontWeight: 700 }}>{course.averageRating.toFixed(1)}</Typography>
+                <Typography variant="body2" sx={{ opacity: 0.7 }}>({course.totalRatings || 0} rating)</Typography>
+              </Box>
+            )}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Person sx={{ color: 'text.secondary' }} />
+              <Typography variant="body2">{course.enrolledStudents?.length || 0} students</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Schedule sx={{ color: 'text.secondary' }} />
+              <Typography variant="body2">Last updated {new Date(course.updatedAt || course.createdAt).toLocaleDateString()}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Language sx={{ color: 'text.secondary' }} />
+              <Typography variant="body2">{course.language || 'English'}</Typography>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      <Container sx={{ py: 4 }}>
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
           <Box sx={{ mb: 3 }}>
             {course.thumbnail && (
-              <Box
-                component="img"
-                src={course.thumbnail}
-                alt={course.title}
-                sx={{
-                  width: '100%',
-                  height: 400,
-                  objectFit: 'cover',
-                  borderRadius: 2,
-                  mb: 2,
-                }}
-              />
+              <Box sx={{ position: 'relative', mb: 2 }}>
+                {/* framing line */}
+                <Box sx={{ position: 'absolute', inset: 16, border: '3px solid rgba(255,255,255,0.6)', borderRadius: 2, zIndex: 2, pointerEvents: 'none' }} />
+                <Box
+                  component="img"
+                  src={course.thumbnail}
+                  alt={course.title}
+                  sx={{
+                    width: '100%',
+                    height: 420,
+                    objectFit: 'cover',
+                    borderRadius: 2,
+                    display: 'block',
+                    backgroundColor: '#e9ecef',
+                  }}
+                />
+                {/* play overlay icon style */}
+                <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Box sx={{ width: 64, height: 64, bgcolor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}>
+                    <Box sx={{ width: 0, height: 0, borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderLeft: '18px solid #A84836', ml: 0.5 }} />
+                  </Box>
+                </Box>
+              </Box>
             )}
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, color: '#202F32' }}>
               {course.title}
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
@@ -483,6 +532,7 @@ const CourseDetail = () => {
         </Grid>
       </Grid>
     </Container>
+    </Box>
   );
 };
 
