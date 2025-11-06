@@ -18,6 +18,7 @@ import LessonView from './pages/LessonView';
 import AdminDashboard from './pages/AdminDashboard';
 import CreateCourse from './pages/CreateCourse';
 import AIAssistant from './pages/AIAssistant';
+import DropInformation from './pages/DropInformation';
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/drop-information" element={<DropInformation />} />
           <Route
             path="/ai-assistant"
             element={

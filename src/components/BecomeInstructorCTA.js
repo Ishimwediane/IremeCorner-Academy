@@ -43,7 +43,7 @@ const BecomeInstructorCTA = () => {
             <Button
               variant="contained"
               component={Link}
-              to="/create-course"
+              to="/drop-information"
               sx={{
                 bgcolor: '#2E7D32',
                 '&:hover': { bgcolor: '#256b2a' },
