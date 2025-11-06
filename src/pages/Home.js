@@ -8,6 +8,7 @@ import AllCoursesSection from '../components/AllCoursesSection';
 import BecomeInstructorCTA from '../components/BecomeInstructorCTA';
 import HowItWorks from '../components/HowItWorks';
 import TestimonialsSection from '../components/TestimonialsSection';
+import WelcomeSection from '../components/WelcomeSection';
 
 const Home = () => {
   const { user } = useAuth();
@@ -31,6 +32,7 @@ const Home = () => {
   return (
     <Box>
       <Hero user={user} totalCourses={totalApprovedCourses} />
+      <WelcomeSection />
       {/* All Courses Section */}
       <AllCoursesSection />
       <HowItWorks totalCourses={totalApprovedCourses} />
