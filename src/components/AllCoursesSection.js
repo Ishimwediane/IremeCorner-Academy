@@ -151,3 +151,4 @@ const AllCoursesSection = () => {
 export default AllCoursesSection;
 
 
+
