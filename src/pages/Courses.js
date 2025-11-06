@@ -11,14 +11,15 @@ import {
   Button,
   TextField,
   Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Chip,
   Paper,
   Stack,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Link as MuiLink,
 } from '@mui/material';
+import { Info } from '@mui/icons-material';
 import {
   Search,
   School,
@@ -34,17 +35,28 @@ const Courses = () => {
   const { user } = useAuth();
   const [filters, setFilters] = useState({
     search: '',
-    category: '',
-    level: '',
+    categories: [],
+    levels: [],
   });
+  const [showMoreCategories, setShowMoreCategories] = useState(false);
+  const [showMoreLevels, setShowMoreLevels] = useState(false);
+
+  const categories = [
+    'Digital Tools',
+    'Marketing',
+    'Financial Literacy',
+    'Business Management',
+    'Technical Skills',
+    'Other',
+  ];
+
+  const levels = ['Beginner', 'Intermediate', 'Advanced'];
 
   const { data: coursesData, isLoading } = useQuery(
     ['courses', filters],
     async () => {
       const params = new URLSearchParams();
       params.append('status', 'approved');
-      if (filters.category) params.append('category', filters.category);
-      if (filters.level) params.append('level', filters.level);
       if (filters.search) params.append('search', filters.search);
 
       const response = await api.get(`/courses?${params.toString()}`);
@@ -57,19 +69,44 @@ const Courses = () => {
     }
   );
 
-  const courses = coursesData?.data || [];
-  const totalCourses = coursesData?.count || courses.length;
+  const allCourses = coursesData?.data || [];
+  const totalCourses = coursesData?.count || allCourses.length;
 
-  const categories = [
-    'Digital Tools',
-    'Marketing',
-    'Financial Literacy',
-    'Business Management',
-    'Technical Skills',
-    'Other',
-  ];
+  // Filter courses client-side based on selected categories and levels
+  const courses = allCourses.filter((course) => {
+    const matchesCategory = filters.categories.length === 0 || filters.categories.includes(course.category);
+    const matchesLevel = filters.levels.length === 0 || filters.levels.includes(course.level);
+    return matchesCategory && matchesLevel;
+  });
 
-  const levels = ['Beginner', 'Intermediate', 'Advanced'];
+  // Calculate counts for each category and level
+  const categoryCounts = categories.reduce((acc, cat) => {
+    acc[cat] = allCourses.filter((c) => c.category === cat).length;
+    return acc;
+  }, {});
+
+  const levelCounts = levels.reduce((acc, level) => {
+    acc[level] = allCourses.filter((c) => c.level === level).length;
+    return acc;
+  }, {});
+
+  const handleCategoryChange = (category) => {
+    setFilters((prev) => ({
+      ...prev,
+      categories: prev.categories.includes(category)
+        ? prev.categories.filter((c) => c !== category)
+        : [...prev.categories, category],
+    }));
+  };
+
+  const handleLevelChange = (level) => {
+    setFilters((prev) => ({
+      ...prev,
+      levels: prev.levels.includes(level)
+        ? prev.levels.filter((l) => l !== level)
+        : [...prev.levels, level],
+    }));
+  };
 
   return (
     <Box>
@@ -158,7 +195,12 @@ const Courses = () => {
         <Box sx={{ mb: 4 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
             <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32' }}>
-              {totalCourses} Courses Available
+              {courses.length} {courses.length === 1 ? 'Course' : 'Courses'} Available
+              {(filters.categories.length > 0 || filters.levels.length > 0) && (
+                <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', fontWeight: 400, ml: 1 }}>
+                  (of {totalCourses})
+                </Box>
+              )}
             </Typography>
             <Button
               component={Link}
@@ -197,31 +239,19 @@ const Courses = () => {
               }}
             >
               <Typography
-                variant="h6"
+                variant="h5"
                 sx={{
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: '#202F32',
-                  mb: 3,
-                  pb: 2,
-                  borderBottom: '2px solid rgba(168,72,54,0.2)',
+                  mb: 4,
                 }}
               >
-                Filter Courses
+                Filter by
               </Typography>
 
-              <Stack spacing={3}>
+              <Stack spacing={4}>
                 {/* Search */}
                 <Box>
-                  <Typography
-                    sx={{
-                      color: '#202F32',
-                      fontWeight: 600,
-                      mb: 1.5,
-                      fontSize: '0.95rem',
-                    }}
-                  >
-                    Search
-                  </Typography>
                   <TextField
                     fullWidth
                     placeholder="Search courses..."
@@ -232,6 +262,9 @@ const Courses = () => {
                     InputProps={{
                       startAdornment: <Search sx={{ mr: 1, color: 'rgba(32,47,50,0.5)' }} />,
                     }}
+                    sx={{
+                      bgcolor: 'white',
+                    }}
                   />
                 </Box>
 
@@ -240,80 +273,136 @@ const Courses = () => {
                   <Typography
                     sx={{
                       color: '#202F32',
-                      fontWeight: 600,
-                      mb: 1.5,
-                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      mb: 2,
+                      fontSize: '1rem',
                     }}
                   >
-                    Category
+                    Subject
                   </Typography>
-                  <FormControl fullWidth size="small">
-                    <Select
-                      value={filters.category}
-                      onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-                      displayEmpty
+                  <FormGroup>
+                    {(showMoreCategories ? categories : categories.slice(0, 4)).map((cat) => (
+                      <FormControlLabel
+                        key={cat}
+                        control={
+                          <Checkbox
+                            checked={filters.categories.includes(cat)}
+                            onChange={() => handleCategoryChange(cat)}
+                            sx={{
+                              color: '#202F32',
+                              '&.Mui-checked': {
+                                color: '#A84836',
+                              },
+                            }}
+                          />
+                        }
+                        label={
+                          <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+                            {cat} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({categoryCounts[cat] || 0})</Box>
+                          </Typography>
+                        }
+                        sx={{ mb: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                  {categories.length > 4 && (
+                    <MuiLink
+                      component="button"
+                      onClick={() => setShowMoreCategories(!showMoreCategories)}
                       sx={{
-                        bgcolor: 'white',
+                        color: '#A84836',
+                        textDecoration: 'underline',
+                        fontSize: '0.9rem',
+                        mt: 1,
+                        cursor: 'pointer',
+                        border: 'none',
+                        background: 'none',
+                        '&:hover': { color: '#8f3b2d' },
                       }}
                     >
-                      <MenuItem value="">All Categories</MenuItem>
-                      {categories.map((cat) => (
-                        <MenuItem key={cat} value={cat}>
-                          {cat}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                      {showMoreCategories ? 'Show less' : 'Show more'}
+                    </MuiLink>
+                  )}
                 </Box>
 
                 {/* Level Filter */}
                 <Box>
-                  <Typography
-                    sx={{
-                      color: '#202F32',
-                      fontWeight: 600,
-                      mb: 1.5,
-                      fontSize: '0.95rem',
-                    }}
-                  >
-                    Level
-                  </Typography>
-                  <FormControl fullWidth size="small">
-                    <Select
-                      value={filters.level}
-                      onChange={(e) => setFilters({ ...filters, level: e.target.value })}
-                      displayEmpty
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 2 }}>
+                    <Typography
                       sx={{
-                        bgcolor: 'white',
+                        color: '#202F32',
+                        fontWeight: 700,
+                        fontSize: '1rem',
                       }}
                     >
-                      <MenuItem value="">All Levels</MenuItem>
-                      {levels.map((level) => (
-                        <MenuItem key={level} value={level}>
-                          {level}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                      Level
+                    </Typography>
+                    <Info sx={{ fontSize: 16, color: 'rgba(32,47,50,0.5)' }} />
+                  </Box>
+                  <FormGroup>
+                    {(showMoreLevels ? levels : levels.slice(0, 3)).map((level) => (
+                      <FormControlLabel
+                        key={level}
+                        control={
+                          <Checkbox
+                            checked={filters.levels.includes(level)}
+                            onChange={() => handleLevelChange(level)}
+                            sx={{
+                              color: '#202F32',
+                              '&.Mui-checked': {
+                                color: '#A84836',
+                              },
+                            }}
+                          />
+                        }
+                        label={
+                          <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+                            {level} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({levelCounts[level] || 0})</Box>
+                          </Typography>
+                        }
+                        sx={{ mb: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                  {levels.length > 3 && (
+                    <MuiLink
+                      component="button"
+                      onClick={() => setShowMoreLevels(!showMoreLevels)}
+                      sx={{
+                        color: '#A84836',
+                        textDecoration: 'underline',
+                        fontSize: '0.9rem',
+                        mt: 1,
+                        cursor: 'pointer',
+                        border: 'none',
+                        background: 'none',
+                        '&:hover': { color: '#8f3b2d' },
+                      }}
+                    >
+                      {showMoreLevels ? 'Show less' : 'Show more'}
+                    </MuiLink>
+                  )}
                 </Box>
 
                 {/* Clear Button */}
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => setFilters({ search: '', category: '', level: '' })}
-                  sx={{
-                    borderColor: '#202F32',
-                    color: '#202F32',
-                    mt: 2,
-                    '&:hover': {
-                      borderColor: '#A84836',
-                      bgcolor: 'rgba(168,72,54,0.05)',
-                    },
-                  }}
-                >
-                  Clear Filters
-                </Button>
+                {(filters.categories.length > 0 || filters.levels.length > 0 || filters.search) && (
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => setFilters({ search: '', categories: [], levels: [] })}
+                    sx={{
+                      borderColor: '#202F32',
+                      color: '#202F32',
+                      mt: 2,
+                      '&:hover': {
+                        borderColor: '#A84836',
+                        bgcolor: 'rgba(168,72,54,0.05)',
+                      },
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
               </Stack>
             </Paper>
           </Grid>
