@@ -265,7 +265,7 @@ const Home = () => {
             {/* Main Student Image */}
             <Box
               component="img"
-              src="/student-image.png"
+              src="/hero.gif"
               alt="Student"
               onError={(e) => {
                 e.target.style.display = 'none';
