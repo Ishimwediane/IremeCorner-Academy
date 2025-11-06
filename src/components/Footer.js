@@ -103,7 +103,7 @@ const Footer = () => {
               </Typography>
               <Typography
                 component={Link}
-                to="/#about"
+                to="/about"
                 sx={{
                   color: 'rgba(255,255,255,0.8)',
                   textDecoration: 'none',
