@@ -62,7 +62,7 @@ const Navbar = () => {
         }}
       />
 
-      {/* Gradient background (right ~35%) */}
+      {/* Chocolate background (right ~35%) */}
       <Box
         sx={{
           position: 'absolute',
@@ -70,7 +70,7 @@ const Navbar = () => {
           top: 0,
           width: '35%',
           height: '100%',
-          background: 'linear-gradient(135deg, rgba(168,72,54,0.9) 0%, rgba(32,47,50,0.95) 100%)',
+          bgcolor: '#A84836',
           zIndex: 0,
         }}
       />
@@ -247,7 +247,7 @@ const Navbar = () => {
               sx={{
                 bgcolor: 'white',
                 color: '#202F32',
-                borderRadius: '20px',
+                borderRadius: '20px 0 0 20px',
                 px: 3,
                 py: 1,
                 fontWeight: 600,
