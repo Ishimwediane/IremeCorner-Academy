@@ -43,6 +43,11 @@ const categories = [
 const levels = ['Beginner', 'Intermediate', 'Advanced'];
 
 const languages = ['English', 'French', 'Spanish', 'Portuguese', 'Arabic', 'Swahili'];
+const prices = ['Free', 'Paid'];
+const durations = ['Short (< 2 hours)', 'Medium (2-10 hours)', 'Long (> 10 hours)'];
+const ratings = ['4+ Stars', '5 Stars'];
+const formats = ['Video', 'Text', 'Interactive', 'Mixed'];
+const certifications = ['With Certificate', 'No Certificate'];
 
 const Courses = () => {
   const { user } = useAuth();
@@ -51,10 +56,20 @@ const Courses = () => {
     categories: [],
     levels: [],
     languages: [],
+    prices: [],
+    durations: [],
+    ratings: [],
+    formats: [],
+    certifications: [],
   });
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [showMoreLevels, setShowMoreLevels] = useState(false);
   const [showMoreLanguages, setShowMoreLanguages] = useState(false);
+  const [showMorePrices, setShowMorePrices] = useState(false);
+  const [showMoreDurations, setShowMoreDurations] = useState(false);
+  const [showMoreRatings, setShowMoreRatings] = useState(false);
+  const [showMoreFormats, setShowMoreFormats] = useState(false);
+  const [showMoreCertifications, setShowMoreCertifications] = useState(false);
 
   const { data: coursesData, isLoading } = useQuery(
     ['courses', filters],
@@ -76,12 +91,44 @@ const Courses = () => {
   const allCourses = coursesData?.data || [];
   const totalCourses = coursesData?.count || allCourses.length;
 
-  // Filter courses client-side based on selected categories, levels, and languages
+  // Helper function to check duration
+  const getDurationCategory = (course) => {
+    const totalHours = course.lessons?.reduce((sum, lesson) => sum + (lesson.duration || 0), 0) || 0;
+    if (totalHours < 2) return 'Short (< 2 hours)';
+    if (totalHours <= 10) return 'Medium (2-10 hours)';
+    return 'Long (> 10 hours)';
+  };
+
+  // Helper function to check rating
+  const getRatingCategory = (course) => {
+    const avgRating = course.rating || 0;
+    if (avgRating >= 5) return '5 Stars';
+    if (avgRating >= 4) return '4+ Stars';
+    return null;
+  };
+
+  // Helper function to check price
+  const getPriceCategory = (course) => {
+    const price = course.price || 0;
+    return price === 0 ? 'Free' : 'Paid';
+  };
+
+  // Filter courses client-side based on all selected filters
   const courses = allCourses.filter((course) => {
     const matchesCategory = filters.categories.length === 0 || filters.categories.includes(course.category);
     const matchesLevel = filters.levels.length === 0 || filters.levels.includes(course.level);
     const matchesLanguage = filters.languages.length === 0 || (course.language && filters.languages.includes(course.language));
-    return matchesCategory && matchesLevel && matchesLanguage;
+    const matchesPrice = filters.prices.length === 0 || filters.prices.includes(getPriceCategory(course));
+    const matchesDuration = filters.durations.length === 0 || filters.durations.includes(getDurationCategory(course));
+    const courseRating = getRatingCategory(course);
+    const matchesRating = filters.ratings.length === 0 || (courseRating && filters.ratings.includes(courseRating));
+    const matchesFormat = filters.formats.length === 0 || (course.format && filters.formats.includes(course.format));
+    const matchesCertification = filters.certifications.length === 0 || 
+      (filters.certifications.includes('With Certificate') && course.certificate) ||
+      (filters.certifications.includes('No Certificate') && !course.certificate);
+    
+    return matchesCategory && matchesLevel && matchesLanguage && matchesPrice && 
+           matchesDuration && matchesRating && matchesFormat && matchesCertification;
   });
 
   // Calculate counts for each category, level, and language
@@ -97,6 +144,35 @@ const Courses = () => {
 
   const languageCounts = languages.reduce((acc, lang) => {
     acc[lang] = allCourses.filter((c) => c.language === lang).length;
+    return acc;
+  }, {});
+
+  const priceCounts = prices.reduce((acc, price) => {
+    acc[price] = allCourses.filter((c) => getPriceCategory(c) === price).length;
+    return acc;
+  }, {});
+
+  const durationCounts = durations.reduce((acc, duration) => {
+    acc[duration] = allCourses.filter((c) => getDurationCategory(c) === duration).length;
+    return acc;
+  }, {});
+
+  const ratingCounts = ratings.reduce((acc, rating) => {
+    acc[rating] = allCourses.filter((c) => getRatingCategory(c) === rating).length;
+    return acc;
+  }, {});
+
+  const formatCounts = formats.reduce((acc, format) => {
+    acc[format] = allCourses.filter((c) => c.format === format).length;
+    return acc;
+  }, {});
+
+  const certificationCounts = certifications.reduce((acc, cert) => {
+    if (cert === 'With Certificate') {
+      acc[cert] = allCourses.filter((c) => c.certificate).length;
+    } else {
+      acc[cert] = allCourses.filter((c) => !c.certificate).length;
+    }
     return acc;
   }, {});
 
@@ -124,6 +200,51 @@ const Courses = () => {
       languages: prev.languages.includes(language)
         ? prev.languages.filter((l) => l !== language)
         : [...prev.languages, language],
+    }));
+  };
+
+  const handlePriceChange = (price) => {
+    setFilters((prev) => ({
+      ...prev,
+      prices: prev.prices.includes(price)
+        ? prev.prices.filter((p) => p !== price)
+        : [...prev.prices, price],
+    }));
+  };
+
+  const handleDurationChange = (duration) => {
+    setFilters((prev) => ({
+      ...prev,
+      durations: prev.durations.includes(duration)
+        ? prev.durations.filter((d) => d !== duration)
+        : [...prev.durations, duration],
+    }));
+  };
+
+  const handleRatingChange = (rating) => {
+    setFilters((prev) => ({
+      ...prev,
+      ratings: prev.ratings.includes(rating)
+        ? prev.ratings.filter((r) => r !== rating)
+        : [...prev.ratings, rating],
+    }));
+  };
+
+  const handleFormatChange = (format) => {
+    setFilters((prev) => ({
+      ...prev,
+      formats: prev.formats.includes(format)
+        ? prev.formats.filter((f) => f !== format)
+        : [...prev.formats, format],
+    }));
+  };
+
+  const handleCertificationChange = (certification) => {
+    setFilters((prev) => ({
+      ...prev,
+      certifications: prev.certifications.includes(certification)
+        ? prev.certifications.filter((c) => c !== certification)
+        : [...prev.certifications, certification],
     }));
   };
 
@@ -215,7 +336,9 @@ const Courses = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
             <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32' }}>
               {courses.length} {courses.length === 1 ? 'Course' : 'Courses'} Available
-              {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0) && (
+              {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 ||
+                filters.prices.length > 0 || filters.durations.length > 0 || filters.ratings.length > 0 ||
+                filters.formats.length > 0 || filters.certifications.length > 0) && (
                 <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', fontWeight: 400, ml: 1 }}>
                   (of {totalCourses})
                 </Box>
@@ -462,12 +585,219 @@ const Courses = () => {
                   )}
                 </Box>
 
+                {/* Price Filter */}
+                <Box>
+                  <Typography
+                    sx={{
+                      color: '#202F32',
+                      fontWeight: 700,
+                      mb: 2,
+                      fontSize: '1rem',
+                    }}
+                  >
+                    Price
+                  </Typography>
+                  <FormGroup>
+                    {prices.map((price) => (
+                      <FormControlLabel
+                        key={price}
+                        control={
+                          <Checkbox
+                            checked={filters.prices.includes(price)}
+                            onChange={() => handlePriceChange(price)}
+                            sx={{
+                              color: '#202F32',
+                              '&.Mui-checked': {
+                                color: '#A84836',
+                              },
+                            }}
+                          />
+                        }
+                        label={
+                          <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+                            {price} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({priceCounts[price] || 0})</Box>
+                          </Typography>
+                        }
+                        sx={{ mb: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                </Box>
+
+                {/* Duration Filter */}
+                <Box>
+                  <Typography
+                    sx={{
+                      color: '#202F32',
+                      fontWeight: 700,
+                      mb: 2,
+                      fontSize: '1rem',
+                    }}
+                  >
+                    Duration
+                  </Typography>
+                  <FormGroup>
+                    {durations.map((duration) => (
+                      <FormControlLabel
+                        key={duration}
+                        control={
+                          <Checkbox
+                            checked={filters.durations.includes(duration)}
+                            onChange={() => handleDurationChange(duration)}
+                            sx={{
+                              color: '#202F32',
+                              '&.Mui-checked': {
+                                color: '#A84836',
+                              },
+                            }}
+                          />
+                        }
+                        label={
+                          <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+                            {duration} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({durationCounts[duration] || 0})</Box>
+                          </Typography>
+                        }
+                        sx={{ mb: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                </Box>
+
+                {/* Rating Filter */}
+                <Box>
+                  <Typography
+                    sx={{
+                      color: '#202F32',
+                      fontWeight: 700,
+                      mb: 2,
+                      fontSize: '1rem',
+                    }}
+                  >
+                    Rating
+                  </Typography>
+                  <FormGroup>
+                    {ratings.map((rating) => (
+                      <FormControlLabel
+                        key={rating}
+                        control={
+                          <Checkbox
+                            checked={filters.ratings.includes(rating)}
+                            onChange={() => handleRatingChange(rating)}
+                            sx={{
+                              color: '#202F32',
+                              '&.Mui-checked': {
+                                color: '#A84836',
+                              },
+                            }}
+                          />
+                        }
+                        label={
+                          <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+                            {rating} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({ratingCounts[rating] || 0})</Box>
+                          </Typography>
+                        }
+                        sx={{ mb: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                </Box>
+
+                {/* Format Filter */}
+                <Box>
+                  <Typography
+                    sx={{
+                      color: '#202F32',
+                      fontWeight: 700,
+                      mb: 2,
+                      fontSize: '1rem',
+                    }}
+                  >
+                    Format
+                  </Typography>
+                  <FormGroup>
+                    {formats.map((format) => (
+                      <FormControlLabel
+                        key={format}
+                        control={
+                          <Checkbox
+                            checked={filters.formats.includes(format)}
+                            onChange={() => handleFormatChange(format)}
+                            sx={{
+                              color: '#202F32',
+                              '&.Mui-checked': {
+                                color: '#A84836',
+                              },
+                            }}
+                          />
+                        }
+                        label={
+                          <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+                            {format} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({formatCounts[format] || 0})</Box>
+                          </Typography>
+                        }
+                        sx={{ mb: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                </Box>
+
+                {/* Certification Filter */}
+                <Box>
+                  <Typography
+                    sx={{
+                      color: '#202F32',
+                      fontWeight: 700,
+                      mb: 2,
+                      fontSize: '1rem',
+                    }}
+                  >
+                    Certification
+                  </Typography>
+                  <FormGroup>
+                    {certifications.map((cert) => (
+                      <FormControlLabel
+                        key={cert}
+                        control={
+                          <Checkbox
+                            checked={filters.certifications.includes(cert)}
+                            onChange={() => handleCertificationChange(cert)}
+                            sx={{
+                              color: '#202F32',
+                              '&.Mui-checked': {
+                                color: '#A84836',
+                              },
+                            }}
+                          />
+                        }
+                        label={
+                          <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+                            {cert} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({certificationCounts[cert] || 0})</Box>
+                          </Typography>
+                        }
+                        sx={{ mb: 1 }}
+                      />
+                    ))}
+                  </FormGroup>
+                </Box>
+
                 {/* Clear Button */}
-                {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 || filters.search) && (
+                {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 || 
+                  filters.prices.length > 0 || filters.durations.length > 0 || filters.ratings.length > 0 || 
+                  filters.formats.length > 0 || filters.certifications.length > 0 || filters.search) && (
                   <Button
                     fullWidth
                     variant="outlined"
-                    onClick={() => setFilters({ search: '', categories: [], levels: [], languages: [] })}
+                    onClick={() => setFilters({ 
+                      search: '', 
+                      categories: [], 
+                      levels: [], 
+                      languages: [],
+                      prices: [],
+                      durations: [],
+                      ratings: [],
+                      formats: [],
+                      certifications: [],
+                    })}
                     sx={{
                       borderColor: '#202F32',
                       color: '#202F32',
