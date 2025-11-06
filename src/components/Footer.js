@@ -73,95 +73,82 @@ const Footer = () => {
             </Box>
           </Grid>
 
-          {/* Navigation Links */}
+          {/* Navigation Links - Horizontal */}
           <Grid item xs={12} md={4}>
-            <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-              <Box>
-                <Typography
-                  component={Link}
-                  to="/"
-                  sx={{
-                    color: '#A84836',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    display: 'block',
-                    mb: 1.5,
-                    '&:hover': { color: '#b86d5a' },
-                  }}
-                >
-                  Home
-                </Typography>
-                <Typography
-                  component={Link}
-                  to="/courses"
-                  sx={{
-                    color: 'rgba(255,255,255,0.8)',
-                    textDecoration: 'none',
-                    display: 'block',
-                    mb: 1,
-                    fontSize: '0.9rem',
-                    '&:hover': { color: 'white' },
-                  }}
-                >
-                  Shop
-                </Typography>
-                <Typography
-                  component={Link}
-                  to="/courses"
-                  sx={{
-                    color: 'rgba(255,255,255,0.8)',
-                    textDecoration: 'none',
-                    display: 'block',
-                    mb: 1,
-                    fontSize: '0.9rem',
-                    '&:hover': { color: 'white' },
-                  }}
-                >
-                  Lookbook
-                </Typography>
-                <Typography
-                  component={Link}
-                  to="/courses"
-                  sx={{
-                    color: 'rgba(255,255,255,0.8)',
-                    textDecoration: 'none',
-                    display: 'block',
-                    mb: 1,
-                    fontSize: '0.9rem',
-                    '&:hover': { color: 'white' },
-                  }}
-                >
-                  Sale
-                </Typography>
-                <Typography
-                  component={Link}
-                  to="/#about"
-                  sx={{
-                    color: 'rgba(255,255,255,0.8)',
-                    textDecoration: 'none',
-                    display: 'block',
-                    mb: 1,
-                    fontSize: '0.9rem',
-                    '&:hover': { color: 'white' },
-                  }}
-                >
-                  Blog
-                </Typography>
-                <Typography
-                  component={Link}
-                  to="/#contact"
-                  sx={{
-                    color: 'rgba(255,255,255,0.8)',
-                    textDecoration: 'none',
-                    display: 'block',
-                    mb: 1,
-                    fontSize: '0.9rem',
-                    '&:hover': { color: 'white' },
-                  }}
-                >
-                  Contact
-                </Typography>
-              </Box>
+            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Typography
+                component={Link}
+                to="/"
+                sx={{
+                  color: '#A84836',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  '&:hover': { color: '#b86d5a' },
+                }}
+              >
+                Home
+              </Typography>
+              <Typography
+                component={Link}
+                to="/courses"
+                sx={{
+                  color: 'rgba(255,255,255,0.8)',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  '&:hover': { color: 'white' },
+                }}
+              >
+                Shop
+              </Typography>
+              <Typography
+                component={Link}
+                to="/courses"
+                sx={{
+                  color: 'rgba(255,255,255,0.8)',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  '&:hover': { color: 'white' },
+                }}
+              >
+                Lookbook
+              </Typography>
+              <Typography
+                component={Link}
+                to="/courses"
+                sx={{
+                  color: 'rgba(255,255,255,0.8)',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  '&:hover': { color: 'white' },
+                }}
+              >
+                Sale
+              </Typography>
+              <Typography
+                component={Link}
+                to="/#about"
+                sx={{
+                  color: 'rgba(255,255,255,0.8)',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  '&:hover': { color: 'white' },
+                }}
+              >
+                Blog
+              </Typography>
+              <Typography
+                component={Link}
+                to="/#contact"
+                sx={{
+                  color: 'rgba(255,255,255,0.8)',
+                  textDecoration: 'none',
+                  fontSize: '0.9rem',
+                  '&:hover': { color: 'white' },
+                }}
+              >
+                Contact
+              </Typography>
             </Box>
           </Grid>
 
