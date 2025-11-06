@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Paper, Stack } from '@mui/material';
+import { Box, Container, Grid, Typography, Paper, Stack, Button } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const WelcomeSection = () => {
   return (
-    <Box sx={{ bgcolor: 'rgba(168,72,54,0.06)', py: { xs: 8, md: 10 } }}>
+    <Box sx={{ bgcolor: 'rgba(168,72,54,0.08)', py: { xs: 8, md: 10 } }}>
       <Container>
         <Grid container spacing={6} alignItems="center">
           {/* Left visuals */}
@@ -18,15 +18,10 @@ const WelcomeSection = () => {
                 <Box component="img" src="/hero.gif" alt="Welcome Student" sx={{ width: '100%', height: 340, objectFit: 'cover' }} />
               </Paper>
 
-              {/* mini video card overlay */}
+              {/* secondary image card overlay */}
               <Paper elevation={3} sx={{ position: 'absolute', right: -20, top: 30, borderRadius: '14px', p: 1.5, bgcolor: 'white' }}>
-                <Box sx={{ width: 180, height: 100, borderRadius: '10px', overflow: 'hidden', position: 'relative' }}>
-                  <Box component="img" src="/testimonies.png" alt="Preview" sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Box sx={{ width: 34, height: 34, bgcolor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px rgba(0,0,0,0.15)' }}>
-                      <Box sx={{ width: 0, height: 0, borderTop: '7px solid transparent', borderBottom: '7px solid transparent', borderLeft: '12px solid #A84836', ml: 0.5 }} />
-                    </Box>
-                  </Box>
+                <Box sx={{ width: 180, height: 100, borderRadius: '10px', overflow: 'hidden' }}>
+                  <Box component="img" src="/learn.jpg" alt="Learn" sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </Box>
               </Paper>
 
@@ -60,6 +55,13 @@ const WelcomeSection = () => {
                 </Box>
               ))}
             </Stack>
+            <Button
+              variant="contained"
+              sx={{ mt: 3, px: 3.5, py: 1.25, borderRadius: '10px', fontWeight: 700 }}
+              href="/register"
+            >
+              Join Now
+            </Button>
           </Grid>
         </Grid>
       </Container>
