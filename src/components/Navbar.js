@@ -62,7 +62,7 @@ const Navbar = () => {
         }}
       />
 
-      {/* Chocolate background (right ~35%) */}
+      {/* Chocolate background (right ~35%) with oblique left edge */}
       <Box
         sx={{
           position: 'absolute',
@@ -72,6 +72,7 @@ const Navbar = () => {
           height: '100%',
           bgcolor: '#A84836',
           zIndex: 0,
+          clipPath: 'polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)',
         }}
       />
 
@@ -247,7 +248,7 @@ const Navbar = () => {
               sx={{
                 bgcolor: 'white',
                 color: '#202F32',
-                borderRadius: '20px 0 0 20px',
+                borderRadius: '25px',
                 px: 3,
                 py: 1,
                 fontWeight: 600,
