@@ -5,6 +5,7 @@ import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import Hero from '../components/Hero';
 import AllCoursesSection from '../components/AllCoursesSection';
+import BecomeInstructorCTA from '../components/BecomeInstructorCTA';
 
 const Home = () => {
   const { user } = useAuth();
@@ -30,6 +31,7 @@ const Home = () => {
       <Hero user={user} totalCourses={totalApprovedCourses} />
       {/* All Courses Section */}
       <AllCoursesSection />
+      <BecomeInstructorCTA />
     </Box>
   );
 };
