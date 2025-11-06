@@ -18,26 +18,57 @@ const DropInformation = () => {
     name: '',
     email: '',
     phone: '',
+    location: '',
+    profilePhoto: null,
     expertise: '',
+    motivation: '',
+    teachingMethod: 'Online',
+    languages: '',
+    cvFile: null,
+    sampleFile: null,
     portfolio: '',
-    bio: '',
-    agree: false,
+    agreeAccurate: false,
+    agreeTerms: false,
   });
 
   const onChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    const { name, value, type, checked, files } = e.target;
+    if (type === 'file') {
+      setForm((prev) => ({ ...prev, [name]: files && files[0] ? files[0] : null }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    }
   };
 
   const submitMutation = useMutation(
     async () => {
-      // Try to post to backend; if route doesn't exist yet, this will fail gracefully
-      return await api.post('/instructor-applications', form);
+      const data = new FormData();
+      Object.entries(form).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) data.append(key, value);
+      });
+      return await api.post('/instructor-applications', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
     },
     {
       onSuccess: () => {
         toast.success('Information submitted! We will contact you soon.');
-        setForm({ name: '', email: '', phone: '', expertise: '', portfolio: '', bio: '', agree: false });
+        setForm({
+          name: '',
+          email: '',
+          phone: '',
+          location: '',
+          profilePhoto: null,
+          expertise: '',
+          motivation: '',
+          teachingMethod: 'Online',
+          languages: '',
+          cvFile: null,
+          sampleFile: null,
+          portfolio: '',
+          agreeAccurate: false,
+          agreeTerms: false,
+        });
       },
       onError: () => {
         // Fallback UX when endpoint not implemented
@@ -48,8 +79,8 @@ const DropInformation = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.expertise || !form.agree) {
-      toast.error('Please fill required fields and agree to terms.');
+    if (!form.name || !form.email || !form.expertise || !form.agreeAccurate || !form.agreeTerms) {
+      toast.error('Please fill required fields and agree to both checkboxes.');
       return;
     }
     submitMutation.mutate();
@@ -72,30 +103,83 @@ const DropInformation = () => {
         <Paper sx={{ p: { xs: 3, md: 5 }, borderRadius: '16px' }}>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
+              {/* Basic Info */}
+              <Grid item xs={12}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>Basic Info</Typography>
+              </Grid>
               <Grid item xs={12} md={6}>
                 <TextField label="Full Name" name="name" value={form.name} onChange={onChange} fullWidth required />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Email" name="email" type="email" value={form.email} onChange={onChange} fullWidth required />
+                <TextField label="Email Address" name="email" type="email" value={form.email} onChange={onChange} fullWidth required />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField label="Phone" name="phone" value={form.phone} onChange={onChange} fullWidth />
+                <TextField label="Phone Number (WhatsApp preferred)" name="phone" value={form.phone} onChange={onChange} fullWidth />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField select label="Expertise" name="expertise" value={form.expertise} onChange={onChange} fullWidth required>
+                <TextField label="Country / City" name="location" value={form.location} onChange={onChange} fullWidth />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button component="label" variant="outlined" fullWidth>
+                  Upload Profile Photo (optional)
+                  <input hidden type="file" name="profilePhoto" accept="image/*" onChange={onChange} />
+                </Button>
+              </Grid>
+
+              {/* Tutoring Details */}
+              <Grid item xs={12}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>Tutoring Details</Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField select label="Skill or Subject to Teach" name="expertise" value={form.expertise} onChange={onChange} fullWidth required>
                   {expertiseOptions.map((opt) => (
                     <MenuItem key={opt} value={opt}>{opt}</MenuItem>
                   ))}
                 </TextField>
               </Grid>
-              <Grid item xs={12}>
-                <TextField label="Portfolio / LinkedIn (optional)" name="portfolio" value={form.portfolio} onChange={onChange} fullWidth />
+              <Grid item xs={12} md={6}>
+                <TextField select label="Teaching Method" name="teachingMethod" value={form.teachingMethod} onChange={onChange} fullWidth>
+                  {['Online', 'In-person', 'Both'].map((opt) => (
+                    <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Grid item xs={12}>
-                <TextField label="Short Bio" name="bio" value={form.bio} onChange={onChange} fullWidth multiline minRows={4} />
+                <TextField label="Short Description / Motivation" name="motivation" value={form.motivation} onChange={onChange} fullWidth multiline minRows={4} />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField label="Preferred Language(s)" name="languages" value={form.languages} onChange={onChange} fullWidth placeholder="e.g., English, French" />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button component="label" variant="outlined" fullWidth>
+                  Upload CV (PDF, DOC, DOCX)
+                  <input hidden type="file" name="cvFile" accept=".pdf,.doc,.docx" onChange={onChange} />
+                </Button>
+              </Grid>
+
+              {/* Optional */}
+              <Grid item xs={12}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>Optional</Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button component="label" variant="outlined" fullWidth>
+                  Upload Sample of Work (Photo or Video)
+                  <input hidden type="file" name="sampleFile" accept="image/*,video/*" onChange={onChange} />
+                </Button>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField label="Link to Portfolio / Social Media (optional)" name="portfolio" value={form.portfolio} onChange={onChange} fullWidth />
+              </Grid>
+
+              {/* Agreement */}
+              <Grid item xs={12}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>Agreement</Typography>
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel control={<Checkbox name="agree" checked={form.agree} onChange={onChange} />} label="I agree to be contacted about tutoring opportunities." />
+                <FormControlLabel control={<Checkbox name="agreeAccurate" checked={form.agreeAccurate} onChange={onChange} />} label="I confirm all information is accurate" />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel control={<Checkbox name="agreeTerms" checked={form.agreeTerms} onChange={onChange} />} label="I agree to the IremeCorner Tutor Terms" />
               </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" sx={{ px: 4, py: 1.5, fontWeight: 700 }}>Submit</Button>
