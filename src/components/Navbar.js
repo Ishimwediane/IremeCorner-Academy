@@ -13,7 +13,7 @@ import {
 import {
   Notifications as NotificationsIcon,
   Dashboard as DashboardIcon,
-  School as SchoolIcon,
+  School,
   AdminPanelSettings,
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
@@ -98,7 +98,7 @@ const Navbar = () => {
             mr: 4,
           }}
         >
-          <SchoolIcon sx={{ color: '#202F32', fontSize: 32 }} />
+          <School sx={{ color: '#202F32', fontSize: 32 }} />
           <Typography
             variant="h6"
             sx={{
@@ -201,7 +201,7 @@ const Navbar = () => {
                 <Button
                   component={Link}
                   to="/create-course"
-                  startIcon={<SchoolIcon />}
+                  startIcon={<School />}
                   sx={{
                     color: 'white',
                     textTransform: 'none',
