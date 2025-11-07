@@ -30,9 +30,9 @@ import {
   Visibility,
 } from '@mui/icons-material';
 import { useQuery } from 'react-query';
-import { useAuth } from '../context/AuthContext';
-import api from '../utils/api';
-import Calendar from '../components/Calendar';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api';
+import Calendar from '../../components/Calendar';
 import { format } from 'date-fns';
 
 const Dashboard = () => {
@@ -124,7 +124,7 @@ const Dashboard = () => {
                 </Typography>
                 <Button
                   component={Link}
-                  to="/courses"
+                  to="/learner/courses"
                   variant="outlined"
                   size="small"
                   sx={{
@@ -250,7 +250,7 @@ const Dashboard = () => {
                     <Typography>No courses in progress</Typography>
                     <Button
                       component={Link}
-                      to="/courses"
+                      to="/learner/courses"
                       variant="contained"
                       sx={{ mt: 2, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}
                     >

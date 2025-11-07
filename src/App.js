@@ -13,7 +13,8 @@ import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/learnerdashboard/Dashboard';
+import Course from './pages/learnerdashboard/Course';
 import Profile from './pages/Profile';
 import MyCourses from './pages/MyCourses';
 import LessonView from './pages/LessonView';
@@ -27,7 +28,7 @@ import About from './pages/About';
 
 function AppContent() {
   const location = useLocation();
-  const learnerPages = ['/dashboard', '/profile', '/my-courses'];
+  const learnerPages = ['/dashboard', '/profile', '/my-courses', '/learner/courses'];
   const isLearnerPage = learnerPages.some(path => location.pathname.startsWith(path)) || 
                      location.pathname.includes('/lessons/');
   const showDashboardNavbar = isLearnerPage;
@@ -47,6 +48,14 @@ function AppContent() {
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/learner/courses"
+            element={
+              <PrivateRoute>
+                <Course />
               </PrivateRoute>
             }
           />

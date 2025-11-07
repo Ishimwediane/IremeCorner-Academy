@@ -19,6 +19,10 @@ import {
   KeyboardArrowDown,
   Language as LanguageIcon,
   Search,
+  Assignment,
+  Quiz,
+  CardMembership,
+  Explore,
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../hooks/useNotifications';
@@ -40,7 +44,7 @@ const DashboardNavbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [categoryAnchor, setCategoryAnchor] = useState(null);
   const [languageAnchor, setLanguageAnchor] = useState(null);
-  const [businessAnchor, setBusinessAnchor] = useState(null);
+  const [learnerMenuAnchor, setLearnerMenuAnchor] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedLanguage, setSelectedLanguage] = useState('English');
@@ -70,12 +74,12 @@ const DashboardNavbar = () => {
     setLanguageAnchor(null);
   };
 
-  const handleBusinessClick = (event) => {
-    setBusinessAnchor(event.currentTarget);
+  const handleLearnerMenuClick = (event) => {
+    setLearnerMenuAnchor(event.currentTarget);
   };
 
-  const handleBusinessClose = () => {
-    setBusinessAnchor(null);
+  const handleLearnerMenuClose = () => {
+    setLearnerMenuAnchor(null);
   };
 
   const handleLogout = () => {
@@ -242,9 +246,9 @@ const DashboardNavbar = () => {
           />
         </Box>
 
-        {/* Business Team Dropdown */}
+        {/* Learner Menu Dropdown */}
         <Button
-          onClick={handleBusinessClick}
+          onClick={handleLearnerMenuClick}
           endIcon={<KeyboardArrowDown />}
           sx={{
             color: '#202F32',
@@ -255,16 +259,50 @@ const DashboardNavbar = () => {
             },
           }}
         >
-          Business team
+          My Learning
         </Button>
         <Menu
-          anchorEl={businessAnchor}
-          open={Boolean(businessAnchor)}
-          onClose={handleBusinessClose}
+          anchorEl={learnerMenuAnchor}
+          open={Boolean(learnerMenuAnchor)}
+          onClose={handleLearnerMenuClose}
         >
-          <MenuItem onClick={handleBusinessClose}>For Business</MenuItem>
-          <MenuItem onClick={handleBusinessClose}>Enterprise Solutions</MenuItem>
-          <MenuItem onClick={handleBusinessClose}>Contact Sales</MenuItem>
+          <MenuItem 
+            component={Link} 
+            to="/my-courses" 
+            onClick={handleLearnerMenuClose}
+          >
+            <School sx={{ mr: 1, fontSize: 20 }} />
+            My Courses
+          </MenuItem>
+          <MenuItem 
+            component={Link} 
+            to="/learner/courses" 
+            onClick={handleLearnerMenuClose}
+          >
+            <Explore sx={{ mr: 1, fontSize: 20 }} />
+            Explore Courses
+          </MenuItem>
+          <MenuItem 
+            onClick={handleLearnerMenuClose}
+            sx={{ opacity: 0.6 }}
+          >
+            <Assignment sx={{ mr: 1, fontSize: 20 }} />
+            My Assignments
+          </MenuItem>
+          <MenuItem 
+            onClick={handleLearnerMenuClose}
+            sx={{ opacity: 0.6 }}
+          >
+            <Quiz sx={{ mr: 1, fontSize: 20 }} />
+            Quiz
+          </MenuItem>
+          <MenuItem 
+            onClick={handleLearnerMenuClose}
+            sx={{ opacity: 0.6 }}
+          >
+            <CardMembership sx={{ mr: 1, fontSize: 20 }} />
+            Certificates
+          </MenuItem>
         </Menu>
 
         {/* Language Selector */}
