@@ -340,7 +340,7 @@ const DashboardNavbar = () => {
         {/* Notification Bell */}
         <IconButton
           component={Link}
-          to="/dashboard"
+          to="/learner/notifications"
           sx={{
             color: '#202F32',
             '&:hover': {
