@@ -19,14 +19,14 @@ const StepCard = ({ icon, title, description, corner }) => (
     {corner === 'tl' && (
       <Box sx={{ position: 'absolute', left: 14, top: 14, display: 'flex', gap: 1 }}>
         {[...Array(3)].map((_, i) => (
-          <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#A84836', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
+          <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
         ))}
       </Box>
     )}
     {corner === 'br' && (
       <Box sx={{ position: 'absolute', right: 14, bottom: 14, display: 'flex', gap: 1 }}>
         {[...Array(3)].map((_, i) => (
-          <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#A84836', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
+          <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
         ))}
       </Box>
     )}

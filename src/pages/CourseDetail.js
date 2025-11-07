@@ -147,8 +147,8 @@ const CourseDetail = () => {
       {/* Header section with brand gradient and meta */}
       <Box
         sx={{
-          bgcolor: 'rgba(168,72,54,0.08)',
-          background: 'linear-gradient(180deg, rgba(168,72,54,0.08) 0%, rgba(32,47,50,0.04) 100%)',
+          bgcolor: 'rgba(195,151,102,0.08)',
+          background: 'linear-gradient(180deg, rgba(195,151,102,0.08) 0%, rgba(32,47,50,0.04) 100%)',
           py: 6,
           mb: 2,
         }}
@@ -205,7 +205,7 @@ const CourseDetail = () => {
                 {/* play overlay icon style */}
                 <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Box sx={{ width: 64, height: 64, bgcolor: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}>
-                    <Box sx={{ width: 0, height: 0, borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderLeft: '18px solid #A84836', ml: 0.5 }} />
+                    <Box sx={{ width: 0, height: 0, borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderLeft: '18px solid #C39766', ml: 0.5 }} />
                   </Box>
                 </Box>
               </Box>

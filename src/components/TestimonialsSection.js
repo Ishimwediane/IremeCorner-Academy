@@ -37,12 +37,12 @@ const TestimonialsSection = () => {
               {/* Decorative sprinkles */}
               <Box sx={{ position: 'absolute', left: 16, top: 16, display: 'flex', gap: 1 }}>
                 {[...Array(3)].map((_, i) => (
-                  <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#A84836', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
+                  <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
                 ))}
               </Box>
               <Box sx={{ position: 'absolute', right: 16, bottom: 16, display: 'flex', gap: 1 }}>
                 {[...Array(3)].map((_, i) => (
-                  <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#A84836', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
+                  <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
                 ))}
               </Box>
             </Paper>
@@ -53,7 +53,7 @@ const TestimonialsSection = () => {
             <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {/* Rings */}
               <Box sx={{ position: 'absolute', width: 360, height: 360, borderRadius: '50%', border: '3px solid rgba(46,125,50,0.35)' }} />
-              <Box sx={{ position: 'absolute', width: 420, height: 420, borderRadius: '50%', border: '3px solid rgba(168,72,54,0.25)' }} />
+              <Box sx={{ position: 'absolute', width: 420, height: 420, borderRadius: '50%', border: '3px solid rgba(195,151,102,0.25)' }} />
 
               {/* Image */}
               <Box
@@ -64,7 +64,7 @@ const TestimonialsSection = () => {
               />
 
               {/* Small triangle accent */}
-              <Box sx={{ position: 'absolute', left: '20%', top: '48%', width: 0, height: 0, borderLeft: '14px solid transparent', borderRight: '14px solid transparent', borderBottom: '24px solid #A84836', transform: 'rotate(90deg)' }} />
+              <Box sx={{ position: 'absolute', left: '20%', top: '48%', width: 0, height: 0, borderLeft: '14px solid transparent', borderRight: '14px solid transparent', borderBottom: '24px solid #C39766', transform: 'rotate(90deg)' }} />
             </Box>
           </Grid>
         </Grid>
@@ -74,6 +74,8 @@ const TestimonialsSection = () => {
 };
 
 export default TestimonialsSection;
+
+
 
 
 

@@ -89,7 +89,7 @@ const DropInformation = () => {
 
   return (
     <Box>
-      <Box sx={{ bgcolor: 'rgba(168,72,54,0.08)', py: 6, mb: 4 }}>
+      <Box sx={{ bgcolor: 'rgba(195,151,102,0.08)', py: 6, mb: 4 }}>
         <Container>
           <Typography variant="h3" sx={{ fontWeight: 800, color: '#202F32', textAlign: 'center' }}>
             Become an Instructor
@@ -185,7 +185,7 @@ const DropInformation = () => {
                   label={
                     <span>
                       I agree to the{' '}
-                      <MuiLink component={Link} to="/terms" target="_blank" underline="hover" sx={{ color: '#A84836', fontWeight: 600 }}>
+                      <MuiLink component={Link} to="/terms" target="_blank" underline="hover" sx={{ color: '#C39766', fontWeight: 600 }}>
                         IremeCorner Tutor Terms
                       </MuiLink>
                     </span>

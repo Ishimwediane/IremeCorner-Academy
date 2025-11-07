@@ -34,24 +34,24 @@ const theme = createTheme({
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#A84836',
+      main: '#C39766',
       light: '#b86d5a',
       dark: '#7d3328',
       contrastText: '#ffffff',
     },
     // Remove other colors - use only primary and secondary
     success: {
-      main: '#A84836',
+      main: '#C39766',
       light: '#b86d5a',
       dark: '#7d3328',
     },
     error: {
-      main: '#A84836',
+      main: '#C39766',
       light: '#b86d5a',
       dark: '#7d3328',
     },
     warning: {
-      main: '#A84836',
+      main: '#C39766',
       light: '#b86d5a',
       dark: '#7d3328',
     },
@@ -66,7 +66,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '&.MuiButton-contained': {
-            backgroundColor: '#A84836',
+            backgroundColor: '#C39766',
             '&:hover': {
               backgroundColor: '#7d3328',
             },
@@ -90,6 +90,8 @@ root.render(
     </QueryClientProvider>
   </React.StrictMode>
 );
+
+
 
 
 

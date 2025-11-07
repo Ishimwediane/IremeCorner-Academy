@@ -14,8 +14,8 @@ const Footer = () => {
     <Box
       sx={{
         bgcolor: '#202F32',
-        borderTop: '4px solid #A84836',
-        borderBottom: '4px solid #A84836',
+        borderTop: '4px solid #C39766',
+        borderBottom: '4px solid #C39766',
         py: 5,
         mt: 8,
       }}
@@ -37,7 +37,7 @@ const Footer = () => {
             </Typography>
             <Typography
               sx={{
-                color: '#A84836',
+                color: '#C39766',
                 fontWeight: 600,
                 fontSize: '0.9rem',
                 mb: 3,
@@ -63,7 +63,7 @@ const Footer = () => {
                     width: 40,
                     height: 40,
                     '&:hover': {
-                      bgcolor: '#A84836',
+                      bgcolor: '#C39766',
                     },
                   }}
                 >
@@ -80,7 +80,7 @@ const Footer = () => {
                 component={Link}
                 to="/"
                 sx={{
-                  color: '#A84836',
+                  color: '#C39766',
                   fontWeight: 600,
                   textDecoration: 'none',
                   fontSize: '0.9rem',

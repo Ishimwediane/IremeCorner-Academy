@@ -77,12 +77,12 @@ const AllCoursesSection = () => {
               onClick={() => setActiveCategory(cat)}
               color={activeCategory === cat ? 'default' : 'default'}
               sx={{
-                bgcolor: activeCategory === cat ? 'rgba(168,72,54,0.15)' : 'white',
+                bgcolor: activeCategory === cat ? 'rgba(195,151,102,0.15)' : 'white',
                 color: '#202F32',
                 fontWeight: 600,
                 px: 1,
                 height: 36,
-                border: activeCategory === cat ? '1px solid #A84836' : '1px solid rgba(32,47,50,0.12)',
+                border: activeCategory === cat ? '1px solid #C39766' : '1px solid rgba(32,47,50,0.12)',
               }}
             />
           ))}
@@ -134,7 +134,7 @@ const AllCoursesSection = () => {
                     size="small"
                     component={Link}
                     to={`/courses/${course._id}`}
-                    sx={{ color: '#A84836', fontWeight: 600 }}
+                    sx={{ color: '#C39766', fontWeight: 600 }}
                   >
                     View Details
                   </Button>
@@ -149,6 +149,8 @@ const AllCoursesSection = () => {
 };
 
 export default AllCoursesSection;
+
+
 
 
 

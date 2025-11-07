@@ -41,7 +41,7 @@ const WelcomeSection = () => {
             <Typography variant="h3" sx={{ color: '#ffffff', fontWeight: 800, mb: 2 }}>
               Learn & Grow Your Skills
               <br />
-              From <Box component="span" sx={{ color: '#A84836' }}>Anywhere</Box>
+              From <Box component="span" sx={{ color: '#C39766' }}>Anywhere</Box>
             </Typography>
             <Box sx={{ width: 90, height: 6, bgcolor: '#2E7D32', borderRadius: 3, mb: 2 }} />
             <Typography sx={{ color: 'rgba(255,255,255,0.9)', mb: 3, lineHeight: 1.8 }}>
@@ -57,7 +57,7 @@ const WelcomeSection = () => {
             </Stack>
             <Button
               variant="contained"
-              sx={{ mt: 3, px: 3.5, py: 1.25, borderRadius: '10px', fontWeight: 700, bgcolor: '#A84836', '&:hover': { bgcolor: '#8f3b2d' } }}
+              sx={{ mt: 3, px: 3.5, py: 1.25, borderRadius: '10px', fontWeight: 700, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}
               href="/register"
             >
               Join Now

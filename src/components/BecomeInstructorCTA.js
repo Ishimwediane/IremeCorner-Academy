@@ -79,12 +79,12 @@ const BecomeInstructorCTA = () => {
           {/* Sprinkles */}
           <Box sx={{ position: 'absolute', left: 20, bottom: 16, display: 'flex', gap: 1 }}>
             {[...Array(3)].map((_, i) => (
-              <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#A84836', borderRadius: '6px', opacity: 0.4, transform: `rotate(${20 + i * 10}deg)` }} />
+              <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.4, transform: `rotate(${20 + i * 10}deg)` }} />
             ))}
           </Box>
           <Box sx={{ position: 'absolute', right: 20, top: 16, display: 'flex', gap: 1 }}>
             {[...Array(3)].map((_, i) => (
-              <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#A84836', borderRadius: '6px', opacity: 0.4, transform: `rotate(${20 + i * 10}deg)` }} />
+              <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.4, transform: `rotate(${20 + i * 10}deg)` }} />
             ))}
           </Box>
         </Box>

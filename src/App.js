@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/Navbar';
+import DashboardNavbar from './components/DashboardNavbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
@@ -24,12 +25,17 @@ import TermsAndConditions from './pages/TermsAndConditions';
 import Contact from './pages/Contact';
 import About from './pages/About';
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const learnerPages = ['/dashboard', '/profile', '/my-courses'];
+  const isLearnerPage = learnerPages.some(path => location.pathname.startsWith(path)) || 
+                     location.pathname.includes('/lessons/');
+  const showDashboardNavbar = isLearnerPage;
+
   return (
-    <AuthProvider>
-      <div className="App">
-        <Navbar />
-        <Box sx={{ pt: '70px' }}>
+    <div className="App">
+      {showDashboardNavbar ? <DashboardNavbar /> : <Navbar />}
+      <Box sx={{ pt: showDashboardNavbar ? '80px' : '70px' }}>
           <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Auth />} />
@@ -112,6 +118,13 @@ function App() {
           pauseOnHover
         />
       </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
     </AuthProvider>
   );
 }

@@ -72,7 +72,7 @@ const Contact = () => {
               xs={12}
               md={5}
               sx={{
-                bgcolor: '#A84836',
+                bgcolor: '#C39766',
                 color: 'white',
                 p: { xs: 4, md: 6 },
                 display: 'flex',
@@ -180,10 +180,10 @@ const Contact = () => {
                           borderColor: 'rgba(32,47,50,0.2)',
                         },
                         '&:hover fieldset': {
-                          borderColor: '#A84836',
+                          borderColor: '#C39766',
                         },
                         '&.Mui-focused fieldset': {
-                          borderColor: '#A84836',
+                          borderColor: '#C39766',
                         },
                       },
                     }}
@@ -206,10 +206,10 @@ const Contact = () => {
                           borderColor: 'rgba(32,47,50,0.2)',
                         },
                         '&:hover fieldset': {
-                          borderColor: '#A84836',
+                          borderColor: '#C39766',
                         },
                         '&.Mui-focused fieldset': {
-                          borderColor: '#A84836',
+                          borderColor: '#C39766',
                         },
                       },
                     }}
@@ -233,10 +233,10 @@ const Contact = () => {
                           borderColor: 'rgba(32,47,50,0.2)',
                         },
                         '&:hover fieldset': {
-                          borderColor: '#A84836',
+                          borderColor: '#C39766',
                         },
                         '&.Mui-focused fieldset': {
-                          borderColor: '#A84836',
+                          borderColor: '#C39766',
                         },
                       },
                     }}
@@ -249,7 +249,7 @@ const Contact = () => {
                   variant="contained"
                   disabled={isSubmitting}
                   sx={{
-                    bgcolor: '#A84836',
+                    bgcolor: '#C39766',
                     color: 'white',
                     px: 5,
                     py: 1.5,
@@ -258,10 +258,10 @@ const Contact = () => {
                     fontSize: '1rem',
                     textTransform: 'uppercase',
                     '&:hover': {
-                      bgcolor: '#8f3b2d',
+                      bgcolor: '#A67A52',
                     },
                     '&:disabled': {
-                      bgcolor: 'rgba(168,72,54,0.5)',
+                      bgcolor: 'rgba(195,151,102,0.5)',
                     },
                   }}
                 >
@@ -277,4 +277,6 @@ const Contact = () => {
 };
 
 export default Contact;
+
+
 

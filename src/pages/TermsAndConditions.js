@@ -17,7 +17,7 @@ const TermsAndConditions = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #202F32 0%, rgba(32,47,50,0.95) 50%, rgba(168,72,54,0.1) 100%)',
+        background: 'linear-gradient(135deg, #202F32 0%, rgba(32,47,50,0.95) 50%, rgba(195,151,102,0.1) 100%)',
         py: 6,
       }}
     >
@@ -35,7 +35,7 @@ const TermsAndConditions = () => {
             <Box component="span" sx={{ color: 'rgba(255,255,255,0.95)' }}>
               Terms of{' '}
             </Box>
-            <Box component="span" sx={{ color: '#A84836' }}>
+            <Box component="span" sx={{ color: '#C39766' }}>
               Service
             </Box>
           </Typography>
@@ -70,7 +70,7 @@ const TermsAndConditions = () => {
                     borderRadius: '8px',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
-                    bgcolor: activeSection === section.id ? 'rgba(168,72,54,0.2)' : 'transparent',
+                    bgcolor: activeSection === section.id ? 'rgba(195,151,102,0.2)' : 'transparent',
                     '&:hover': {
                       bgcolor: 'rgba(255,255,255,0.05)',
                     },
@@ -85,7 +85,7 @@ const TermsAndConditions = () => {
                         transform: 'translateY(-50%)',
                         width: 4,
                         height: '60%',
-                        bgcolor: '#A84836',
+                        bgcolor: '#C39766',
                         borderRadius: '0 4px 4px 0',
                       }}
                     />

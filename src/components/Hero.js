@@ -51,7 +51,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
               height: '460px',
               right: '40px',
               top: '32%',
-              backgroundColor: '#A84836',
+              backgroundColor: '#C39766',
               opacity: 0.18,
               transform: 'rotate(-15deg)',
               borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
@@ -75,7 +75,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
             <Chip
               label="eLearning Platform"
               sx={{
-                bgcolor: '#A84836',
+                bgcolor: '#C39766',
                 color: 'white',
                 fontWeight: 600,
                 mb: 2.5,
@@ -96,7 +96,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
               }}
             >
               Smart Learning{' '}
-              <Box component="span" sx={{ color: '#A84836', display: 'inline-block' }}>
+              <Box component="span" sx={{ color: '#C39766', display: 'inline-block' }}>
                 Deeper & More
               </Box>
               <br />
@@ -143,7 +143,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
                       width: '36px',
                       height: '36px',
                       borderRadius: '50%',
-                      bgcolor: '#A84836',
+                      bgcolor: '#C39766',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -186,7 +186,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
                 left: '-10%',
                 width: '46px',
                 height: '46px',
-                bgcolor: '#A84836',
+                bgcolor: '#C39766',
                 borderRadius: '12px',
                 display: 'flex',
                 alignItems: 'center',
@@ -205,7 +205,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
                 right: '4%',
                 width: 96,
                 height: 96,
-                bgcolor: '#A84836',
+                bgcolor: '#C39766',
                 color: 'white',
                 borderRadius: '50%',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
@@ -229,8 +229,8 @@ const Hero = ({ user, totalCourses = 0 }) => {
             <Box sx={{ position: 'absolute', top: '18%', right: '10%', width: 60, height: 60, borderRight: '3px solid rgba(46,125,50,0.5)', borderBottom: '3px solid rgba(46,125,50,0.5)', borderRadius: '0 0 60px 0', transform: 'rotate(20deg)', zIndex: 3 }} />
 
             {/* Small Dots */}
-            <Box sx={{ position: 'absolute', top: '6%', left: '22%', width: '10px', height: '10px', bgcolor: '#A84836', borderRadius: '50%', zIndex: 4 }} />
-            <Box sx={{ position: 'absolute', top: '16%', right: '26%', width: '10px', height: '10px', bgcolor: '#A84836', borderRadius: '50%', zIndex: 4 }} />
+            <Box sx={{ position: 'absolute', top: '6%', left: '22%', width: '10px', height: '10px', bgcolor: '#C39766', borderRadius: '50%', zIndex: 4 }} />
+            <Box sx={{ position: 'absolute', top: '16%', right: '26%', width: '10px', height: '10px', bgcolor: '#C39766', borderRadius: '50%', zIndex: 4 }} />
           </Box>
         </Container>
       </Box>

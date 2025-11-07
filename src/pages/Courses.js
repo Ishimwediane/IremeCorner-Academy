@@ -253,8 +253,8 @@ const Courses = () => {
       {/* Hero Section */}
       <Box
         sx={{
-          bgcolor: 'rgba(168,72,54,0.08)',
-          background: 'linear-gradient(135deg, rgba(168,72,54,0.1) 0%, rgba(32,47,50,0.05) 100%)',
+          bgcolor: 'rgba(195,151,102,0.08)',
+          background: 'linear-gradient(135deg, rgba(195,151,102,0.1) 0%, rgba(32,47,50,0.05) 100%)',
           py: 8,
           mb: 6,
         }}
@@ -295,8 +295,8 @@ const Courses = () => {
                 size="large"
                 endIcon={<ArrowForward />}
                 sx={{
-                  bgcolor: '#A84836',
-                  '&:hover': { bgcolor: '#8f3b2d' },
+                  bgcolor: '#C39766',
+                  '&:hover': { bgcolor: '#A67A52' },
                   px: 4,
                   py: 1.5,
                   borderRadius: '8px',
@@ -311,15 +311,15 @@ const Courses = () => {
                 variant="outlined"
                 size="large"
                 sx={{
-                  borderColor: '#A84836',
-                  color: '#A84836',
+                  borderColor: '#C39766',
+                  color: '#C39766',
                   px: 4,
                   py: 1.5,
                   borderRadius: '8px',
                   fontWeight: 600,
                   '&:hover': {
-                    borderColor: '#8f3b2d',
-                    bgcolor: 'rgba(168,72,54,0.05)',
+                    borderColor: '#A67A52',
+                    bgcolor: 'rgba(195,151,102,0.05)',
                   },
                 }}
               >
@@ -433,7 +433,7 @@ const Courses = () => {
                             sx={{
                               color: '#202F32',
                               '&.Mui-checked': {
-                                color: '#A84836',
+                                color: '#C39766',
                               },
                             }}
                           />
@@ -452,14 +452,14 @@ const Courses = () => {
                       component="button"
                       onClick={() => setShowMoreCategories(!showMoreCategories)}
                       sx={{
-                        color: '#A84836',
+                        color: '#C39766',
                         textDecoration: 'underline',
                         fontSize: '0.9rem',
                         mt: 1,
                         cursor: 'pointer',
                         border: 'none',
                         background: 'none',
-                        '&:hover': { color: '#8f3b2d' },
+                        '&:hover': { color: '#A67A52' },
                       }}
                     >
                       {showMoreCategories ? 'Show less' : 'Show more'}
@@ -492,7 +492,7 @@ const Courses = () => {
                             sx={{
                               color: '#202F32',
                               '&.Mui-checked': {
-                                color: '#A84836',
+                                color: '#C39766',
                               },
                             }}
                           />
@@ -511,14 +511,14 @@ const Courses = () => {
                       component="button"
                       onClick={() => setShowMoreLevels(!showMoreLevels)}
                       sx={{
-                        color: '#A84836',
+                        color: '#C39766',
                         textDecoration: 'underline',
                         fontSize: '0.9rem',
                         mt: 1,
                         cursor: 'pointer',
                         border: 'none',
                         background: 'none',
-                        '&:hover': { color: '#8f3b2d' },
+                        '&:hover': { color: '#A67A52' },
                       }}
                     >
                       {showMoreLevels ? 'Show less' : 'Show more'}
@@ -551,7 +551,7 @@ const Courses = () => {
                             sx={{
                               color: '#202F32',
                               '&.Mui-checked': {
-                                color: '#A84836',
+                                color: '#C39766',
                               },
                             }}
                           />
@@ -570,14 +570,14 @@ const Courses = () => {
                       component="button"
                       onClick={() => setShowMoreLanguages(!showMoreLanguages)}
                       sx={{
-                        color: '#A84836',
+                        color: '#C39766',
                         textDecoration: 'underline',
                         fontSize: '0.9rem',
                         mt: 1,
                         cursor: 'pointer',
                         border: 'none',
                         background: 'none',
-                        '&:hover': { color: '#8f3b2d' },
+                        '&:hover': { color: '#A67A52' },
                       }}
                     >
                       {showMoreLanguages ? 'Show less' : 'Show more'}
@@ -608,7 +608,7 @@ const Courses = () => {
                             sx={{
                               color: '#202F32',
                               '&.Mui-checked': {
-                                color: '#A84836',
+                                color: '#C39766',
                               },
                             }}
                           />
@@ -647,7 +647,7 @@ const Courses = () => {
                             sx={{
                               color: '#202F32',
                               '&.Mui-checked': {
-                                color: '#A84836',
+                                color: '#C39766',
                               },
                             }}
                           />
@@ -686,7 +686,7 @@ const Courses = () => {
                             sx={{
                               color: '#202F32',
                               '&.Mui-checked': {
-                                color: '#A84836',
+                                color: '#C39766',
                               },
                             }}
                           />
@@ -725,7 +725,7 @@ const Courses = () => {
                             sx={{
                               color: '#202F32',
                               '&.Mui-checked': {
-                                color: '#A84836',
+                                color: '#C39766',
                               },
                             }}
                           />
@@ -764,7 +764,7 @@ const Courses = () => {
                             sx={{
                               color: '#202F32',
                               '&.Mui-checked': {
-                                color: '#A84836',
+                                color: '#C39766',
                               },
                             }}
                           />
@@ -803,8 +803,8 @@ const Courses = () => {
                       color: '#202F32',
                       mt: 2,
                       '&:hover': {
-                        borderColor: '#A84836',
-                        bgcolor: 'rgba(168,72,54,0.05)',
+                        borderColor: '#C39766',
+                        bgcolor: 'rgba(195,151,102,0.05)',
                       },
                     }}
                   >
@@ -836,8 +836,8 @@ const Courses = () => {
                 to="/register"
                 variant="contained"
                 sx={{
-                  bgcolor: '#A84836',
-                  '&:hover': { bgcolor: '#8f3b2d' },
+                  bgcolor: '#C39766',
+                  '&:hover': { bgcolor: '#A67A52' },
                 }}
               >
                 Create Account to Get Started
@@ -888,8 +888,8 @@ const Courses = () => {
                         label={course.category}
                         size="small"
                         sx={{
-                          bgcolor: 'rgba(168,72,54,0.1)',
-                          color: '#A84836',
+                          bgcolor: 'rgba(195,151,102,0.1)',
+                          color: '#C39766',
                           fontWeight: 600,
                         }}
                       />
@@ -952,8 +952,8 @@ const Courses = () => {
                       component={Link}
                       to={`/courses/${course._id}`}
                       sx={{
-                        bgcolor: '#A84836',
-                        '&:hover': { bgcolor: '#8f3b2d' },
+                        bgcolor: '#C39766',
+                        '&:hover': { bgcolor: '#A67A52' },
                         fontWeight: 600,
                         borderRadius: '8px',
                       }}
@@ -969,73 +969,7 @@ const Courses = () => {
           </Grid>
         </Grid>
 
-        {/* Become Tutor CTA Section */}
-        {!user && (
-          <Box
-            sx={{
-              mt: 8,
-              bgcolor: '#202F32',
-              borderRadius: '16px',
-              p: { xs: 4, md: 6 },
-              textAlign: 'center',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            <Box
-              sx={{
-                position: 'absolute',
-                top: -50,
-                right: -50,
-                width: 200,
-                height: 200,
-                bgcolor: 'rgba(168,72,54,0.1)',
-                borderRadius: '50%',
-              }}
-            />
-            <Box sx={{ position: 'relative', zIndex: 1 }}>
-              <School sx={{ fontSize: 64, color: '#A84836', mb: 2 }} />
-              <Typography
-                variant="h4"
-                sx={{
-                  color: 'white',
-                  fontWeight: 800,
-                  mb: 2,
-                }}
-              >
-                Share Your Knowledge
-              </Typography>
-              <Typography
-                sx={{
-                  color: 'rgba(255,255,255,0.9)',
-                  mb: 4,
-                  maxWidth: 600,
-                  mx: 'auto',
-                  fontSize: '1.1rem',
-                }}
-              >
-                Become a tutor and help others learn. Create courses, share your expertise, and build your teaching career with IremeCorner Academy.
-              </Typography>
-              <Button
-                component={Link}
-                to="/drop-information"
-                variant="contained"
-                size="large"
-                endIcon={<ArrowForward />}
-                sx={{
-                  bgcolor: '#A84836',
-                  '&:hover': { bgcolor: '#8f3b2d' },
-                  px: 4,
-                  py: 1.5,
-                  borderRadius: '8px',
-                  fontWeight: 700,
-                }}
-              >
-                Become a Tutor
-              </Button>
-            </Box>
-          </Box>
-        )}
+        
       </Container>
     </Box>
   );

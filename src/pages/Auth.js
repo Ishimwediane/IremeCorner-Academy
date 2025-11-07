@@ -101,7 +101,7 @@ const Auth = () => {
           <Box
             sx={{
               flex: 1,
-              background: 'linear-gradient(180deg, rgba(168,72,54,0.3) 0%, rgba(32,47,50,0.5) 100%)',
+              background: 'linear-gradient(180deg, rgba(195,151,102,0.3) 0%, rgba(32,47,50,0.5) 100%)',
               position: 'relative',
               display: { xs: 'none', md: 'flex' },
               flexDirection: 'column',
@@ -135,9 +135,9 @@ const Auth = () => {
             </Box>
 
             {/* Abstract Shapes */}
-            <Box sx={{ position: 'absolute', top: 60, right: 40, width: 80, height: 80, bgcolor: '#A84836', borderRadius: '50%', opacity: 0.3 }} />
+            <Box sx={{ position: 'absolute', top: 60, right: 40, width: 80, height: 80, bgcolor: '#C39766', borderRadius: '50%', opacity: 0.3 }} />
             <Box sx={{ position: 'absolute', top: 120, left: 20, width: 120, height: 40, bgcolor: '#2E7D32', borderRadius: '20px', opacity: 0.25, transform: 'rotate(-15deg)' }} />
-            <Box sx={{ position: 'absolute', bottom: 100, right: 60, width: 100, height: 100, bgcolor: '#A84836', borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%', opacity: 0.2 }} />
+            <Box sx={{ position: 'absolute', bottom: 100, right: 60, width: 100, height: 100, bgcolor: '#C39766', borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%', opacity: 0.2 }} />
 
             {/* Copyright */}
             <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', zIndex: 2 }}>
@@ -266,8 +266,8 @@ const Auth = () => {
                   mb: 2,
                   py: 1.5,
                   borderRadius: '8px',
-                  bgcolor: '#A84836',
-                  '&:hover': { bgcolor: '#8f3b2d' },
+                  bgcolor: '#C39766',
+                  '&:hover': { bgcolor: '#A67A52' },
                   fontWeight: 700,
                 }}
                 disabled={loading}
@@ -277,7 +277,7 @@ const Auth = () => {
 
               {tab === 1 && (
                 <Box textAlign="center" sx={{ mb: 3 }}>
-                  <Typography variant="body2" component={Link} to="/register" onClick={() => setTab(0)} sx={{ color: '#A84836', textDecoration: 'none' }}>
+                  <Typography variant="body2" component={Link} to="/register" onClick={() => setTab(0)} sx={{ color: '#C39766', textDecoration: 'none' }}>
                     I have an Account?
                   </Typography>
                 </Box>

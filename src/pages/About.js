@@ -59,7 +59,7 @@ const About = () => {
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', maxWidth: 900, mx: 'auto' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5, mb: 4 }}>
-              <Home sx={{ fontSize: 40, color: '#A84836' }} />
+              <Home sx={{ fontSize: 40, color: '#C39766' }} />
               <Typography
                 variant="h2"
                 sx={{
@@ -75,7 +75,7 @@ const About = () => {
               variant="h3"
               sx={{
                 fontWeight: 700,
-                color: '#A84836',
+                color: '#C39766',
                 mb: 4,
                 fontSize: { xs: '1.75rem', md: '2.5rem' },
               }}
@@ -207,14 +207,14 @@ const About = () => {
         {/* Showcase Your Work Section */}
         <Box
           sx={{
-            bgcolor: 'rgba(168,72,54,0.08)',
+            bgcolor: 'rgba(195,151,102,0.08)',
             borderRadius: '24px',
             p: { xs: 5, md: 7 },
             mb: { xs: 8, md: 10 },
             textAlign: 'center',
           }}
         >
-          <ShoppingBag sx={{ fontSize: 64, color: '#A84836', mb: 3 }} />
+          <ShoppingBag sx={{ fontSize: 64, color: '#C39766', mb: 3 }} />
           <Typography
             variant="h3"
             sx={{
@@ -261,7 +261,7 @@ const About = () => {
             color: 'white',
           }}
         >
-          <School sx={{ fontSize: 64, color: '#A84836', mb: 3 }} />
+          <School sx={{ fontSize: 64, color: '#C39766', mb: 3 }} />
           <Typography
             variant="h3"
             sx={{
@@ -295,7 +295,7 @@ const About = () => {
               size="large"
               startIcon={<School />}
               sx={{
-                bgcolor: '#A84836',
+                bgcolor: '#C39766',
                 color: 'white',
                 px: 5,
                 py: 1.75,
@@ -303,10 +303,10 @@ const About = () => {
                 fontWeight: 700,
                 fontSize: '1.05rem',
                 textTransform: 'none',
-                boxShadow: '0 4px 14px rgba(168,72,54,0.3)',
+                boxShadow: '0 4px 14px rgba(195,151,102,0.3)',
                 '&:hover': {
-                  bgcolor: '#8f3b2d',
-                  boxShadow: '0 6px 20px rgba(168,72,54,0.4)',
+                  bgcolor: '#A67A52',
+                  boxShadow: '0 6px 20px rgba(195,151,102,0.4)',
                 },
               }}
             >
@@ -329,8 +329,8 @@ const About = () => {
                 fontSize: '1.05rem',
                 textTransform: 'none',
                 '&:hover': {
-                  borderColor: '#A84836',
-                  bgcolor: 'rgba(168,72,54,0.15)',
+                  borderColor: '#C39766',
+                  bgcolor: 'rgba(195,151,102,0.15)',
                   borderWidth: 2,
                 },
               }}

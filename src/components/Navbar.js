@@ -74,7 +74,7 @@ const Navbar = () => {
           top: 0,
           width: '35%',
           height: '100%',
-          bgcolor: '#A84836',
+          bgcolor: '#C39766',
           zIndex: 0,
           clipPath: 'polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)',
         }}
@@ -134,7 +134,7 @@ const Navbar = () => {
               color: '#202F32',
               fontWeight: 500,
               textTransform: 'none',
-              '&:hover': { color: '#A84836' },
+              '&:hover': { color: '#C39766' },
             }}
           >
             Home
@@ -146,7 +146,7 @@ const Navbar = () => {
               color: '#202F32',
               fontWeight: 500,
               textTransform: 'none',
-              '&:hover': { color: '#A84836' },
+              '&:hover': { color: '#C39766' },
             }}
           >
             Courses
@@ -158,7 +158,7 @@ const Navbar = () => {
               color: '#202F32',
               fontWeight: 500,
               textTransform: 'none',
-              '&:hover': { color: '#A84836' },
+              '&:hover': { color: '#C39766' },
             }}
           >
             About Us
@@ -170,7 +170,7 @@ const Navbar = () => {
               color: '#202F32',
               fontWeight: 500,
               textTransform: 'none',
-              '&:hover': { color: '#A84836' },
+              '&:hover': { color: '#C39766' },
             }}
           >
             Contact Us
