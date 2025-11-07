@@ -44,6 +44,38 @@ export const useMarkNotificationRead = () => {
   );
 };
 
+export const useMarkAllNotificationsRead = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async () => {
+      const response = await api.put('/notifications/mark-all-read');
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('notifications');
+      },
+    }
+  );
+};
+
+export const useDeleteNotification = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (id) => {
+      const response = await api.delete(`/notifications/${id}`);
+      return response.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('notifications');
+      },
+    }
+  );
+};
+
 
 
 
