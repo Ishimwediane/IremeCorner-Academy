@@ -91,11 +91,8 @@ const Dashboard = () => {
     return events;
   }, [inProgressCourses]);
 
-  // Get user's first and last name
+  // Get user's name
   const userName = user?.name || 'User';
-  const nameParts = userName.split(' ');
-  const firstName = nameParts[0] || '';
-  const lastName = nameParts.slice(1).join(' ') || '';
 
   // Color scheme for course cards
   const cardColors = [
@@ -540,67 +537,6 @@ const Dashboard = () => {
                       </IconButton>
                     </Box>
                   </Box>
-
-                  {/* Detailed Information */}
-                  <Box sx={{ p: 3 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 2 }}>
-                      Detailed Information
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                          First Name:
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
-                            {firstName}
-                          </Typography>
-                          <IconButton size="small" sx={{ p: 0.5 }}>
-                            <Edit fontSize="small" sx={{ fontSize: 14, color: 'rgba(32,47,50,0.5)' }} />
-                          </IconButton>
-                        </Box>
-                      </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                          Last Name:
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
-                            {lastName}
-                          </Typography>
-                          <IconButton size="small" sx={{ p: 0.5 }}>
-                            <Edit fontSize="small" sx={{ fontSize: 14, color: 'rgba(32,47,50,0.5)' }} />
-                          </IconButton>
-                        </Box>
-                      </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                          Email:
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
-                            {user?.email || 'N/A'}
-                          </Typography>
-                          <IconButton size="small" sx={{ p: 0.5 }}>
-                            <Edit fontSize="small" sx={{ fontSize: 14, color: 'rgba(32,47,50,0.5)' }} />
-                          </IconButton>
-                        </Box>
-                      </Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                          Phone Number:
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
-                            {user?.phone || 'N/A'}
-                          </Typography>
-                          <IconButton size="small" sx={{ p: 0.5 }}>
-                            <Edit fontSize="small" sx={{ fontSize: 14, color: 'rgba(32,47,50,0.5)' }} />
-                          </IconButton>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Box>
                 </CardContent>
               </Card>
             </Grid>
@@ -617,3 +553,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
