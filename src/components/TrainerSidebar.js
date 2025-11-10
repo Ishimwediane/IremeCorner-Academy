@@ -62,7 +62,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
 
   const groups = useMemo(() => ([
     {
-      header: { text: 'Dashboard', icon: <DashboardIcon /> },
+      header: { text: 'Dashboard', icon: <DashboardIcon />, path: '/trainer/dashboard' },
       // No children; we will render a single child item that links to dashboard
       children: [],
       key: 'dashboard',
@@ -87,15 +87,15 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
       key: 'students',
     },
     {
-      header: { text: 'Earnings', icon: <EarningsIcon /> },
+      header: { text: 'Earnings', icon: <EarningsIcon />, path: '/trainer/earnings' },
       children: [], key: 'earnings',
     },
     {
-      header: { text: 'Reports', icon: <ReportsIcon /> },
+      header: { text: 'Reports', icon: <ReportsIcon />, path: '/trainer/reports' },
       children: [], key: 'reports',
     },
     {
-      header: { text: 'Settings', icon: <SettingsIcon /> },
+      header: { text: 'Settings', icon: <SettingsIcon />, path: '/trainer/settings' },
       children: [], key: 'settings',
     },
   ]), []);
@@ -199,10 +199,12 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
           },
         }}
       >
-        <List sx={{ px: isExpanded ? 2 : 1, position: 'relative' }}>
+        <List sx={{ pl: isExpanded ? 2 : 1, pr: 0, position: 'relative' }}>
           {groups.map((group) => {
-            const groupActive = group.children.some(c => location.pathname.startsWith(c.path)) || (group.key === 'dashboard' && location.pathname.startsWith('/trainer/dashboard'));
+            const groupActive = group.children.some(c => location.pathname.startsWith(c.path)) || (group.header.path ? location.pathname.startsWith(group.header.path) : false);
             const showChildren = isExpanded && openGroups[group.key] && group.children.length > 0;
+            const tintedHeader = (group.key === 'courses' || group.key === 'students') && groupActive;
+            const isLinkHeader = group.children.length === 0 && !!group.header.path;
 
             return (
               <Box key={group.key} sx={{ mb: 0.5 }}>
@@ -214,18 +216,34 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
                   }}
                 >
                   <ListItemButton
-                    onClick={() => group.children.length > 0 ? toggleGroup(group.key) : navigate('/trainer/dashboard')}
+                    onClick={() => group.children.length > 0 ? toggleGroup(group.key) : (group.header.path && navigate(group.header.path))}
                     sx={{
                       borderRadius: '999px',
-                      bgcolor: groupActive ? 'white' : 'transparent',
-                      color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)',
-                      '&:hover': { bgcolor: 'white', color: '#202F32', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' },
+                      // Link headers (Dashboard/Earnings/Reports/Settings) use white pill when active/hover
+                      bgcolor: isLinkHeader ? (groupActive ? 'white' : 'transparent') : (tintedHeader ? 'rgba(195,151,102,0.15)' : 'transparent'),
+                      color: isLinkHeader ? (groupActive ? '#202F32' : 'rgba(255,255,255,0.95)') : 'rgba(255,255,255,0.95)',
+                      '&:hover': isLinkHeader
+                        ? { bgcolor: 'white', color: '#202F32', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }
+                        : { bgcolor: tintedHeader ? 'rgba(195,151,102,0.22)' : 'rgba(255,255,255,0.08)' },
                       py: 1.25,
                       px: isExpanded ? 2 : 1.25,
                       width: '100%',
-                  }}
-                 >
-                    <ListItemIcon sx={{ color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)', minWidth: 36 }}>
+                      position: 'relative',
+                      mr: isLinkHeader && (groupActive) ? '-16px' : 0,
+                      '&::after': isLinkHeader && (groupActive) ? {
+                        content: '""',
+                        position: 'absolute',
+                        right: '-16px',
+                        top: 0,
+                        bottom: 0,
+                        width: '16px',
+                        background: 'white',
+                        borderTopRightRadius: '999px',
+                        borderBottomRightRadius: '999px',
+                      } : {},
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: isLinkHeader && groupActive ? '#202F32' : 'rgba(255,255,255,0.9)', minWidth: 36 }}>
                       {group.header.icon}
                     </ListItemIcon>
                     {isExpanded && (
@@ -262,6 +280,20 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
                             py: 1,
                             px: isExpanded ? 2 : 1.25,
                             width: '100%',
+                            position: 'relative',
+                            // Extend white pill to the right edge with a rounded end similar to the reference
+                            mr: isActive ? '-16px' : 0,
+                            '&::after': isActive ? {
+                              content: '""',
+                              position: 'absolute',
+                              right: '-16px',
+                              top: 0,
+                              bottom: 0,
+                              width: '16px',
+                              background: 'white',
+                              borderTopRightRadius: '999px',
+                              borderBottomRightRadius: '999px',
+                            } : {},
                           }}>
                             <ListItemIcon sx={{ minWidth: 30, color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)' }}>
                               {child.icon}
