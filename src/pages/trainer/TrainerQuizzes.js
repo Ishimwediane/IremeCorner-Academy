@@ -30,7 +30,7 @@ import api from '../../utils/api';
 
 const dayCols = 13;
 
-const PlannerHeader = ({ startDate, setStartDate, onCreate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => (
+const PlannerHeader = ({ startDate, setStartDate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => (
   <Paper sx={{ p: 2, borderRadius: '16px', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
     <Button startIcon={<FilterIcon />} sx={{ textTransform: 'none' }}>Filter Settings</Button>
     <Select size="small" value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)} displayEmpty sx={{ ml: 1, minWidth: 200, bgcolor: 'rgba(0,0,0,0.02)', borderRadius: '10px' }}>
@@ -53,7 +53,6 @@ const PlannerHeader = ({ startDate, setStartDate, onCreate, courseOptions, selec
       <Button variant={viewMode === 'week' ? 'contained' : 'outlined'} onClick={() => setViewMode('week')}>Week</Button>
       <Button variant={viewMode === 'month' ? 'contained' : 'outlined'} onClick={() => setViewMode('month')}>Month</Button>
     </ButtonGroup>
-    <Button variant="contained" startIcon={<AddIcon />} onClick={onCreate} sx={{ ml: 2, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Create</Button>
   </Paper>
 );
 
@@ -194,14 +193,14 @@ const TrainerQuizzes = () => {
   return (
     <TrainerLayout title="Quiz Management">
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
-        <Tab label="Planner" />
+        <Tab label="Planner (Schedule)" />
         <Tab label="Attempts" />
         <Tab label="All Quizzes" />
       </Tabs>
 
       {tab === 0 && (
         <>
-          <PlannerHeader startDate={startDate} setStartDate={setStartDate} onCreate={() => setOpenCreate(true)} courseOptions={courses} selectedCourse={selectedCourse} setSelectedCourse={setSelectedCourse} viewMode={viewMode} setViewMode={setViewMode} days={days} />
+          <PlannerHeader startDate={startDate} setStartDate={setStartDate} courseOptions={courses} selectedCourse={selectedCourse} setSelectedCourse={setSelectedCourse} viewMode={viewMode} setViewMode={setViewMode} days={days} />
           <ScheduleGrid days={days} items={items} viewMode={viewMode} />
         </>
       )}
@@ -215,7 +214,10 @@ const TrainerQuizzes = () => {
 
       {tab === 2 && (
         <Paper sx={{ p: 3, borderRadius: '16px' }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 2 }}>All Quizzes</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>All Quizzes</Typography>
+            <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpenCreate(true)} sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Create Quiz</Button>
+          </Box>
           {quizzes.length === 0 ? (
             <Typography variant="body2" sx={{ color: '#666' }}>No quizzes found.</Typography>
           ) : (

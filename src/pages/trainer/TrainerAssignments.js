@@ -32,7 +32,7 @@ import api from '../../utils/api';
 
 const dayCols = 13; // show ~2 weeks
 
-const PlannerHeader = ({ startDate, setStartDate, onCreate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => {
+const PlannerHeader = ({ startDate, setStartDate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => {
   return (
     <Paper sx={{ p: 2, borderRadius: '16px', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
       <Button startIcon={<FilterIcon />} sx={{ textTransform: 'none' }}>Filter Settings</Button>
@@ -62,7 +62,6 @@ const PlannerHeader = ({ startDate, setStartDate, onCreate, courseOptions, selec
         <Button variant={viewMode === 'week' ? 'contained' : 'outlined'} onClick={() => setViewMode('week')}>Week</Button>
         <Button variant={viewMode === 'month' ? 'contained' : 'outlined'} onClick={() => setViewMode('month')}>Month</Button>
       </ButtonGroup>
-      <Button variant="contained" startIcon={<AddIcon />} onClick={onCreate} sx={{ ml: 2, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Create</Button>
     </Paper>
   );
 };
@@ -243,7 +242,7 @@ const TrainerAssignments = () => {
   return (
     <TrainerLayout title="Assignment Management">
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
-        <Tab label="Planner" />
+        <Tab label="Planner (Schedule)" />
         <Tab label="Submissions" />
         <Tab label="All Assignments" />
       </Tabs>
@@ -253,7 +252,6 @@ const TrainerAssignments = () => {
           <PlannerHeader
             startDate={startDate}
             setStartDate={setStartDate}
-            onCreate={() => setOpenCreate(true)}
             courseOptions={courses}
             selectedCourse={selectedCourse}
             setSelectedCourse={setSelectedCourse}
@@ -274,7 +272,10 @@ const TrainerAssignments = () => {
 
       {tab === 2 && (
         <Paper sx={{ p: 3, borderRadius: '16px' }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 2 }}>All Assignments</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>All Assignments</Typography>
+            <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpenCreate(true)} sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Create Assignment</Button>
+          </Box>
           {assignments.length === 0 ? (
             <Typography variant="body2" sx={{ color: '#666' }}>No assignments found.</Typography>
           ) : (
