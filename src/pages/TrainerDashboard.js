@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   Box,
   Grid,
@@ -7,7 +7,6 @@ import {
   Avatar,
   Chip,
   Button,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,
@@ -15,6 +14,7 @@ import {
   CircularProgress,
   Card,
   CardContent,
+  IconButton,
 } from '@mui/material';
 import {
   People as PeopleIcon,
@@ -26,25 +26,16 @@ import {
   Message as ChatIcon,
   CheckCircle as CheckIcon,
   Cancel as CancelIcon,
-  Notifications as NotificationsIcon,
-  Help as HelpIcon,
-  Settings as SettingsIcon,
-  Menu as MenuIcon,
 } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { format, isSameDay, addDays } from 'date-fns';
-import TrainerSidebar from '../components/TrainerSidebar';
+import TrainerLayout from '../components/TrainerLayout';
 import Calendar from '../components/Calendar';
 
 const TrainerDashboard = () => {
   const { user } = useAuth();
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   // Fetch trainer's courses
   const { data: coursesData, isLoading: coursesLoading } = useQuery(
@@ -213,112 +204,7 @@ const TrainerDashboard = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f5f7fa' }}>
-      <TrainerSidebar mobileOpen={mobileOpen} onMobileClose={handleDrawerToggle} />
-      {/* Main Content Area */}
-      <Box
-        sx={{
-          flex: 1,
-          ml: { xs: 0, md: '280px' },
-          width: { xs: '100%', md: 'calc(100% - 280px)' },
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        {/* Top Header Bar - Fixed */}
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: { xs: 0, md: '280px' },
-            right: 0,
-            height: 70,
-            bgcolor: 'white',
-            borderBottom: '1px solid rgba(0,0,0,0.08)',
-            zIndex: 1100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            px: { xs: 2, md: 4 },
-            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-            // Ensure header doesn't clip sidebar overflow
-            overflow: 'visible',
-          }}
-        >
-          {/* Mobile Menu Button */}
-          <IconButton
-            sx={{
-              display: { xs: 'block', md: 'none' },
-              mr: 2,
-              color: '#202F32',
-            }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          {/* Dashboard Title */}
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 700,
-              color: '#202F32',
-              fontSize: { xs: '1.5rem', md: '2rem' },
-            }}
-          >
-            Dashboard
-          </Typography>
-
-          {/* Action Icons */}
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <IconButton
-              sx={{
-                width: 40,
-                height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
-                color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
-              }}
-              title="Notifications"
-            >
-              <NotificationsIcon />
-            </IconButton>
-            <IconButton
-              sx={{
-                width: 40,
-                height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
-                color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
-              }}
-              title="Help"
-            >
-              <HelpIcon />
-            </IconButton>
-            <IconButton
-              sx={{
-                width: 40,
-                height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
-                color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
-              }}
-              title="Settings"
-            >
-              <SettingsIcon />
-            </IconButton>
-          </Box>
-        </Box>
-
-        {/* Main Content - Below Header */}
-        <Box
-          sx={{
-            flex: 1,
-            mt: '70px',
-            p: { xs: 2, md: 3 },
-            overflow: 'auto',
-          }}
-        >
+    <TrainerLayout title="Dashboard">
 
         {/* Summary Cards */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
@@ -861,9 +747,7 @@ const TrainerDashboard = () => {
             <Calendar events={calendarEvents} />
           </Grid>
         </Grid>
-        </Box>
-      </Box>
-    </Box>
+    </TrainerLayout>
   );
 };
 

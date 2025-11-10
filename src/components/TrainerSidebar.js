@@ -20,6 +20,14 @@ import {
   Message as MessageIcon,
   School as SchoolIcon,
   Logout as LogoutIcon,
+  Assignment as AssignmentIcon,
+  Quiz as QuizIcon,
+  AttachMoney as EarningsIcon,
+  Assessment as ReportsIcon,
+  Settings as SettingsIcon,
+  CardMembership as CertificateIcon,
+  VideoCall as LiveSessionIcon,
+  Book as CoursesIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 
@@ -32,10 +40,16 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/trainer/dashboard' },
-    { text: 'Create Course', icon: <SchoolIcon />, path: '/create-course' },
-    { text: 'My Courses', icon: <SchoolIcon />, path: '/my-courses' },
+    { text: 'Courses', icon: <CoursesIcon />, path: '/trainer/courses' },
     { text: 'Students', icon: <PeopleIcon />, path: '/trainer/students' },
+    { text: 'Assignments', icon: <AssignmentIcon />, path: '/trainer/assignments' },
+    { text: 'Quizzes', icon: <QuizIcon />, path: '/trainer/quizzes' },
+    { text: 'Earnings', icon: <EarningsIcon />, path: '/trainer/earnings' },
     { text: 'Messages', icon: <MessageIcon />, path: '/trainer/messages' },
+    { text: 'Reports', icon: <ReportsIcon />, path: '/trainer/reports' },
+    { text: 'Live Sessions', icon: <LiveSessionIcon />, path: '/trainer/live-sessions' },
+    { text: 'Certifications', icon: <CertificateIcon />, path: '/trainer/certifications' },
+    { text: 'Settings', icon: <SettingsIcon />, path: '/trainer/settings' },
   ];
 
   const handleLogout = () => {
@@ -116,8 +130,9 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
           }}
         >
           {menuItems.map((item) => {
-            // Exact match for active state - only highlight the exact route
-            const isActive = location.pathname === item.path;
+            // Match exact route or if path starts with the menu item path
+            const isActive = location.pathname === item.path || 
+                            (item.path !== '/trainer/dashboard' && location.pathname.startsWith(item.path));
             return (
               <ListItem 
                 key={item.text} 

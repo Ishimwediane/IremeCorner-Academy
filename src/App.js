@@ -23,6 +23,16 @@ import LessonView from './pages/LessonView';
 import AdminDashboard from './pages/AdminDashboard';
 import CreateCourse from './pages/CreateCourse';
 import TrainerDashboard from './pages/TrainerDashboard';
+import TrainerCourses from './pages/trainer/TrainerCourses';
+import TrainerStudents from './pages/trainer/TrainerStudents';
+import TrainerAssignments from './pages/trainer/TrainerAssignments';
+import TrainerQuizzes from './pages/trainer/TrainerQuizzes';
+import TrainerEarnings from './pages/trainer/TrainerEarnings';
+import TrainerMessages from './pages/trainer/TrainerMessages';
+import TrainerReports from './pages/trainer/TrainerReports';
+import TrainerSettings from './pages/trainer/TrainerSettings';
+import TrainerCertifications from './pages/trainer/TrainerCertifications';
+import TrainerLiveSessions from './pages/trainer/TrainerLiveSessions';
 import AIAssistant from './pages/AIAssistant';
 import DropInformation from './pages/DropInformation';
 import TermsAndConditions from './pages/TermsAndConditions';
@@ -119,6 +129,86 @@ function AppContent() {
             element={
               <PrivateRoute requiredRole={['trainer', 'admin']}>
                 <TrainerDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/courses"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerCourses />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/students"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerStudents />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/assignments"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerAssignments />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/quizzes"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerQuizzes />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/earnings"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerEarnings />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/messages"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerMessages />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/reports"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerReports />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/settings"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerSettings />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/certifications"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerCertifications />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/live-sessions"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerLiveSessions />
               </PrivateRoute>
             }
           />
