@@ -23,6 +23,122 @@ import api from '../../utils/api';
 
 const drawTemplate = (ctx, width, height, data, variant) => {
   ctx.clearRect(0, 0, width, height);
+  if (variant === 'award') {
+    // Background (page) and inner card with shadow
+    ctx.fillStyle = '#eaf2ff';
+    ctx.fillRect(0, 0, width, height);
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.2)';
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetY = 8;
+    ctx.fillStyle = '#ffffff';
+    const radius = 10;
+    const x = 20, y0 = 20, w = width - 40, h = height - 40;
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y0);
+    ctx.lineTo(x + w - radius, y0);
+    ctx.quadraticCurveTo(x + w, y0, x + w, y0 + radius);
+    ctx.lineTo(x + w, y0 + h - radius);
+    ctx.quadraticCurveTo(x + w, y0 + h, x + w - radius, y0 + h);
+    ctx.lineTo(x + radius, y0 + h);
+    ctx.quadraticCurveTo(x, y0 + h, x, y0 + h - radius);
+    ctx.lineTo(x, y0 + radius);
+    ctx.quadraticCurveTo(x, y0, x + radius, y0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // Top gradient band with angled cut
+    const grad = ctx.createLinearGradient(x, y0, x + w, y0);
+    grad.addColorStop(0, '#d8e5ff');
+    grad.addColorStop(1, '#bcd1ff');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(x + 10, y0 + 10);
+    ctx.lineTo(x + w - 200, y0 + 10);
+    ctx.lineTo(x + w - 60, y0 + 80);
+    ctx.lineTo(x + 10, y0 + 80);
+    ctx.closePath();
+    ctx.fill();
+
+    // Company name and logo
+    if (data.logoImg) ctx.drawImage(data.logoImg, x + 20, y0 + 22, 60, 60);
+    ctx.fillStyle = '#202F32';
+    ctx.font = 'bold 14px Arial';
+    ctx.fillText((data.companyName || 'COMPANY NAME'), x + 90, y0 + 52);
+
+    // Title
+    ctx.fillStyle = '#2b5cff';
+    ctx.font = 'bold 64px Arial';
+    ctx.fillText('Certificate', x + 40, y0 + 160);
+
+    // Subtitle lines
+    ctx.fillStyle = '#202F32';
+    ctx.font = 'bold 18px Arial';
+    ctx.fillText('OF ACHIEVEMENT', x + 40, y0 + 190);
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#666';
+    ctx.fillText('THIS CERTIFICATE IS PRESENTED TO', x + 40, y0 + 215);
+
+    // Name
+    ctx.fillStyle = '#2b5cff';
+    ctx.font = 'bold 48px Arial';
+    ctx.fillText(data.recipientName || 'Name Surname', x + 40, y0 + 270);
+
+    // Paragraph
+    ctx.fillStyle = '#666';
+    ctx.font = '16px Arial';
+    const text = data.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.';
+    const words = text.split(' ');
+    let line = '';
+    let yy = y0 + 300;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const { width: wline } = ctx.measureText(testLine);
+      if (wline > w - 120) {
+        ctx.fillText(line, x + 40, yy);
+        line = words[n] + ' ';
+        yy += 22;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, x + 40, yy);
+
+    // Date and signature
+    ctx.fillStyle = '#202F32';
+    ctx.font = '14px Arial';
+    ctx.fillText(data.issueDate ? new Date(data.issueDate).toDateString() : 'JANUARY 2ND 2025', x + 40, y0 + h - 70);
+    ctx.fillStyle = '#666';
+    ctx.fillText('DATE', x + 40, y0 + h - 50);
+
+    if (data.signatureImg) {
+      ctx.drawImage(data.signatureImg, x + w - 300, y0 + h - 120, 160, 50);
+    }
+    ctx.strokeStyle = '#999';
+    ctx.beginPath();
+    ctx.moveTo(x + w - 320, y0 + h - 60);
+    ctx.lineTo(x + w - 140, y0 + h - 60);
+    ctx.stroke();
+    ctx.fillStyle = '#666';
+    ctx.fillText('SIGNATURE', x + w - 265, y0 + h - 40);
+
+    // Award badge
+    const cx = x + w - 280;
+    const cy = y0 + 200;
+    ctx.beginPath(); ctx.fillStyle = '#2b5cff'; ctx.arc(cx, cy, 52, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.fillStyle = '#ffffff'; ctx.arc(cx, cy, 44, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#2b5cff';
+    ctx.font = 'bold 14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('BEST', cx, cy - 4);
+    ctx.font = '12px Arial';
+    ctx.fillText('AWARD', cx, cy + 14);
+    ctx.textAlign = 'start';
+    return;
+  }
+
+  // Default existing templates
   // Background
   const bgColor = variant === 'classic' ? '#ffffff' : '#f8f5f0';
   ctx.fillStyle = bgColor;
@@ -73,8 +189,8 @@ const drawTemplate = (ctx, width, height, data, variant) => {
 
 const TemplateDesigner = () => {
   const canvasRef = useRef(null);
-  const [variant, setVariant] = useState('classic');
-  const [form, setForm] = useState({ recipientName: '', courseTitle: '', issueDate: '', trainerName: '', certificateNumber: '' });
+  const [variant, setVariant] = useState('award');
+  const [form, setForm] = useState({ companyName: '', recipientName: '', courseTitle: '', issueDate: '', trainerName: '', certificateNumber: '', description: '' });
   const [logoPreview, setLogoPreview] = useState(null);
   const [signaturePreview, setSignaturePreview] = useState(null);
 
@@ -142,11 +258,13 @@ const TemplateDesigner = () => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField fullWidth select label="Template Variant" value={variant} onChange={(e) => setVariant(e.target.value)}>
-                <MenuItem value="classic">Classic (gold)
-                </MenuItem>
-                <MenuItem value="modern">Modern (purple)
-                </MenuItem>
+                <MenuItem value="classic">Classic (gold)</MenuItem>
+                <MenuItem value="modern">Modern (purple)</MenuItem>
+                <MenuItem value="award">Award (blue)</MenuItem>
               </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField fullWidth label="Company Name" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField fullWidth label="Certificate Number" value={form.certificateNumber} onChange={(e) => setForm({ ...form, certificateNumber: e.target.value })} />
@@ -162,6 +280,9 @@ const TemplateDesigner = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField fullWidth label="Trainer Name" value={form.trainerName} onChange={(e) => setForm({ ...form, trainerName: e.target.value })} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth multiline rows={3} label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <Button component="label" startIcon={<UploadIcon />} variant="outlined" sx={{ textTransform: 'none', width: '100%' }}>Upload Logo<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setLogoPreview)} /></Button>
