@@ -52,6 +52,8 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
         color: 'white',
         display: 'flex',
         flexDirection: 'column',
+        position: 'relative',
+        overflow: 'visible',
       }}
     >
       {/* Profile Section */}
@@ -87,49 +89,95 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
       </Box>
 
       {/* Navigation Menu */}
-      <Box sx={{ flex: 1, overflow: 'auto', pt: 2 }}>
-        <List sx={{ px: 2 }}>
+      <Box 
+        sx={{ 
+          flex: 1, 
+          pt: 2, 
+          position: 'relative',
+          overflowY: 'auto',
+          overflowX: 'visible',
+          '&::-webkit-scrollbar': {
+            width: '6px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'transparent',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(255,255,255,0.2)',
+            borderRadius: '3px',
+          },
+        }}
+      >
+        <List 
+          sx={{ 
+            px: 2, 
+            position: 'relative',
+            overflow: 'visible',
+          }}
+        >
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path || 
+                            (item.path === '/trainer/dashboard' && location.pathname.startsWith('/trainer'));
             return (
-              <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
-                <ListItemButton
-                  component={Link}
-                  to={item.path}
-                  onClick={() => {
-                    if (isMobile) {
-                      onMobileClose();
-                    }
-                  }}
+              <ListItem 
+                key={item.text} 
+                disablePadding 
+                sx={{ 
+                  mb: 0.5,
+                  position: 'relative',
+                  overflow: 'visible',
+                }}
+              >
+                <Box
                   sx={{
-                    borderRadius: '12px',
-                    bgcolor: isActive ? 'rgba(195,151,102,0.2)' : 'transparent',
-                    '&:hover': {
-                      bgcolor: isActive
-                        ? 'rgba(195,151,102,0.3)'
-                        : 'rgba(255,255,255,0.1)',
-                    },
-                    py: 1.5,
-                    px: 2,
+                    width: '100%',
+                    position: 'relative',
+                    overflow: 'visible',
                   }}
                 >
-                  <ListItemIcon
+                  <ListItemButton
+                    component={Link}
+                    to={item.path}
+                    onClick={() => {
+                      if (isMobile) {
+                        onMobileClose();
+                      }
+                    }}
                     sx={{
-                      color: isActive ? '#C39766' : 'rgba(255,255,255,0.7)',
-                      minWidth: 40,
+                      borderRadius: '12px',
+                      bgcolor: isActive ? 'white' : 'transparent',
+                      color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
+                      '&:hover': {
+                        bgcolor: isActive ? 'white' : 'rgba(255,255,255,0.1)',
+                      },
+                      py: 1.5,
+                      px: 2.5,
+                      position: 'relative',
+                      width: isActive ? 'calc(100% + 24px)' : '100%',
+                      marginRight: isActive ? '-24px' : 0,
+                      boxShadow: isActive ? '2px 0 8px rgba(0,0,0,0.12)' : 'none',
+                      zIndex: isActive ? 10 : 0,
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     }}
                   >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.text}
-                    primaryTypographyProps={{
-                      fontSize: '0.95rem',
-                      fontWeight: isActive ? 600 : 400,
-                      color: isActive ? 'white' : 'rgba(255,255,255,0.9)',
-                    }}
-                  />
-                </ListItemButton>
+                    <ListItemIcon
+                      sx={{
+                        color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
+                        minWidth: 40,
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.text}
+                      primaryTypographyProps={{
+                        fontSize: '0.95rem',
+                        fontWeight: isActive ? 600 : 400,
+                        color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
+                      }}
+                    />
+                  </ListItemButton>
+                </Box>
               </ListItem>
             );
           })}
@@ -175,6 +223,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: 280,
+              overflow: 'visible',
             },
           }}
         >
@@ -190,6 +239,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
             top: 0,
             zIndex: 1200,
             display: { xs: 'none', md: 'block' },
+            overflow: 'visible',
           }}
         >
           {sidebarContent}

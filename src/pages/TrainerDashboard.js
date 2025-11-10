@@ -198,6 +198,8 @@ const TrainerDashboard = () => {
             justifyContent: 'space-between',
             px: { xs: 2, md: 4 },
             boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+            // Ensure header doesn't clip sidebar overflow
+            overflow: 'visible',
           }}
         >
           {/* Mobile Menu Button */}
