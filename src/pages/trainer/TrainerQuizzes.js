@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Grid,
@@ -14,36 +14,59 @@ import {
   DialogActions,
   TextField,
   MenuItem,
+  Tabs,
+  Tab,
+  Select,
+  ButtonGroup,
 } from '@mui/material';
 import {
   Add as AddIcon,
   FilterList as FilterIcon,
 } from '@mui/icons-material';
-import { format, addDays, eachDayOfInterval } from 'date-fns';
+import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import TrainerLayout from '../../components/TrainerLayout';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api';
 
 const dayCols = 13;
 
-const PlannerHeader = ({ startDate, onCreate }) => (
+const PlannerHeader = ({ startDate, setStartDate, onCreate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => (
   <Paper sx={{ p: 2, borderRadius: '16px', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
     <Button startIcon={<FilterIcon />} sx={{ textTransform: 'none' }}>Filter Settings</Button>
+    <Select size="small" value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)} displayEmpty sx={{ ml: 1, minWidth: 200, bgcolor: 'rgba(0,0,0,0.02)', borderRadius: '10px' }}>
+      <MenuItem value="all">All Courses</MenuItem>
+      {courseOptions.map((c) => (
+        <MenuItem key={c._id} value={c._id}>{c.title}</MenuItem>
+      ))}
+    </Select>
     <Box sx={{ flex: 1 }} />
-    <Typography variant="body2" sx={{ color: '#202F32', fontWeight: 600 }}>
-      {format(startDate, 'MMMM yyyy')} – {format(addDays(startDate, dayCols - 1), 'MMMM yyyy')}
+    <ButtonGroup size="small" sx={{ mr: 1 }}>
+      <Button onClick={() => setStartDate(viewMode === 'month' ? subMonths(startDate, 1) : addDays(startDate, viewMode === 'week' ? -7 : -1))}>Prev</Button>
+      <Button onClick={() => setStartDate(new Date())}>Today</Button>
+      <Button onClick={() => setStartDate(viewMode === 'month' ? addMonths(startDate, 1) : addDays(startDate, viewMode === 'week' ? 7 : 1))}>Next</Button>
+    </ButtonGroup>
+    <Typography variant="body2" sx={{ color: '#202F32', fontWeight: 600, mr: 1 }}>
+      {viewMode === 'month' ? format(startDate, 'MMMM yyyy') : `${format(days[0], 'MMM dd')} – ${format(days[days.length - 1], 'MMM dd')}`}
     </Typography>
+    <ButtonGroup size="small">
+      <Button variant={viewMode === 'day' ? 'contained' : 'outlined'} onClick={() => setViewMode('day')}>Day</Button>
+      <Button variant={viewMode === 'week' ? 'contained' : 'outlined'} onClick={() => setViewMode('week')}>Week</Button>
+      <Button variant={viewMode === 'month' ? 'contained' : 'outlined'} onClick={() => setViewMode('month')}>Month</Button>
+    </ButtonGroup>
     <Button variant="contained" startIcon={<AddIcon />} onClick={onCreate} sx={{ ml: 2, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Create</Button>
   </Paper>
 );
 
-const ScheduleGrid = ({ startDate, items }) => {
-  const days = eachDayOfInterval({ start: startDate, end: addDays(startDate, dayCols - 1) });
+const ScheduleGrid = ({ days, items, viewMode }) => {
   return (
     <Paper sx={{ p: 2, borderRadius: '16px' }}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: `200px repeat(${dayCols}, 1fr)`, gap: 0.5 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: `200px repeat(${days.length}, 1fr)`, gap: 0.5 }}>
         <Box />
         {days.map((d) => (
           <Box key={d.toISOString()} sx={{ textAlign: 'center', py: 1 }}>
-            <Typography variant="caption" sx={{ fontWeight: 600 }}>{format(d, 'dd EEE')}</Typography>
+            <Typography variant="caption" sx={{ fontWeight: 600 }}>
+              {viewMode === 'month' ? format(d, 'dd') : format(d, 'dd EEE')}
+            </Typography>
           </Box>
         ))}
         {items.map((row) => (
@@ -100,32 +123,110 @@ const CreateQuizDialog = ({ open, onClose, onSave, courses = [] }) => {
 };
 
 const TrainerQuizzes = () => {
-  const [startDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
   const [openCreate, setOpenCreate] = useState(false);
+  const [tab, setTab] = useState(0);
+  const { user } = useAuth();
+  const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState('all');
+  const [quizzes, setQuizzes] = useState([]);
+  const [viewMode, setViewMode] = useState('week');
 
-  const items = useMemo(() => ([
-    { id: 'q1', title: 'Module 1 Quiz', courseTag: 'EN', name: 'Module 1 Quiz', questions: 10, start: addDays(new Date(), 1), span: 2, color: 'rgba(124, 77, 255, 0.08)', border: '#7b68ee' },
-    { id: 'q2', title: 'Midterm Quiz', courseTag: 'EN', name: 'Midterm Quiz', questions: 20, start: addDays(new Date(), 4), span: 3, color: 'rgba(33,150,243,0.08)', border: '#2196f3' },
-  ]), []);
+  useEffect(() => {
+    const userId = user?._id || user?.id;
+    if (!userId) return;
+    api.get(`/courses?trainer=${userId}`).then((res) => setCourses(res.data?.data || [])).catch(() => {});
+  }, [user]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (selectedCourse === 'all') {
+          const lists = await Promise.all(
+            courses.map((c) => api.get(`/assessments/course/${c._id}`).then((r) => ({ course: c, items: r.data?.data?.quizzes || [] })).catch(() => ({ course: c, items: [] })))
+          );
+          const merged = lists.flatMap(({ course, items }) => items.map((q) => ({ ...q, _course: course })));
+          setQuizzes(merged);
+        } else {
+          const r = await api.get(`/assessments/course/${selectedCourse}`);
+          const course = courses.find((c) => c._id === selectedCourse);
+          setQuizzes((r.data?.data?.quizzes || []).map((q) => ({ ...q, _course: course })));
+        }
+      } catch (e) {
+        setQuizzes([]);
+      }
+    };
+    load();
+  }, [selectedCourse, courses]);
+
+  const items = useMemo(() => quizzes.map((q, idx) => ({
+    id: q._id || `q-${idx}`,
+    title: q._course?.title || 'Course',
+    courseTag: q._course?.level || 'EN',
+    name: q.title || 'Quiz',
+    questions: q.questions?.length || 0,
+    start: q.availableOn ? new Date(q.availableOn) : addDays(new Date(), (idx % 5) + 1),
+    span: 1,
+    color: 'rgba(33,150,243,0.08)',
+    border: '#2196f3',
+  })), [quizzes]);
+
+  const days = useMemo(() => {
+    if (viewMode === 'day') return [startDate];
+    if (viewMode === 'month') {
+      const s = startOfMonth(startDate);
+      const e = endOfMonth(startDate);
+      return eachDayOfInterval({ start: s, end: e });
+    }
+    return eachDayOfInterval({ start: startDate, end: addDays(startDate, 6) });
+  }, [startDate, viewMode]);
 
   return (
     <TrainerLayout title="Quiz Management">
-      <PlannerHeader startDate={startDate} onCreate={() => setOpenCreate(true)} />
-      <ScheduleGrid startDate={startDate} items={items} />
-      <Typography variant="h6" sx={{ mt: 3, mb: 1, fontWeight: 700, color: '#202F32' }}>Workload Summary</Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card><CardContent><Typography variant="caption" sx={{ color: '#7b68ee', fontWeight: 700 }}>QUIZ RELEASES</Typography><Typography variant="body2" sx={{ color: '#666', mt: 0.5 }}>Upcoming quiz releases by course</Typography></CardContent></Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card><CardContent><Typography variant="caption" sx={{ color: '#2196f3', fontWeight: 700 }}>QUIZ ATTEMPTS</Typography><Typography variant="body2" sx={{ color: '#666', mt: 0.5 }}>Recent attempts and performance</Typography></CardContent></Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card><CardContent><Typography variant="caption" sx={{ color: '#e91e63', fontWeight: 700 }}>RETAKES</Typography><Typography variant="body2" sx={{ color: '#666', mt: 0.5 }}>Retake workload and thresholds</Typography></CardContent></Card>
-        </Grid>
-      </Grid>
+      <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
+        <Tab label="Planner" />
+        <Tab label="Attempts" />
+        <Tab label="All Quizzes" />
+      </Tabs>
 
-      <CreateQuizDialog open={openCreate} onClose={() => setOpenCreate(false)} onSave={() => setOpenCreate(false)} courses={[ 'Course A', 'Course B', 'Course C' ]} />
+      {tab === 0 && (
+        <>
+          <PlannerHeader startDate={startDate} setStartDate={setStartDate} onCreate={() => setOpenCreate(true)} courseOptions={courses} selectedCourse={selectedCourse} setSelectedCourse={setSelectedCourse} viewMode={viewMode} setViewMode={setViewMode} days={days} />
+          <ScheduleGrid days={days} items={items} viewMode={viewMode} />
+        </>
+      )}
+
+      {tab === 1 && (
+        <Paper sx={{ p: 3, borderRadius: '16px' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 1 }}>Attempts</Typography>
+          <Typography variant="body2" sx={{ color: '#666' }}>Attempts view coming soon. We will list attempts by student with score, time, and status.</Typography>
+        </Paper>
+      )}
+
+      {tab === 2 && (
+        <Paper sx={{ p: 3, borderRadius: '16px' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 2 }}>All Quizzes</Typography>
+          {quizzes.length === 0 ? (
+            <Typography variant="body2" sx={{ color: '#666' }}>No quizzes found.</Typography>
+          ) : (
+            <Grid container spacing={2}>
+              {quizzes.map((q) => (
+                <Grid key={q._id} item xs={12} md={6} lg={4}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32' }}>{q.title}</Typography>
+                      <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>{q._course?.title}</Typography>
+                      <Chip size="small" label={`${q.questions?.length || 0} Questions`} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766' }} />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Paper>
+      )}
+
+      <CreateQuizDialog open={openCreate} onClose={() => setOpenCreate(false)} onSave={() => setOpenCreate(false)} courses={courses.map((c) => c.title)} />
     </TrainerLayout>
   );
 };

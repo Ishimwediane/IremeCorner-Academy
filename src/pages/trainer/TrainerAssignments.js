@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Grid,
@@ -15,44 +15,71 @@ import {
   TextField,
   MenuItem,
   IconButton,
+  Tabs,
+  Tab,
+  Select,
+  ButtonGroup,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
   FilterList as FilterIcon,
 } from '@mui/icons-material';
-import { format, addDays, eachDayOfInterval } from 'date-fns';
+import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import TrainerLayout from '../../components/TrainerLayout';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api';
 
 const dayCols = 13; // show ~2 weeks
 
-const PlannerHeader = ({ startDate, setStartDate, onCreate }) => {
-  const endDate = addDays(startDate, dayCols - 1);
+const PlannerHeader = ({ startDate, setStartDate, onCreate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => {
   return (
     <Paper sx={{ p: 2, borderRadius: '16px', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
       <Button startIcon={<FilterIcon />} sx={{ textTransform: 'none' }}>Filter Settings</Button>
+      <Select
+        size="small"
+        value={selectedCourse}
+        onChange={(e) => setSelectedCourse(e.target.value)}
+        displayEmpty
+        sx={{ ml: 1, minWidth: 200, bgcolor: 'rgba(0,0,0,0.02)', borderRadius: '10px' }}
+      >
+        <MenuItem value="all">All Courses</MenuItem>
+        {courseOptions.map((c) => (
+          <MenuItem key={c._id} value={c._id}>{c.title}</MenuItem>
+        ))}
+      </Select>
       <Box sx={{ flex: 1 }} />
-      <Typography variant="body2" sx={{ color: '#202F32', fontWeight: 600 }}>
-        {format(startDate, 'MMMM yyyy')} – {format(endDate, 'MMMM yyyy')}
+      <ButtonGroup size="small" sx={{ mr: 1 }}>
+        <Button onClick={() => setStartDate(viewMode === 'month' ? subMonths(startDate, 1) : addDays(startDate, viewMode === 'week' ? -7 : -1))}>Prev</Button>
+        <Button onClick={() => setStartDate(new Date())}>Today</Button>
+        <Button onClick={() => setStartDate(viewMode === 'month' ? addMonths(startDate, 1) : addDays(startDate, viewMode === 'week' ? 7 : 1))}>Next</Button>
+      </ButtonGroup>
+      <Typography variant="body2" sx={{ color: '#202F32', fontWeight: 600, mr: 1 }}>
+        {viewMode === 'month' ? format(startDate, 'MMMM yyyy') : `${format(days[0], 'MMM dd')} – ${format(days[days.length - 1], 'MMM dd')}`}
       </Typography>
+      <ButtonGroup size="small">
+        <Button variant={viewMode === 'day' ? 'contained' : 'outlined'} onClick={() => setViewMode('day')}>Day</Button>
+        <Button variant={viewMode === 'week' ? 'contained' : 'outlined'} onClick={() => setViewMode('week')}>Week</Button>
+        <Button variant={viewMode === 'month' ? 'contained' : 'outlined'} onClick={() => setViewMode('month')}>Month</Button>
+      </ButtonGroup>
       <Button variant="contained" startIcon={<AddIcon />} onClick={onCreate} sx={{ ml: 2, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Create</Button>
-      <Button variant="outlined" sx={{ ml: 1, borderColor: '#C39766', color: '#C39766', '&:hover': { borderColor: '#A67A52' } }}>Delete</Button>
     </Paper>
   );
 };
 
-const ScheduleGrid = ({ startDate, items }) => {
-  const days = eachDayOfInterval({ start: startDate, end: addDays(startDate, dayCols - 1) });
+const ScheduleGrid = ({ days, items, viewMode }) => {
   return (
     <Paper sx={{ p: 2, borderRadius: '16px' }}>
       <Grid container spacing={0}>
         <Grid item xs={12}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: `200px repeat(${dayCols}, 1fr)`, gap: 0.5 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: `200px repeat(${days.length}, 1fr)`, gap: 0.5 }}>
             {/* Header row */}
             <Box />
             {days.map((d) => (
               <Box key={d.toISOString()} sx={{ textAlign: 'center', py: 1, color: '#202F32' }}>
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>{format(d, 'dd EEE')}</Typography>
+                <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                  {viewMode === 'month' ? format(d, 'dd') : format(d, 'dd EEE')}
+                </Typography>
               </Box>
             ))}
             {/* Rows */}
@@ -145,28 +172,129 @@ const SummaryCards = ({ stats }) => (
 const TrainerAssignments = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [openCreate, setOpenCreate] = useState(false);
+  const [tab, setTab] = useState(0);
+  const { user } = useAuth();
+  const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState('all');
+  const [assignments, setAssignments] = useState([]);
+  const [viewMode, setViewMode] = useState('week'); // 'day' | 'week' | 'month'
+
+  // Fetch trainer courses
+  useEffect(() => {
+    const userId = user?._id || user?.id;
+    if (!userId) return;
+    api.get(`/courses?trainer=${userId}`).then((res) => setCourses(res.data?.data || [])).catch(() => {});
+  }, [user]);
+
+  // Fetch assignments for selected course
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (selectedCourse === 'all') {
+          // Aggregate from all courses
+          const lists = await Promise.all(
+            courses.map((c) => api.get(`/assignments/course/${c._id}`).then((r) => ({ course: c, items: r.data?.data || [] })).catch(() => ({ course: c, items: [] })))
+          );
+          const merged = lists.flatMap(({ course, items }) => items.map((a) => ({ ...a, _course: course })));
+          setAssignments(merged);
+        } else {
+          const r = await api.get(`/assignments/course/${selectedCourse}`);
+          const course = courses.find((c) => c._id === selectedCourse);
+          setAssignments((r.data?.data || []).map((a) => ({ ...a, _course: course })));
+        }
+      } catch (e) {
+        setAssignments([]);
+      }
+    };
+    load();
+  }, [selectedCourse, courses]);
 
   // Mock items for the planner
-  const items = useMemo(() => ([
-    { id: 'a1', title: 'API Descriptions', courseTag: 'EN', name: 'API Descriptions', status: 'REVIEW', start: addDays(startDate, 2), span: 5, color: 'rgba(156,39,176,0.08)', border: '#9c27b0' },
-    { id: 'a2', title: 'FAQ Section', courseTag: 'EN', name: 'FAQ Section', status: 'TRANSLATION', start: addDays(startDate, 3), span: 3, color: 'rgba(33,150,243,0.08)', border: '#2196f3' },
-    { id: 'a3', title: 'Mars Travel Manual', courseTag: 'EN', name: 'Mars Travel Manual', status: 'CONTRIBUTION', start: addDays(startDate, 5), span: 4, color: 'rgba(233,30,99,0.08)', border: '#e91e63' },
-  ]), [startDate]);
+  const items = useMemo(() => {
+    // Map assignments to planner bars by dueDate (1-day span)
+    return assignments.map((a, idx) => ({
+      id: a._id || `a-${idx}`,
+      title: a._course?.title || 'Course',
+      courseTag: a._course?.level || 'EN',
+      name: a.title || 'Assignment',
+      status: a.status || 'DUE',
+      start: a.dueDate ? new Date(a.dueDate) : addDays(startDate, (idx % 5) + 1),
+      span: 1,
+      color: 'rgba(124,77,255,0.08)',
+      border: '#7b68ee',
+    }));
+  }, [assignments, startDate]);
+
+  const days = useMemo(() => {
+    if (viewMode === 'day') return [startDate];
+    if (viewMode === 'month') {
+      const s = startOfMonth(startDate);
+      const e = endOfMonth(startDate);
+      return eachDayOfInterval({ start: s, end: e });
+    }
+    // week
+    return eachDayOfInterval({ start: startDate, end: addDays(startDate, 6) });
+  }, [startDate, viewMode]);
 
   return (
     <TrainerLayout title="Assignment Management">
-      <PlannerHeader startDate={startDate} setStartDate={setStartDate} onCreate={() => setOpenCreate(true)} />
-      <ScheduleGrid startDate={startDate} items={items} />
-      <Typography variant="h6" sx={{ mt: 3, mb: 1, fontWeight: 700, color: '#202F32' }}>Workload Summary</Typography>
-      <SummaryCards
-        stats={[
-          { title: 'Translation Assignments', subtitle: 'User workload with translation assignments', color: '#2196f3' },
-          { title: 'Review Assignments', subtitle: 'User workload with review assignments', color: '#7b68ee' },
-          { title: 'Contribution Assignments', subtitle: 'User workload with contribution assignments', color: '#e91e63' },
-        ]}
-      />
+      <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
+        <Tab label="Planner" />
+        <Tab label="Submissions" />
+        <Tab label="All Assignments" />
+      </Tabs>
 
-      <CreateAssignmentDialog open={openCreate} onClose={() => setOpenCreate(false)} onSave={() => setOpenCreate(false)} courses={[ 'Course A', 'Course B', 'Course C' ]} />
+      {tab === 0 && (
+        <>
+          <PlannerHeader
+            startDate={startDate}
+            setStartDate={setStartDate}
+            onCreate={() => setOpenCreate(true)}
+            courseOptions={courses}
+            selectedCourse={selectedCourse}
+            setSelectedCourse={setSelectedCourse}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            days={days}
+          />
+          <ScheduleGrid days={days} items={items} viewMode={viewMode} />
+        </>
+      )}
+
+      {tab === 1 && (
+        <Paper sx={{ p: 3, borderRadius: '16px' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 1 }}>Submissions</Typography>
+          <Typography variant="body2" sx={{ color: '#666' }}>No submissions yet. This section will list submissions per assignment with grading status once wired to the API.</Typography>
+        </Paper>
+      )}
+
+      {tab === 2 && (
+        <Paper sx={{ p: 3, borderRadius: '16px' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 2 }}>All Assignments</Typography>
+          {assignments.length === 0 ? (
+            <Typography variant="body2" sx={{ color: '#666' }}>No assignments found.</Typography>
+          ) : (
+            <Grid container spacing={2}>
+              {assignments.map((a) => (
+                <Grid key={a._id} item xs={12} md={6} lg={4}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32' }}>{a.title}</Typography>
+                      <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>{a._course?.title}</Typography>
+                      <Chip size="small" label={a.status || 'DUE'} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766', mr: 1 }} />
+                      {a.dueDate && (
+                        <Chip size="small" label={`Due ${format(new Date(a.dueDate), 'MMM dd')}`} />
+                      )}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Paper>
+      )}
+
+      <CreateAssignmentDialog open={openCreate} onClose={() => setOpenCreate(false)} onSave={() => setOpenCreate(false)} courses={courses.map((c) => c.title)} />
     </TrainerLayout>
   );
 };
