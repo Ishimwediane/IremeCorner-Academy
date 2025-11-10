@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -13,41 +13,38 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const { login } = useAuth();
-  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    setError('');
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  console.log('Form submit clicked. Current state:', { email, password });
+  
+  if (!email || !password) {
+    setError('Please enter both email and password');
+    return;
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  setError('');
+  setLoading(true);
 
-    const result = await login(formData.email, formData.password);
-
-    if (result.success) {
-      toast.success('Login successful!');
-      navigate('/dashboard');
-    } else {
-      setError(result.error || 'Login failed');
-      toast.error(result.error || 'Login failed');
-    }
-
+  try {
+    const loginData = { email: email.trim(), password };
+    console.log('Calling login with:', loginData);
+    const user = await login(loginData);
+    toast.success(`Welcome back, ${user.name}!`);
+  } catch (err) {
+    console.error('Login error in handleSubmit:', err);
+    setError(err.message);
+    toast.error(err.message);
+  } finally {
     setLoading(false);
-  };
+  }
+};
+
 
   return (
     <Container maxWidth="sm" sx={{ py: 8 }}>
@@ -68,8 +65,8 @@ const Login = () => {
             label="Email"
             name="email"
             type="email"
-            value={formData.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             margin="normal"
             required
           />
@@ -78,8 +75,8 @@ const Login = () => {
             label="Password"
             name="password"
             type="password"
-            value={formData.password}
-            onChange={handleChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             required
           />
@@ -105,6 +102,7 @@ const Login = () => {
 };
 
 export default Login;
+
 
 
 

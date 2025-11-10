@@ -23,116 +23,91 @@ import api from '../../utils/api';
 
 const drawTemplate = (ctx, width, height, data, variant) => {
   ctx.clearRect(0, 0, width, height);
+  
+  // Common settings for both templates
+  const x = 20, y0 = 20, w = width - 40, h = height - 40;
+  ctx.textAlign = 'center';
+  const centerX = width / 2;
+
   if (variant === 'award') {
-    // Background (page) and inner card with shadow
-    ctx.fillStyle = '#eaf2ff';
-    ctx.fillRect(0, 0, width, height);
-    ctx.save();
-    ctx.shadowColor = 'rgba(0,0,0,0.2)';
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetY = 8;
+    // Background
     ctx.fillStyle = '#ffffff';
-    const radius = 10;
-    const x = 20, y0 = 20, w = width - 40, h = height - 40;
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y0);
-    ctx.lineTo(x + w - radius, y0);
-    ctx.quadraticCurveTo(x + w, y0, x + w, y0 + radius);
-    ctx.lineTo(x + w, y0 + h - radius);
-    ctx.quadraticCurveTo(x + w, y0 + h, x + w - radius, y0 + h);
-    ctx.lineTo(x + radius, y0 + h);
-    ctx.quadraticCurveTo(x, y0 + h, x, y0 + h - radius);
-    ctx.lineTo(x, y0 + radius);
-    ctx.quadraticCurveTo(x, y0, x + radius, y0);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
+    ctx.fillRect(0, 0, width, height);
+    
+    // Border
+    ctx.strokeStyle = '#2b5cff';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(x, y0, w, h);
+    
+    // Inner border
+    ctx.strokeStyle = '#2b5cff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x + 15, y0 + 15, w - 30, h - 30);
 
-    // Top gradient band with angled cut
-    const grad = ctx.createLinearGradient(x, y0, x + w, y0);
-    grad.addColorStop(0, '#d8e5ff');
-    grad.addColorStop(1, '#bcd1ff');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.moveTo(x + 10, y0 + 10);
-    ctx.lineTo(x + w - 200, y0 + 10);
-    ctx.lineTo(x + w - 60, y0 + 80);
-    ctx.lineTo(x + 10, y0 + 80);
-    ctx.closePath();
-    ctx.fill();
-
-    // Company name and logo
+    // Logo and Company name
     if (data.logoImg) {
-      const logoX = (width - 60) / 2;  // Center the logo
-      ctx.drawImage(data.logoImg, logoX, y0 + 22, 60, 60);
+      ctx.drawImage(data.logoImg, centerX - 30, y0 + 40, 60, 60);
     }
     ctx.fillStyle = '#202F32';
-    ctx.font = 'bold 14px Arial';
-    ctx.textAlign = 'center';  // Center text alignment
-    ctx.fillText((data.companyName || 'COMPANY NAME'), width/2, y0 + 100);
+    ctx.font = 'bold 24px "Times New Roman"';
+    ctx.fillText(data.companyName || 'COMPANY NAME', centerX, y0 + 130);
 
-    // Title
+    // Certificate Title
     ctx.fillStyle = '#2b5cff';
-    ctx.font = 'bold 64px Arial';
-    ctx.fillText('Certificate', width/2, y0 + 180);
+    ctx.font = 'bold 48px "Times New Roman"';
+    ctx.fillText('Certificate', centerX, y0 + 200);
+    ctx.font = 'bold 24px "Times New Roman"';
+    ctx.fillText('OF ACHIEVEMENT', centerX, y0 + 235);
 
-    // Subtitle lines
-    ctx.fillStyle = '#202F32';
-    ctx.font = 'bold 18px Arial';
-    ctx.fillText('OF ACHIEVEMENT', width/2, y0 + 220);
-    ctx.font = '16px Arial';
+    // Recipient
     ctx.fillStyle = '#666';
-    ctx.fillText('THIS CERTIFICATE IS PRESENTED TO', width/2, y0 + 260);
+    ctx.font = '18px "Times New Roman"';
+    ctx.fillText('THIS IS TO CERTIFY THAT', centerX, y0 + 290);
+    ctx.fillStyle = '#202F32';
+    ctx.font = 'bold 36px "Times New Roman"';
+    ctx.fillText(data.recipientName || 'Name Surname', centerX, y0 + 340);
 
-    // Name
+    // Description
+    ctx.fillStyle = '#666';
+    ctx.font = '18px "Times New Roman"';
+    const text = data.description || 'has successfully completed the course requirements';
+    ctx.fillText(text, centerX, y0 + 390);
+    
+    // Course Title
     ctx.fillStyle = '#2b5cff';
-    ctx.font = 'bold 48px Arial';
-    ctx.fillText(data.recipientName || 'Name Surname', width/2, y0 + 320);
+    ctx.font = 'bold 28px "Times New Roman"';
+    ctx.fillText(data.courseTitle || 'Course Title', centerX, y0 + 440);
 
-    // Paragraph
-    ctx.fillStyle = '#666';
-    ctx.font = '16px Arial';
-    const text = data.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.';
-    const words = text.split(' ');
-    let line = '';
-    let yy = y0 + 380;
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + ' ';
-      const metrics = ctx.measureText(testLine);
-      if (metrics.width > w - 120) {
-        ctx.fillText(line, width/2, yy);
-        line = words[n] + ' ';
-        yy += 22;
-      } else {
-        line = testLine;
-      }
-    }
-    ctx.fillText(line, width/2, yy);
-
-    // Date and signature
+    // Date and Signature
+    const dateX = x + w/4;
+    const signatureX = x + (w*3)/4;
+    
     ctx.fillStyle = '#202F32';
-    ctx.font = '14px Arial';
+    ctx.font = '16px "Times New Roman"';
     
-    const dateX = x + 100;
-    const signatureX = x + w - 200;
-    
-    ctx.textAlign = 'center';
-    ctx.fillText(data.issueDate ? new Date(data.issueDate).toDateString() : 'JANUARY 2ND 2025', dateX, y0 + h - 70);
-    ctx.fillStyle = '#666';
-    ctx.fillText('DATE', dateX, y0 + h - 50);
-
-    if (data.signatureImg) {
-      ctx.drawImage(data.signatureImg, signatureX - 80, y0 + h - 120, 160, 50);
-    }
-    ctx.strokeStyle = '#999';
+    // Date
+    ctx.fillText(data.issueDate ? new Date(data.issueDate).toDateString() : 'Date of Issue', dateX, y0 + h - 60);
     ctx.beginPath();
-    ctx.moveTo(signatureX - 90, y0 + h - 60);
-    ctx.lineTo(signatureX + 90, y0 + h - 60);
+    ctx.moveTo(dateX - 100, y0 + h - 80);
+    ctx.lineTo(dateX + 100, y0 + h - 80);
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 1;
     ctx.stroke();
+    
+    // Signature
+    if (data.signatureImg) {
+      ctx.drawImage(data.signatureImg, signatureX - 80, y0 + h - 140, 160, 60);
+    }
+    ctx.beginPath();
+    ctx.moveTo(signatureX - 100, y0 + h - 80);
+    ctx.lineTo(signatureX + 100, y0 + h - 80);
+    ctx.stroke();
+    
     ctx.fillStyle = '#666';
+    ctx.font = '14px "Times New Roman"';
+    ctx.fillText('DATE', dateX, y0 + h - 40);
     ctx.fillText('SIGNATURE', signatureX, y0 + h - 40);
 
-    // Remove badge section - it's not needed anymore
     return;
   }
 

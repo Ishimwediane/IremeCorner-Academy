@@ -19,6 +19,10 @@ import {
   MenuItem,
   Checkbox,
   CircularProgress,
+  Menu,
+  ListItemIcon,
+  ListItemText,
+  Divider,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -27,6 +31,9 @@ import {
   FilterList as FilterIcon,
   Download as DownloadIcon,
   Print as PrintIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Mail as MailIcon,
 } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useMemo, useState } from 'react';
@@ -40,6 +47,9 @@ const TrainerStudents = () => {
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [sortBy, setSortBy] = useState('name');
   const [filterBy, setFilterBy] = useState('all');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [classFilter, setClassFilter] = useState('all');
 
   const { data: coursesData, isLoading } = useQuery(
     ['trainer-courses', user?._id || user?.id],
@@ -82,6 +92,99 @@ const TrainerStudents = () => {
     (student.name || student.email || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleExportData = () => {
+    const csvData = filteredStudents.map(student => ({
+      ID: student._id,
+      Name: student.name,
+      Gender: student.gender,
+      Age: student.age,
+      Class: student.class,
+      'Average Grade': student.avgGrade,
+      'Missing Days': student.missingDays
+    }));
+
+    const csvString = [
+      Object.keys(csvData[0]),
+      ...csvData.map(row => Object.values(row))
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'students.csv';
+    a.click();
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleActionClick = (event, student) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedStudent(student);
+  };
+
+  const handleActionClose = () => {
+    setAnchorEl(null);
+    setSelectedStudent(null);
+  };
+
+  const handleSelectAllStudents = (e) => {
+    if (e.target.checked) {
+      setSelectedStudents(filteredStudents.map(s => s._id));
+    } else {
+      setSelectedStudents([]);
+    }
+  };
+
+  const handleStudentSelect = (studentId) => {
+    if (selectedStudents.includes(studentId)) {
+      setSelectedStudents(selectedStudents.filter(id => id !== studentId));
+    } else {
+      setSelectedStudents([...selectedStudents, studentId]);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterBy(e.target.value);
+  };
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+  };
+
+  const handleClassFilterChange = (e) => {
+    setClassFilter(e.target.value);
+  };
+
+  const filteredAndSortedStudents = useMemo(() => {
+    let students = filteredStudents;
+
+    // Apply class filter
+    if (classFilter !== 'all') {
+      students = students.filter(student => student.class === classFilter);
+    }
+
+    // Apply sort
+    students = students.sort((a, b) => {
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      } else if (sortBy === 'grade') {
+        return (a.avgGrade || 0) - (b.avgGrade || 0);
+      } else if (sortBy === 'age') {
+        return (a.age || 0) - (b.age || 0);
+      }
+      return 0;
+    });
+
+    return students;
+  }, [filteredStudents, sortBy, classFilter]);
+
   if (isLoading) {
     return (
       <TrainerLayout title="Student Management">
@@ -97,18 +200,35 @@ const TrainerStudents = () => {
       {/* Header Section */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>Students</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{
-            bgcolor: '#6366F1',
-            '&:hover': { bgcolor: '#4F46E5' },
-            borderRadius: '8px',
-            textTransform: 'none'
-          }}
-        >
-          Add student
-        </Button>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            startIcon={<DownloadIcon />}
+            onClick={handleExportData}
+            variant="outlined"
+            sx={{ textTransform: 'none' }}
+          >
+            Export
+          </Button>
+          <Button
+            startIcon={<PrintIcon />}
+            onClick={handlePrint}
+            variant="outlined"
+            sx={{ textTransform: 'none' }}
+          >
+            Print
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{
+              bgcolor: '#6366F1',
+              '&:hover': { bgcolor: '#4F46E5' },
+              textTransform: 'none'
+            }}
+          >
+            Add student
+          </Button>
+        </Box>
       </Box>
 
       {/* Filters and Search Bar */}
@@ -120,7 +240,7 @@ const TrainerStudents = () => {
               size="small"
               placeholder="Search for students..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -135,7 +255,7 @@ const TrainerStudents = () => {
               fullWidth
               size="small"
               value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value)}
+              onChange={handleFilterChange}
               displayEmpty
             >
               <MenuItem value="all">All filters</MenuItem>
@@ -148,12 +268,27 @@ const TrainerStudents = () => {
               fullWidth
               size="small"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={handleSortChange}
               displayEmpty
             >
               <MenuItem value="name">Name</MenuItem>
               <MenuItem value="grade">Avg. grade</MenuItem>
               <MenuItem value="age">Age</MenuItem>
+            </Select>
+          </Grid>
+          <Grid item xs={6} md={2}>
+            <Select
+              fullWidth
+              size="small"
+              value={classFilter}
+              onChange={handleClassFilterChange}
+              displayEmpty
+            >
+              <MenuItem value="all">All Classes</MenuItem>
+              <MenuItem value="1A">1A</MenuItem>
+              <MenuItem value="1B">1B</MenuItem>
+              <MenuItem value="1C">1C</MenuItem>
+              {/* Add more class options as needed */}
             </Select>
           </Grid>
         </Grid>
@@ -167,13 +302,7 @@ const TrainerStudents = () => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedStudents(filteredStudents.map(s => s._id));
-                      } else {
-                        setSelectedStudents([]);
-                      }
-                    }}
+                    onChange={handleSelectAllStudents}
                   />
                 </TableCell>
                 <TableCell>ID</TableCell>
@@ -187,18 +316,12 @@ const TrainerStudents = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredStudents.map((student, index) => (
+              {filteredAndSortedStudents.map((student, index) => (
                 <TableRow key={student._id} hover>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={selectedStudents.includes(student._id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedStudents([...selectedStudents, student._id]);
-                        } else {
-                          setSelectedStudents(selectedStudents.filter(id => id !== student._id));
-                        }
-                      }}
+                      onChange={() => handleStudentSelect(student._id)}
                     />
                   </TableCell>
                   <TableCell>{index + 1}</TableCell>
@@ -216,7 +339,7 @@ const TrainerStudents = () => {
                   <TableCell>{student.avgGrade || 'N/A'}</TableCell>
                   <TableCell>{student.missingDays || 0}</TableCell>
                   <TableCell align="right">
-                    <IconButton size="small">
+                    <IconButton size="small" onClick={(e) => handleActionClick(e, student)}>
                       <MoreVertIcon />
                     </IconButton>
                   </TableCell>
@@ -226,6 +349,35 @@ const TrainerStudents = () => {
           </Table>
         </TableContainer>
       </Paper>
+
+      {/* Add Actions Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleActionClose}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <MenuItem onClick={handleActionClose}>
+          <ListItemIcon>
+            <EditIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Edit</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleActionClose}>
+          <ListItemIcon>
+            <MailIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Send Email</ListItemText>
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleActionClose} sx={{ color: 'error.main' }}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" color="error" />
+          </ListItemIcon>
+          <ListItemText>Delete</ListItemText>
+        </MenuItem>
+      </Menu>
     </TrainerLayout>
   );
 };
