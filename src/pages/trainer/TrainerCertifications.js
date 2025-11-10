@@ -62,28 +62,32 @@ const drawTemplate = (ctx, width, height, data, variant) => {
     ctx.fill();
 
     // Company name and logo
-    if (data.logoImg) ctx.drawImage(data.logoImg, x + 20, y0 + 22, 60, 60);
+    if (data.logoImg) {
+      const logoX = (width - 60) / 2;  // Center the logo
+      ctx.drawImage(data.logoImg, logoX, y0 + 22, 60, 60);
+    }
     ctx.fillStyle = '#202F32';
     ctx.font = 'bold 14px Arial';
-    ctx.fillText((data.companyName || 'COMPANY NAME'), x + 90, y0 + 52);
+    ctx.textAlign = 'center';  // Center text alignment
+    ctx.fillText((data.companyName || 'COMPANY NAME'), width/2, y0 + 100);
 
     // Title
     ctx.fillStyle = '#2b5cff';
     ctx.font = 'bold 64px Arial';
-    ctx.fillText('Certificate', x + 40, y0 + 160);
+    ctx.fillText('Certificate', width/2, y0 + 180);
 
     // Subtitle lines
     ctx.fillStyle = '#202F32';
     ctx.font = 'bold 18px Arial';
-    ctx.fillText('OF ACHIEVEMENT', x + 40, y0 + 190);
+    ctx.fillText('OF ACHIEVEMENT', width/2, y0 + 220);
     ctx.font = '16px Arial';
     ctx.fillStyle = '#666';
-    ctx.fillText('THIS CERTIFICATE IS PRESENTED TO', x + 40, y0 + 215);
+    ctx.fillText('THIS CERTIFICATE IS PRESENTED TO', width/2, y0 + 260);
 
     // Name
     ctx.fillStyle = '#2b5cff';
     ctx.font = 'bold 48px Arial';
-    ctx.fillText(data.recipientName || 'Name Surname', x + 40, y0 + 270);
+    ctx.fillText(data.recipientName || 'Name Surname', width/2, y0 + 320);
 
     // Paragraph
     ctx.fillStyle = '#666';
@@ -91,50 +95,44 @@ const drawTemplate = (ctx, width, height, data, variant) => {
     const text = data.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.';
     const words = text.split(' ');
     let line = '';
-    let yy = y0 + 300;
+    let yy = y0 + 380;
     for (let n = 0; n < words.length; n++) {
       const testLine = line + words[n] + ' ';
-      const { width: wline } = ctx.measureText(testLine);
-      if (wline > w - 120) {
-        ctx.fillText(line, x + 40, yy);
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > w - 120) {
+        ctx.fillText(line, width/2, yy);
         line = words[n] + ' ';
         yy += 22;
       } else {
         line = testLine;
       }
     }
-    ctx.fillText(line, x + 40, yy);
+    ctx.fillText(line, width/2, yy);
 
     // Date and signature
     ctx.fillStyle = '#202F32';
     ctx.font = '14px Arial';
-    ctx.fillText(data.issueDate ? new Date(data.issueDate).toDateString() : 'JANUARY 2ND 2025', x + 40, y0 + h - 70);
+    
+    const dateX = x + 100;
+    const signatureX = x + w - 200;
+    
+    ctx.textAlign = 'center';
+    ctx.fillText(data.issueDate ? new Date(data.issueDate).toDateString() : 'JANUARY 2ND 2025', dateX, y0 + h - 70);
     ctx.fillStyle = '#666';
-    ctx.fillText('DATE', x + 40, y0 + h - 50);
+    ctx.fillText('DATE', dateX, y0 + h - 50);
 
     if (data.signatureImg) {
-      ctx.drawImage(data.signatureImg, x + w - 300, y0 + h - 120, 160, 50);
+      ctx.drawImage(data.signatureImg, signatureX - 80, y0 + h - 120, 160, 50);
     }
     ctx.strokeStyle = '#999';
     ctx.beginPath();
-    ctx.moveTo(x + w - 320, y0 + h - 60);
-    ctx.lineTo(x + w - 140, y0 + h - 60);
+    ctx.moveTo(signatureX - 90, y0 + h - 60);
+    ctx.lineTo(signatureX + 90, y0 + h - 60);
     ctx.stroke();
     ctx.fillStyle = '#666';
-    ctx.fillText('SIGNATURE', x + w - 265, y0 + h - 40);
+    ctx.fillText('SIGNATURE', signatureX, y0 + h - 40);
 
-    // Award badge
-    const cx = x + w - 280;
-    const cy = y0 + 200;
-    ctx.beginPath(); ctx.fillStyle = '#2b5cff'; ctx.arc(cx, cy, 52, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.fillStyle = '#ffffff'; ctx.arc(cx, cy, 44, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#2b5cff';
-    ctx.font = 'bold 14px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('BEST', cx, cy - 4);
-    ctx.font = '12px Arial';
-    ctx.fillText('AWARD', cx, cy + 14);
-    ctx.textAlign = 'start';
+    // Remove badge section - it's not needed anymore
     return;
   }
 
