@@ -15,6 +15,7 @@ import {
   useTheme,
   Collapse,
   Tooltip,
+  ListSubheader,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -30,6 +31,7 @@ import {
   CardMembership as CertificateIcon,
   VideoCall as LiveSessionIcon,
   Book as CoursesIcon,
+  ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 
@@ -60,12 +62,13 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
 
   const groups = useMemo(() => ([
     {
-      header: { text: 'Dashboard', icon: <DashboardIcon />, path: '/trainer/dashboard' },
+      header: { text: 'Dashboard', icon: <DashboardIcon /> },
+      // No children; we will render a single child item that links to dashboard
       children: [],
       key: 'dashboard',
     },
     {
-      header: { text: 'Courses', icon: <CoursesIcon />, path: '/trainer/courses' },
+      header: { text: 'Course Management', icon: <CoursesIcon /> },
       children: [
         { text: 'Courses', icon: <CoursesIcon />, path: '/trainer/courses' },
         { text: 'Assignments', icon: <AssignmentIcon />, path: '/trainer/assignments' },
@@ -76,7 +79,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
       key: 'courses',
     },
     {
-      header: { text: 'Students', icon: <PeopleIcon />, path: '/trainer/students' },
+      header: { text: 'Student Management', icon: <PeopleIcon /> },
       children: [
         { text: 'Students', icon: <PeopleIcon />, path: '/trainer/students' },
         { text: 'Messages', icon: <MessageIcon />, path: '/trainer/messages' },
@@ -84,15 +87,15 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
       key: 'students',
     },
     {
-      header: { text: 'Earnings', icon: <EarningsIcon />, path: '/trainer/earnings' },
+      header: { text: 'Earnings', icon: <EarningsIcon /> },
       children: [], key: 'earnings',
     },
     {
-      header: { text: 'Reports', icon: <ReportsIcon />, path: '/trainer/reports' },
+      header: { text: 'Reports', icon: <ReportsIcon /> },
       children: [], key: 'reports',
     },
     {
-      header: { text: 'Settings', icon: <SettingsIcon />, path: '/trainer/settings' },
+      header: { text: 'Settings', icon: <SettingsIcon /> },
       children: [], key: 'settings',
     },
   ]), []);
@@ -198,66 +201,77 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
       >
         <List sx={{ px: isExpanded ? 2 : 1, position: 'relative' }}>
           {groups.map((group) => {
-            const groupActive = location.pathname.startsWith(group.header.path);
+            const groupActive = group.children.some(c => location.pathname.startsWith(c.path)) || (group.key === 'dashboard' && location.pathname.startsWith('/trainer/dashboard'));
             const showChildren = isExpanded && openGroups[group.key] && group.children.length > 0;
-            const headerButton = (
-              <ListItemButton
-                component={Link}
-                to={group.header.path}
-                onClick={(e) => {
-                  if (group.children.length > 0 && isExpanded) {
-                    // Navigate on single click; toggle via secondary action handled below
-                  }
-                  if (isMobile) onMobileClose();
-                }}
-                sx={{
-                  borderRadius: '12px',
-                  bgcolor: groupActive ? 'white' : 'transparent',
-                  color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)',
-                  '&:hover': { bgcolor: groupActive ? 'white' : 'rgba(255,255,255,0.1)' },
-                  py: 1.5,
-                  px: isExpanded ? 2.5 : 1.5,
-                }}
-              >
-                <ListItemIcon sx={{ color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)', minWidth: 40 }}>
-                  {group.header.icon}
-                </ListItemIcon>
-                {isExpanded && (
-                  <ListItemText primary={group.header.text} primaryTypographyProps={{ fontSize: '0.95rem', fontWeight: groupActive ? 600 : 400, color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)' }} />
-                )}
-              </ListItemButton>
-            );
 
             return (
               <Box key={group.key} sx={{ mb: 0.5 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {isExpanded ? (
-                    <Box sx={{ flex: 1 }}>{headerButton}</Box>
-                  ) : (
-                    <Tooltip title={group.header.text} placement="right">{headerButton}</Tooltip>
-                  )}
-                  {isExpanded && group.children.length > 0 && (
-                    <Button onClick={() => toggleGroup(group.key)} sx={{ ml: 1, minWidth: 0, color: 'white' }}>{openGroups[group.key] ? '−' : '+'}</Button>
-                  )}
-                </Box>
+                {/* Header (toggle only, not a link) */}
+                <ListItem
+                  disablePadding
+                  sx={{
+                    mb: 0.5,
+                  }}
+                >
+                  <ListItemButton
+                    onClick={() => group.children.length > 0 ? toggleGroup(group.key) : navigate('/trainer/dashboard')}
+                    sx={{
+                      borderRadius: '999px',
+                      bgcolor: groupActive ? 'white' : 'transparent',
+                      color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)',
+                      '&:hover': { bgcolor: 'white', color: '#202F32', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' },
+                      py: 1.25,
+                      px: isExpanded ? 2 : 1.25,
+                      width: '100%',
+                  }}
+                 >
+                    <ListItemIcon sx={{ color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)', minWidth: 36 }}>
+                      {group.header.icon}
+                    </ListItemIcon>
+                    {isExpanded && (
+                      <ListItemText
+                        primary={group.header.text}
+                        primaryTypographyProps={{
+                          fontSize: '0.9rem',
+                          fontWeight: groupActive ? 700 : 600,
+                          noWrap: true,
+                        }}
+                      />
+                    )}
+                    {isExpanded && group.children.length > 0 && (
+                      <ExpandMoreIcon sx={{ ml: 'auto', transform: openGroups[group.key] ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
+                    )}
+                  </ListItemButton>
+                </ListItem>
+
+                {/* Children */}
                 <Collapse in={showChildren} timeout="auto" unmountOnExit>
-                  <List sx={{ pl: 4 }}>
-                    {group.children.map((child) => {
+                  <List sx={{ pl: isExpanded ? 4 : 2 }}>
+                    {(group.key === 'dashboard'
+                      ? [{ text: 'Dashboard', icon: <DashboardIcon />, path: '/trainer/dashboard' }]
+                      : group.children
+                    ).map((child) => {
                       const isActive = location.pathname === child.path || location.pathname.startsWith(child.path + '/');
                       return (
                         <ListItem key={child.path} disablePadding>
                           <ListItemButton component={Link} to={child.path} onClick={() => isMobile && onMobileClose()} sx={{
-                            borderRadius: '12px',
-                            bgcolor: isActive ? 'rgba(255,255,255,1)' : 'transparent',
+                            borderRadius: '999px',
+                            bgcolor: isActive ? 'white' : 'transparent',
                             color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
-                            '&:hover': { bgcolor: isActive ? 'white' : 'rgba(255,255,255,0.1)' },
+                            '&:hover': { bgcolor: 'white', color: '#202F32', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' },
                             py: 1,
-                            px: 2,
+                            px: isExpanded ? 2 : 1.25,
+                            width: '100%',
                           }}>
-                            <ListItemIcon sx={{ minWidth: 32, color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)' }}>
+                            <ListItemIcon sx={{ minWidth: 30, color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)' }}>
                               {child.icon}
                             </ListItemIcon>
-                            <ListItemText primary={child.text} primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: isActive ? 600 : 400, color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)' }} />
+                            {isExpanded && (
+                              <ListItemText
+                                primary={child.text}
+                                primaryTypographyProps={{ fontSize: '0.875rem', fontWeight: isActive ? 600 : 500, noWrap: true }}
+                              />
+                            )}
                           </ListItemButton>
                         </ListItem>
                       );
