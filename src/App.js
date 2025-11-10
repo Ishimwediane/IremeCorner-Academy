@@ -22,6 +22,7 @@ import MyCourses from './pages/MyCourses';
 import LessonView from './pages/LessonView';
 import AdminDashboard from './pages/AdminDashboard';
 import CreateCourse from './pages/CreateCourse';
+import TrainerDashboard from './pages/TrainerDashboard';
 import AIAssistant from './pages/AIAssistant';
 import DropInformation from './pages/DropInformation';
 import TermsAndConditions from './pages/TermsAndConditions';
@@ -31,14 +32,18 @@ import About from './pages/About';
 function AppContent() {
   const location = useLocation();
   const learnerPages = ['/dashboard', '/profile', '/my-courses', '/learner/courses', '/learner/notifications'];
+  const trainerPages = ['/trainer'];
   const isLearnerPage = learnerPages.some(path => location.pathname.startsWith(path)) || 
                      location.pathname.includes('/lessons/');
-  const showDashboardNavbar = isLearnerPage;
+  const isTrainerPage = trainerPages.some(path => location.pathname.startsWith(path));
+  const showDashboardNavbar = isLearnerPage && !isTrainerPage;
+  const showNavbar = !isLearnerPage && !isTrainerPage;
 
   return (
     <div className="App">
-      {showDashboardNavbar ? <DashboardNavbar /> : <Navbar />}
-      <Box sx={{ pt: showDashboardNavbar ? '80px' : '70px' }}>
+      {showDashboardNavbar && <DashboardNavbar />}
+      {showNavbar && <Navbar />}
+      <Box sx={{ pt: showDashboardNavbar ? '80px' : showNavbar ? '70px' : 0 }}>
           <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Auth />} />
@@ -109,6 +114,14 @@ function AppContent() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/trainer/dashboard"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerDashboard />
+              </PrivateRoute>
+            }
+          />
           <Route path="/drop-information" element={<DropInformation />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/contact" element={<Contact />} />
@@ -124,8 +137,8 @@ function AppContent() {
           <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>
-        <Footer />
-        <ChatWidget />
+        {!isTrainerPage && <Footer />}
+        {!isTrainerPage && <ChatWidget />}
         <ToastContainer
           position="top-right"
           autoClose={3000}

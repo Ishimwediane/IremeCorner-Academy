@@ -409,10 +409,17 @@ const DashboardNavbar = () => {
           <MenuItem component={Link} to="/profile" onClick={handleClose}>
             Profile
           </MenuItem>
-          <MenuItem component={Link} to="/dashboard" onClick={handleClose}>
-            <DashboardIcon sx={{ mr: 1, fontSize: 20 }} />
-            Dashboard
-          </MenuItem>
+          {user?.role === 'trainer' || user?.role === 'admin' ? (
+            <MenuItem component={Link} to="/trainer/dashboard" onClick={handleClose}>
+              <DashboardIcon sx={{ mr: 1, fontSize: 20 }} />
+              Trainer Dashboard
+            </MenuItem>
+          ) : (
+            <MenuItem component={Link} to="/dashboard" onClick={handleClose}>
+              <DashboardIcon sx={{ mr: 1, fontSize: 20 }} />
+              Dashboard
+            </MenuItem>
+          )}
           {user?.role === 'admin' && (
             <MenuItem component={Link} to="/admin" onClick={handleClose}>
               <AdminPanelSettings sx={{ mr: 1, fontSize: 20 }} />
