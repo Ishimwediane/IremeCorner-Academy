@@ -9,6 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/Navbar';
 import DashboardNavbar from './components/DashboardNavbar';
 import Footer from './components/Footer';
+import ChatWidget from './components/ChatWidget';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import Courses from './pages/Courses';
@@ -124,6 +125,7 @@ function AppContent() {
           </Routes>
         </Box>
         <Footer />
+        <ChatWidget />
         <ToastContainer
           position="top-right"
           autoClose={3000}
