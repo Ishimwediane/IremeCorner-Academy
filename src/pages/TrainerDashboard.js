@@ -34,8 +34,9 @@ import {
 import { useQuery } from 'react-query';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { format } from 'date-fns';
+import { format, isSameDay, addDays } from 'date-fns';
 import TrainerSidebar from '../components/TrainerSidebar';
+import Calendar from '../components/Calendar';
 
 const TrainerDashboard = () => {
   const { user } = useAuth();
@@ -153,6 +154,48 @@ const TrainerDashboard = () => {
     });
     return requests;
   }, [courses]);
+
+  // Generate calendar events from courses and students
+  const calendarEvents = useMemo(() => {
+    const events = [];
+    const today = new Date();
+    
+    courses.forEach((course, courseIndex) => {
+      if (course.enrolledStudents && course.enrolledStudents.length > 0) {
+        // Create events for the next few days based on course
+        course.enrolledStudents.slice(0, 3).forEach((student, studentIndex) => {
+          const eventDate = addDays(today, studentIndex + 1);
+          const studentName = student.name || student.email || 'Student';
+          events.push({
+            id: `event-${courseIndex}-${studentIndex}`,
+            date: eventDate,
+            title: course.title,
+            student: studentName,
+            initials: studentName.charAt(0).toUpperCase(),
+            color: ['#C39766', '#9c27b0', '#4caf50', '#e91e63', '#2196f3'][courseIndex % 5],
+            time: `${9 + studentIndex}:00`,
+          });
+        });
+      }
+    });
+
+    // Add some events for today
+    if (todayActivities.length > 0) {
+      todayActivities.forEach((activity, index) => {
+        events.push({
+          id: `today-${index}`,
+          date: today,
+          title: activity.course,
+          student: activity.student,
+          initials: activity.avatar,
+          color: '#C39766',
+          time: activity.time,
+        });
+      });
+    }
+
+    return events;
+  }, [courses, todayActivities]);
 
   if (coursesLoading) {
     return (
@@ -437,22 +480,25 @@ const TrainerDashboard = () => {
         </Grid>
 
         <Grid container spacing={3}>
-          {/* Today's Classes */}
-          <Grid item xs={12} md={6}>
-            <Paper
-              sx={{
-                p: 3,
-                borderRadius: '16px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                height: '100%',
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 600, color: '#202F32', mb: 2 }}
-              >
-                Today's Classes
-              </Typography>
+          {/* Left Column */}
+          <Grid item xs={12} lg={8}>
+            <Grid container spacing={3}>
+              {/* Today's Classes */}
+              <Grid item xs={12} md={6}>
+                <Paper
+                  sx={{
+                    p: 3,
+                    borderRadius: '16px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    height: '100%',
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, color: '#202F32', mb: 2 }}
+                  >
+                    Today's Classes
+                  </Typography>
               <List>
                 {todayActivities.length > 0 ? (
                   todayActivities.map((activity) => (
@@ -531,11 +577,11 @@ const TrainerDashboard = () => {
                   </Typography>
                 )}
               </List>
-            </Paper>
-          </Grid>
+                </Paper>
+              </Grid>
 
-          {/* Next Student Details */}
-          <Grid item xs={12} md={6}>
+              {/* Next Student Details */}
+              <Grid item xs={12} md={6}>
             <Paper
               sx={{
                 p: 3,
@@ -683,11 +729,11 @@ const TrainerDashboard = () => {
                   No student data available
                 </Typography>
               )}
-            </Paper>
-          </Grid>
+                </Paper>
+              </Grid>
 
-          {/* Student Requests */}
-          <Grid item xs={12} md={6}>
+              {/* Student Requests */}
+              <Grid item xs={12}>
             <Paper
               sx={{
                 p: 3,
@@ -805,53 +851,14 @@ const TrainerDashboard = () => {
                   </Typography>
                 )}
               </List>
-            </Paper>
+                </Paper>
+              </Grid>
+            </Grid>
           </Grid>
 
-          {/* Analytics Chart Placeholder */}
-          <Grid item xs={12} md={6}>
-            <Paper
-              sx={{
-                p: 3,
-                borderRadius: '16px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: 300,
-              }}
-            >
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: 600, color: '#202F32', mb: 1 }}
-                >
-                  Course Analytics
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ color: '#666', mb: 3 }}
-                >
-                  Enrollment and completion statistics
-                </Typography>
-                <Box
-                  sx={{
-                    width: '100%',
-                    height: 200,
-                    bgcolor: 'rgba(195,151,102,0.05)',
-                    borderRadius: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Typography variant="body2" sx={{ color: '#999' }}>
-                    Chart visualization coming soon
-                  </Typography>
-                </Box>
-              </Box>
-            </Paper>
+          {/* Right Column - Calendar */}
+          <Grid item xs={12} lg={4}>
+            <Calendar events={calendarEvents} />
           </Grid>
         </Grid>
         </Box>

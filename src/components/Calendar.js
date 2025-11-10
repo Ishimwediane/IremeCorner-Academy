@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography, IconButton, Avatar } from '@mui/material';
-import { ChevronLeft, ChevronRight, MoreVert, Edit } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, MoreVert } from '@mui/icons-material';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, getDay } from 'date-fns';
 
 const Calendar = ({ events = [] }) => {
@@ -42,14 +42,11 @@ const Calendar = ({ events = [] }) => {
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
-          Tasks Schedule
+          Schedule
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton size="small" sx={{ color: '#202F32' }}>
+          <IconButton size="small" sx={{ color: '#202F32', '&:hover': { bgcolor: 'rgba(195,151,102,0.1)' } }}>
             <MoreVert fontSize="small" />
-          </IconButton>
-          <IconButton size="small" sx={{ color: '#202F32' }}>
-            <Edit fontSize="small" />
           </IconButton>
         </Box>
       </Box>
