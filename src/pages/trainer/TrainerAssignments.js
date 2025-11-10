@@ -124,8 +124,8 @@ const ScheduleGrid = ({ days, items, viewMode }) => {
   );
 };
 
-const CreateAssignmentDialog = ({ open, onClose, onSave, courses = [] }) => {
-  const [form, setForm] = useState({ title: '', course: '', dueDate: '', type: 'Assignment' });
+const CreateAssignmentDialog = ({ open, onClose, onSaved, courses = [], defaultCourseId }) => {
+  const [form, setForm] = useState({ title: '', description: '', course: defaultCourseId || '', dueDate: '' });
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Create Assignment</DialogTitle>
@@ -134,9 +134,12 @@ const CreateAssignmentDialog = ({ open, onClose, onSave, courses = [] }) => {
           <Grid item xs={12}>
             <TextField fullWidth label="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           </Grid>
+          <Grid item xs={12}>
+            <TextField fullWidth multiline rows={3} label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          </Grid>
           <Grid item xs={12} sm={6}>
             <TextField fullWidth label="Course" select value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })}>
-              {courses.map((c) => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+              {courses.map((c) => <MenuItem key={c._id || c} value={c._id || c}>{c.title || c}</MenuItem>)}
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -146,7 +149,7 @@ const CreateAssignmentDialog = ({ open, onClose, onSave, courses = [] }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => onSave(form)} variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Save</Button>
+        <Button onClick={() => onSaved(form)} variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Save</Button>
       </DialogActions>
     </Dialog>
   );
@@ -178,6 +181,7 @@ const TrainerAssignments = () => {
   const [selectedCourse, setSelectedCourse] = useState('all');
   const [assignments, setAssignments] = useState([]);
   const [viewMode, setViewMode] = useState('week'); // 'day' | 'week' | 'month'
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Fetch trainer courses
   useEffect(() => {
@@ -207,7 +211,7 @@ const TrainerAssignments = () => {
       }
     };
     load();
-  }, [selectedCourse, courses]);
+  }, [selectedCourse, courses, refreshKey]);
 
   // Mock items for the planner
   const items = useMemo(() => {
@@ -294,7 +298,26 @@ const TrainerAssignments = () => {
         </Paper>
       )}
 
-      <CreateAssignmentDialog open={openCreate} onClose={() => setOpenCreate(false)} onSave={() => setOpenCreate(false)} courses={courses.map((c) => c.title)} />
+      <CreateAssignmentDialog
+        open={openCreate}
+        onClose={() => setOpenCreate(false)}
+        defaultCourseId={selectedCourse !== 'all' ? selectedCourse : ''}
+        courses={courses}
+        onSaved={async (form) => {
+          try {
+            await api.post('/assignments', {
+              title: form.title,
+              description: form.description,
+              course: form.course,
+              dueDate: form.dueDate,
+            });
+            setOpenCreate(false);
+            setRefreshKey((k) => k + 1);
+          } catch (e) {
+            setOpenCreate(false);
+          }
+        }}
+      />
     </TrainerLayout>
   );
 };

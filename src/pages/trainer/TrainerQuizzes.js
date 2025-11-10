@@ -94,8 +94,8 @@ const ScheduleGrid = ({ days, items, viewMode }) => {
   );
 };
 
-const CreateQuizDialog = ({ open, onClose, onSave, courses = [] }) => {
-  const [form, setForm] = useState({ title: '', course: '', availableOn: '' });
+const CreateQuizDialog = ({ open, onClose, onSaved, courses = [], defaultCourseId }) => {
+  const [form, setForm] = useState({ title: '', course: defaultCourseId || '', availableOn: '', question: '', options: '', correctIndex: 0 });
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Create Quiz</DialogTitle>
@@ -106,17 +106,26 @@ const CreateQuizDialog = ({ open, onClose, onSave, courses = [] }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField fullWidth label="Course" select value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })}>
-              {courses.map((c) => <MenuItem key={c} value={c}>{c}</MenuItem>)}
+              {courses.map((c) => <MenuItem key={c._id || c} value={c._id || c}>{c.title || c}</MenuItem>)}
             </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField fullWidth type="date" label="Available On" InputLabelProps={{ shrink: true }} value={form.availableOn} onChange={(e) => setForm({ ...form, availableOn: e.target.value })} />
           </Grid>
+          <Grid item xs={12}>
+            <TextField fullWidth label="First Question" value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField fullWidth label="Options (comma separated)" value={form.options} onChange={(e) => setForm({ ...form, options: e.target.value })} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField fullWidth type="number" label="Correct Option Index (0-based)" value={form.correctIndex} onChange={(e) => setForm({ ...form, correctIndex: Number(e.target.value) })} />
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => onSave(form)} variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Save</Button>
+        <Button onClick={() => onSaved(form)} variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Save</Button>
       </DialogActions>
     </Dialog>
   );
@@ -131,6 +140,7 @@ const TrainerQuizzes = () => {
   const [selectedCourse, setSelectedCourse] = useState('all');
   const [quizzes, setQuizzes] = useState([]);
   const [viewMode, setViewMode] = useState('week');
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const userId = user?._id || user?.id;
@@ -157,7 +167,7 @@ const TrainerQuizzes = () => {
       }
     };
     load();
-  }, [selectedCourse, courses]);
+  }, [selectedCourse, courses, refreshKey]);
 
   const items = useMemo(() => quizzes.map((q, idx) => ({
     id: q._id || `q-${idx}`,
@@ -226,7 +236,34 @@ const TrainerQuizzes = () => {
         </Paper>
       )}
 
-      <CreateQuizDialog open={openCreate} onClose={() => setOpenCreate(false)} onSave={() => setOpenCreate(false)} courses={courses.map((c) => c.title)} />
+      <CreateQuizDialog
+        open={openCreate}
+        onClose={() => setOpenCreate(false)}
+        defaultCourseId={selectedCourse !== 'all' ? selectedCourse : ''}
+        courses={courses}
+        onSaved={async (form) => {
+          try {
+            const payload = {
+              title: form.title,
+              course: form.course,
+              availableOn: form.availableOn || undefined,
+              questions: [
+                {
+                  question: form.question || 'Sample question',
+                  options: form.options ? form.options.split(',').map((s) => s.trim()) : ['Option A', 'Option B'],
+                  correctAnswer: Number.isInteger(form.correctIndex) ? form.correctIndex : 0,
+                  points: 1,
+                },
+              ],
+            };
+            await api.post('/quizzes', payload);
+            setOpenCreate(false);
+            setRefreshKey((k) => k + 1);
+          } catch (e) {
+            setOpenCreate(false);
+          }
+        }}
+      />
     </TrainerLayout>
   );
 };
