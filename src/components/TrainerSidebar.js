@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -13,6 +13,8 @@ import {
   Drawer,
   useMediaQuery,
   useTheme,
+  Collapse,
+  Tooltip,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -38,19 +40,72 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/trainer/dashboard' },
-    { text: 'Courses', icon: <CoursesIcon />, path: '/trainer/courses' },
-    { text: 'Students', icon: <PeopleIcon />, path: '/trainer/students' },
-    { text: 'Assignments', icon: <AssignmentIcon />, path: '/trainer/assignments' },
-    { text: 'Quizzes', icon: <QuizIcon />, path: '/trainer/quizzes' },
-    { text: 'Earnings', icon: <EarningsIcon />, path: '/trainer/earnings' },
-    { text: 'Messages', icon: <MessageIcon />, path: '/trainer/messages' },
-    { text: 'Reports', icon: <ReportsIcon />, path: '/trainer/reports' },
-    { text: 'Live Sessions', icon: <LiveSessionIcon />, path: '/trainer/live-sessions' },
-    { text: 'Certifications', icon: <CertificateIcon />, path: '/trainer/certifications' },
-    { text: 'Settings', icon: <SettingsIcon />, path: '/trainer/settings' },
-  ];
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('trainerSidebarCollapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [hoverExpanded, setHoverExpanded] = useState(false);
+  const isExpanded = !collapsed || hoverExpanded;
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('trainerSidebarCollapsed', collapsed ? 'true' : 'false');
+    } catch {}
+    // Notify layout about change
+    window.dispatchEvent(new CustomEvent('trainer-sidebar-toggle', { detail: { collapsed } }));
+  }, [collapsed]);
+
+  const groups = useMemo(() => ([
+    {
+      header: { text: 'Dashboard', icon: <DashboardIcon />, path: '/trainer/dashboard' },
+      children: [],
+      key: 'dashboard',
+    },
+    {
+      header: { text: 'Courses', icon: <CoursesIcon />, path: '/trainer/courses' },
+      children: [
+        { text: 'Courses', icon: <CoursesIcon />, path: '/trainer/courses' },
+        { text: 'Assignments', icon: <AssignmentIcon />, path: '/trainer/assignments' },
+        { text: 'Quizzes', icon: <QuizIcon />, path: '/trainer/quizzes' },
+        { text: 'Live Sessions', icon: <LiveSessionIcon />, path: '/trainer/live-sessions' },
+        { text: 'Certifications', icon: <CertificateIcon />, path: '/trainer/certifications' },
+      ],
+      key: 'courses',
+    },
+    {
+      header: { text: 'Students', icon: <PeopleIcon />, path: '/trainer/students' },
+      children: [
+        { text: 'Students', icon: <PeopleIcon />, path: '/trainer/students' },
+        { text: 'Messages', icon: <MessageIcon />, path: '/trainer/messages' },
+      ],
+      key: 'students',
+    },
+    {
+      header: { text: 'Earnings', icon: <EarningsIcon />, path: '/trainer/earnings' },
+      children: [], key: 'earnings',
+    },
+    {
+      header: { text: 'Reports', icon: <ReportsIcon />, path: '/trainer/reports' },
+      children: [], key: 'reports',
+    },
+    {
+      header: { text: 'Settings', icon: <SettingsIcon />, path: '/trainer/settings' },
+      children: [], key: 'settings',
+    },
+  ]), []);
+
+  const [openGroups, setOpenGroups] = useState(() => {
+    const initial = {};
+    groups.forEach(g => { initial[g.key] = true; });
+    return initial;
+  });
+
+  const toggleGroup = (key) => {
+    setOpenGroups(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const handleLogout = () => {
     logout();
@@ -60,15 +115,17 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
   const sidebarContent = (
     <Box
       sx={{
-        width: 280,
+        width: isExpanded ? 280 : 80,
         height: '100%',
         bgcolor: '#202F32',
         color: 'white',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
-        overflow: 'visible',
+        overflow: 'hidden',
       }}
+      onMouseEnter={() => setHoverExpanded(true)}
+      onMouseLeave={() => setHoverExpanded(false)}
     >
       {/* Profile Section */}
       <Box
@@ -88,6 +145,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
           >
             {user?.name?.charAt(0)?.toUpperCase() || 'T'}
           </Avatar>
+          {isExpanded && (
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 600, color: 'white' }}>
               {user?.name || 'Teacher'}
@@ -99,6 +157,22 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
               Instructor
             </Typography>
           </Box>
+          )}
+          <Button
+            onClick={() => setCollapsed(!collapsed)}
+            sx={{
+              ml: 'auto',
+              minWidth: 0,
+              color: 'white',
+              display: { xs: 'none', md: 'inline-flex' },
+              bgcolor: 'rgba(255,255,255,0.1)',
+              px: 1,
+              borderRadius: '8px',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.15)' },
+            }}
+          >
+            {collapsed ? '>' : '<'}
+          </Button>
         </Box>
       </Box>
 
@@ -109,7 +183,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
           pt: 2, 
           position: 'relative',
           overflowY: 'auto',
-          overflowX: 'visible',
+          overflowX: 'hidden',
           '&::-webkit-scrollbar': {
             width: '6px',
           },
@@ -122,78 +196,75 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
           },
         }}
       >
-        <List 
-          sx={{ 
-            px: 2, 
-            position: 'relative',
-            overflow: 'visible',
-          }}
-        >
-          {menuItems.map((item) => {
-            // Match exact route or if path starts with the menu item path
-            const isActive = location.pathname === item.path || 
-                            (item.path !== '/trainer/dashboard' && location.pathname.startsWith(item.path));
-            return (
-              <ListItem 
-                key={item.text} 
-                disablePadding 
-                sx={{ 
-                  mb: 0.5,
-                  position: 'relative',
-                  overflow: 'visible',
+        <List sx={{ px: isExpanded ? 2 : 1, position: 'relative' }}>
+          {groups.map((group) => {
+            const groupActive = location.pathname.startsWith(group.header.path);
+            const showChildren = isExpanded && openGroups[group.key] && group.children.length > 0;
+            const headerButton = (
+              <ListItemButton
+                component={Link}
+                to={group.header.path}
+                onClick={(e) => {
+                  if (group.children.length > 0 && isExpanded) {
+                    // Navigate on single click; toggle via secondary action handled below
+                  }
+                  if (isMobile) onMobileClose();
+                }}
+                sx={{
+                  borderRadius: '12px',
+                  bgcolor: groupActive ? 'white' : 'transparent',
+                  color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)',
+                  '&:hover': { bgcolor: groupActive ? 'white' : 'rgba(255,255,255,0.1)' },
+                  py: 1.5,
+                  px: isExpanded ? 2.5 : 1.5,
                 }}
               >
-                <Box
-                  sx={{
-                    width: '100%',
-                    position: 'relative',
-                    overflow: 'visible',
-                  }}
-                >
-                  <ListItemButton
-                    component={Link}
-                    to={item.path}
-                    onClick={() => {
-                      if (isMobile) {
-                        onMobileClose();
-                      }
-                    }}
-                    sx={{
-                      borderRadius: '12px',
-                      bgcolor: isActive ? 'white' : 'transparent',
-                      color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
-                      '&:hover': {
-                        bgcolor: isActive ? 'white' : 'rgba(255,255,255,0.1)',
-                      },
-                      py: 1.5,
-                      px: 2.5,
-                      position: 'relative',
-                      width: isActive ? 'calc(100% + 24px)' : '100%',
-                      marginRight: isActive ? '-24px' : 0,
-                      boxShadow: isActive ? '2px 0 8px rgba(0,0,0,0.12)' : 'none',
-                      zIndex: isActive ? 10 : 0,
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
-                        minWidth: 40,
-                      }}
-                    >
-                      {item.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={item.text}
-                      primaryTypographyProps={{
-                        fontSize: '0.95rem',
-                        fontWeight: isActive ? 600 : 400,
-                        color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
-                      }}
-                    />
-                  </ListItemButton>
+                <ListItemIcon sx={{ color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)', minWidth: 40 }}>
+                  {group.header.icon}
+                </ListItemIcon>
+                {isExpanded && (
+                  <ListItemText primary={group.header.text} primaryTypographyProps={{ fontSize: '0.95rem', fontWeight: groupActive ? 600 : 400, color: groupActive ? '#202F32' : 'rgba(255,255,255,0.9)' }} />
+                )}
+              </ListItemButton>
+            );
+
+            return (
+              <Box key={group.key} sx={{ mb: 0.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  {isExpanded ? (
+                    <Box sx={{ flex: 1 }}>{headerButton}</Box>
+                  ) : (
+                    <Tooltip title={group.header.text} placement="right">{headerButton}</Tooltip>
+                  )}
+                  {isExpanded && group.children.length > 0 && (
+                    <Button onClick={() => toggleGroup(group.key)} sx={{ ml: 1, minWidth: 0, color: 'white' }}>{openGroups[group.key] ? '−' : '+'}</Button>
+                  )}
                 </Box>
-              </ListItem>
+                <Collapse in={showChildren} timeout="auto" unmountOnExit>
+                  <List sx={{ pl: 4 }}>
+                    {group.children.map((child) => {
+                      const isActive = location.pathname === child.path || location.pathname.startsWith(child.path + '/');
+                      return (
+                        <ListItem key={child.path} disablePadding>
+                          <ListItemButton component={Link} to={child.path} onClick={() => isMobile && onMobileClose()} sx={{
+                            borderRadius: '12px',
+                            bgcolor: isActive ? 'rgba(255,255,255,1)' : 'transparent',
+                            color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
+                            '&:hover': { bgcolor: isActive ? 'white' : 'rgba(255,255,255,0.1)' },
+                            py: 1,
+                            px: 2,
+                          }}>
+                            <ListItemIcon sx={{ minWidth: 32, color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)' }}>
+                              {child.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={child.text} primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: isActive ? 600 : 400, color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)' }} />
+                          </ListItemButton>
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </Collapse>
+              </Box>
             );
           })}
         </List>
@@ -245,18 +316,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
           {sidebarContent}
         </Drawer>
       ) : (
-        <Box
-          sx={{
-            width: 280,
-            height: '100vh',
-            position: 'fixed',
-            left: 0,
-            top: 0,
-            zIndex: 1200,
-            display: { xs: 'none', md: 'block' },
-            overflow: 'visible',
-          }}
-        >
+        <Box sx={{ width: isExpanded ? 280 : 80, height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 1200, display: { xs: 'none', md: 'block' }, overflow: 'hidden' }}>
           {sidebarContent}
         </Box>
       )}

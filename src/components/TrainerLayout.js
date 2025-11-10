@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import {
   Notifications as NotificationsIcon,
@@ -10,6 +10,23 @@ import TrainerSidebar from './TrainerSidebar';
 
 const TrainerLayout = ({ children, title = 'Dashboard' }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('trainerSidebarCollapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e?.detail?.collapsed !== undefined) {
+        setSidebarCollapsed(!!e.detail.collapsed);
+      }
+    };
+    window.addEventListener('trainer-sidebar-toggle', handler);
+    return () => window.removeEventListener('trainer-sidebar-toggle', handler);
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -22,8 +39,8 @@ const TrainerLayout = ({ children, title = 'Dashboard' }) => {
       <Box
         sx={{
           flex: 1,
-          ml: { xs: 0, md: '280px' },
-          width: { xs: '100%', md: 'calc(100% - 280px)' },
+          ml: { xs: 0, md: sidebarCollapsed ? '80px' : '280px' },
+          width: { xs: '100%', md: sidebarCollapsed ? 'calc(100% - 80px)' : 'calc(100% - 280px)' },
           display: 'flex',
           flexDirection: 'column',
         }}
@@ -33,7 +50,7 @@ const TrainerLayout = ({ children, title = 'Dashboard' }) => {
           sx={{
             position: 'fixed',
             top: 0,
-            left: { xs: 0, md: '280px' },
+            left: { xs: 0, md: sidebarCollapsed ? '80px' : '280px' },
             right: 0,
             height: 70,
             bgcolor: 'white',
@@ -129,4 +146,5 @@ const TrainerLayout = ({ children, title = 'Dashboard' }) => {
 };
 
 export default TrainerLayout;
+
 
