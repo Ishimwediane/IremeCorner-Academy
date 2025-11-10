@@ -34,8 +34,8 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/trainer/dashboard' },
     { text: 'Create Course', icon: <SchoolIcon />, path: '/create-course' },
     { text: 'My Courses', icon: <SchoolIcon />, path: '/my-courses' },
-    { text: 'Students', icon: <PeopleIcon />, path: '/trainer/dashboard' }, // Placeholder - will show students in dashboard
-    { text: 'Messages', icon: <MessageIcon />, path: '/trainer/dashboard' }, // Placeholder
+    { text: 'Students', icon: <PeopleIcon />, path: '/trainer/students' },
+    { text: 'Messages', icon: <MessageIcon />, path: '/trainer/messages' },
   ];
 
   const handleLogout = () => {
@@ -116,8 +116,8 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
           }}
         >
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.path || 
-                            (item.path === '/trainer/dashboard' && location.pathname.startsWith('/trainer'));
+            // Exact match for active state - only highlight the exact route
+            const isActive = location.pathname === item.path;
             return (
               <ListItem 
                 key={item.text} 
