@@ -406,7 +406,13 @@ const TrainerCourses = () => {
                 </TableRow>
               ) : (
                 courses.map((course) => (
-                  <TableRow key={course._id} hover>
+                  <TableRow
+                    key={course._id}
+                    hover
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => navigate(`/trainer/course-content/${course._id}`)} // This makes the entire row clickable
+                    
+                  >
                     <TableCell>
                       <Typography variant="body1" sx={{ fontWeight: 500, color: '#202F32' }}>
                         {course.title}
@@ -440,15 +446,16 @@ const TrainerCourses = () => {
                       <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
                         <IconButton
                           size="small"
-                          onClick={() => navigate(`/courses/${course._id}`)}
+                          onClick={e => { e.stopPropagation(); navigate(`/trainer/course-content/${course._id}`); }}
                           sx={{ color: '#2196f3' }}
                         >
                           <ViewIcon fontSize="small" />
                         </IconButton>
                         <IconButton
                           size="small"
-                          onClick={() => navigate(`/create-course?edit=${course._id}`)}
+                          onClick={e => { e.stopPropagation(); navigate(`/create-course?edit=${course._id}`); }}
                           sx={{ color: '#C39766' }}
+                         
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>
@@ -472,6 +479,3 @@ const TrainerCourses = () => {
 };
 
 export default TrainerCourses;
-
-
-

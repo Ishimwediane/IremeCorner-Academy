@@ -38,11 +38,25 @@ import DropInformation from './pages/DropInformation';
 import TermsAndConditions from './pages/TermsAndConditions';
 import Contact from './pages/Contact';
 import About from './pages/About';
+import TrainerCourseContent from './pages/trainer/TrainerCourseContent';
 
 function AppContent() {
   const location = useLocation();
   const learnerPages = ['/dashboard', '/profile', '/my-courses', '/learner/courses', '/learner/notifications'];
-  const trainerPages = ['/trainer'];
+  const trainerPages = [
+    '/trainer/dashboard',
+    '/trainer/courses',
+    '/trainer/course-content',
+    '/trainer/students',
+    '/trainer/assignments',
+    '/trainer/quizzes',
+    '/trainer/earnings',
+    '/trainer/messages',
+    '/trainer/reports',
+    '/trainer/settings',
+    '/trainer/certifications',
+    '/trainer/live-sessions'
+  ];
   const isLearnerPage = learnerPages.some(path => location.pathname.startsWith(path)) || 
                      location.pathname.includes('/lessons/');
   const isTrainerPage = trainerPages.some(path => location.pathname.startsWith(path));
@@ -140,6 +154,14 @@ function AppContent() {
               </PrivateRoute>
             }
           />
+          <Route 
+          path="/trainer/course-content/:courseId" 
+          element={
+            <PrivateRoute requiredRole={['trainer', 'admin']}>
+              <TrainerCourseContent />
+            </PrivateRoute>    
+          } />
+
           <Route
             path="/trainer/students"
             element={
@@ -212,6 +234,7 @@ function AppContent() {
               </PrivateRoute>
             }
           />
+
           <Route path="/drop-information" element={<DropInformation />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/contact" element={<Contact />} />
@@ -253,9 +276,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
