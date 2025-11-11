@@ -9,7 +9,7 @@ import {
   CircularProgress,
   InputAdornment,
 } from '@mui/material';
-import { Save as SaveIcon } from '@mui/icons-material';
+import { Save as SaveIcon, Publish as PublishIcon } from '@mui/icons-material';
 import api from '../../utils/api';
 
 const CourseSettingsTab = ({ course, fetchData }) => {
@@ -38,6 +38,22 @@ const CourseSettingsTab = ({ course, fetchData }) => {
     }
   };
 
+  const handlePublish = async () => {
+    if (!course || course.status === 'pending' || !window.confirm('Are you sure you want to submit this course for review? Once submitted, you cannot edit it until it is reviewed.')) return;
+    setSaving(true);
+    try {
+      // We can use the general update endpoint to change the status to 'pending'
+      await api.put(`/courses/${course._id}`, { status: 'pending' });
+      alert('Course submitted for review!');
+      fetchData();
+    } catch (e) {
+      console.error(e);
+      alert('Failed to publish course.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
       <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 3 }}>Course Settings</Typography>
@@ -45,6 +61,15 @@ const CourseSettingsTab = ({ course, fetchData }) => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField fullWidth label="Course Title" value={courseForm.title || ''} onChange={e => setCourseForm({ ...courseForm, title: e.target.value })} />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="Status"
+              value={courseForm.status || 'draft'}
+              InputProps={{ readOnly: true, sx: { textTransform: 'capitalize' } }}
+              helperText="Submit the course for review when you are ready to publish."
+            />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField fullWidth select label="Category" value={courseForm.category || ''} onChange={e => setCourseForm({ ...courseForm, category: e.target.value })}>
@@ -95,6 +120,17 @@ const CourseSettingsTab = ({ course, fetchData }) => {
         </Grid>
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, pt: 3, mt: 3, borderTop: 1, borderColor: 'divider' }}>
+          {course.status === 'draft' && (
+            <Button
+              onClick={handlePublish}
+              disabled={saving}
+              variant="outlined"
+              startIcon={<PublishIcon />}
+              sx={{ mr: 'auto', color: 'success.main', borderColor: 'success.light' }}
+            >
+              Submit for Review
+            </Button>
+          )}
           <Button onClick={() => setCourseForm(course)}>Reset</Button>
           <Button
             type="submit"

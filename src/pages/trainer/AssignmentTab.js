@@ -79,16 +79,24 @@ const ScheduleGrid = ({ days, items, viewMode }) => (
   </Paper>
 );
 
-const CreateAssignmentDialog = ({ open, onClose, onSaved }) => {
-  const [form, setForm] = useState({ title: '', description: '', dueDate: '' });
+const CreateAssignmentDialog = ({ open, onClose, onSaved, lessons = [] }) => {
+  const [form, setForm] = useState({ title: '', description: '', dueDate: '', lesson: '' });
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Create Assignment</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
           <Grid item xs={12}><TextField fullWidth label="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></Grid>
-          <Grid item xs={12}><TextField fullWidth multiline rows={3} label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></Grid>
-          <Grid item xs={12}><TextField fullWidth type="date" label="Due Date" InputLabelProps={{ shrink: true }} value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} /></Grid>
+          <Grid item xs={12}><TextField fullWidth multiline rows={3} label="Instructions" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></Grid>
+          <Grid item xs={12} sm={6}><TextField fullWidth type="date" label="Due Date" InputLabelProps={{ shrink: true }} value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} /></Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField fullWidth select label="Link to Lesson (Optional)" value={form.lesson} onChange={(e) => setForm({ ...form, lesson: e.target.value })}>
+              <MenuItem value=""><em>None</em></MenuItem>
+              {lessons.map(lesson => (
+                <MenuItem key={lesson._id} value={lesson._id}>{lesson.title}</MenuItem>
+              ))}
+            </TextField>
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -99,7 +107,7 @@ const CreateAssignmentDialog = ({ open, onClose, onSaved }) => {
   );
 };
 
-const AssignmentTab = ({ courseId, assignments, setAssignments }) => {
+const AssignmentTab = ({ courseId, assignments, setAssignments, course }) => {
   const [assignmentTab, setAssignmentTab] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('week');
@@ -176,9 +184,12 @@ const AssignmentTab = ({ courseId, assignments, setAssignments }) => {
                 <Grid key={a._id} item xs={12} md={6} lg={4}>
                   <Card>
                     <CardContent>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32' }}>{a.title}</Typography>
-                      <Chip size="small" label={a.status || 'DUE'} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766', mr: 1 }} />
-                      {a.dueDate && <Chip size="small" label={`Due ${format(new Date(a.dueDate), 'MMM dd')}`} />}
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32', mb: 1 }}>{a.title}</Typography>
+                      <Box>
+                        <Chip size="small" label={a.status || 'DUE'} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766', mr: 1 }} />
+                        {a.dueDate && <Chip size="small" label={`Due ${format(new Date(a.dueDate), 'MMM dd')}`} sx={{ mr: 1 }} />}
+                        {a.lesson && <Chip size="small" label={`Lesson: ${a.lesson.title}`} variant="outlined" />}
+                      </Box>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -188,7 +199,7 @@ const AssignmentTab = ({ courseId, assignments, setAssignments }) => {
         </Box>
       )}
 
-      <CreateAssignmentDialog open={openCreateAssignment} onClose={() => setOpenCreateAssignment(false)} onSaved={handleSaveAssignment} />
+      <CreateAssignmentDialog open={openCreateAssignment} onClose={() => setOpenCreateAssignment(false)} onSaved={handleSaveAssignment} lessons={course?.lessons} />
     </Box>
   );
 };

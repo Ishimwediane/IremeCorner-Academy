@@ -53,16 +53,16 @@ const TrainerCourseContent = () => {
 
       if (courseData) {
         setCourse(courseData);
+        setLessons(courseData.lessons || []); // Use lessons populated from the course endpoint
+
         // Then fetch related content
-        const [lessonsRes, assignmentsRes, quizzesRes, certsRes, liveSessionsRes] = await Promise.all([
-          api.get(`/lessons/course/${courseId}`),
+        const [assignmentsRes, quizzesRes, certsRes, liveSessionsRes] = await Promise.all([
           api.get(`/assignments/course/${courseId}`),
           api.get(`/quizzes/course/${courseId}`),
           api.get(`/certificates/course/${courseId}`), // Assuming this endpoint exists
           api.get(`/live-sessions/course/${courseId}`), // Fetch live sessions
         ]);
 
-        setLessons(lessonsRes.data?.data || []);
         setAssignments(assignmentsRes.data?.data || []);
         setQuizzes(quizzesRes.data?.data || []);
         setCertificates(certsRes.data?.data || []);

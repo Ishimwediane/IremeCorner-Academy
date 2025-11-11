@@ -13,23 +13,60 @@ import {
   DialogContent,
   DialogActions,
   TextField, // Keep TextField for form inputs
+  IconButton,
+  MenuItem, // Import MenuItem
   Tabs,
   Tab,
   ButtonGroup, // Added for PlannerHeader
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import { useEffect } from 'react'; // Import useEffect
 import api from '../../utils/api';
 
-const CreateQuizDialog = ({ open, onClose, onSaved, courseId }) => {
-  const [form, setForm] = useState({ title: '', course: courseId, availableOn: '', question: '', options: '', correctIndex: 0 });
+const CreateQuizDialog = ({ open, onClose, onSaved, courseId, course }) => {
+  const [form, setForm] = useState({
+    title: '',
+    lesson: '',
+    availableOn: '',
+    questions: [{ question: '', options: ['', ''], correctAnswer: 0, points: 10 }],
+  });
 
   useEffect(() => {
     if (open) {
-      setForm({ title: '', course: courseId, availableOn: '', question: '', options: '', correctIndex: 0 });
+      setForm({
+        title: '',
+        lesson: '',
+        availableOn: '',
+        questions: [{ question: '', options: ['', ''], correctAnswer: 0, points: 10 }],
+      });
     }
   }, [open, courseId]);
+
+  const handleQuestionChange = (qIndex, field, value) => {
+    const newQuestions = [...form.questions];
+    newQuestions[qIndex][field] = value;
+    setForm({ ...form, questions: newQuestions });
+  };
+
+  const handleOptionChange = (qIndex, oIndex, value) => {
+    const newQuestions = [...form.questions];
+    newQuestions[qIndex].options[oIndex] = value;
+    setForm({ ...form, questions: newQuestions });
+  };
+
+  const addQuestion = () => {
+    setForm({
+      ...form,
+      questions: [...form.questions, { question: '', options: ['', ''], correctAnswer: 0, points: 10 }],
+    });
+  };
+
+  const removeQuestion = (qIndex) => {
+    if (form.questions.length <= 1) return; // Must have at least one question
+    const newQuestions = form.questions.filter((_, index) => index !== qIndex);
+    setForm({ ...form, questions: newQuestions });
+  };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -37,20 +74,45 @@ const CreateQuizDialog = ({ open, onClose, onSaved, courseId }) => {
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
           <Grid item xs={12}>
-            <TextField fullWidth label="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth type="date" label="Available On" InputLabelProps={{ shrink: true }} value={form.availableOn} onChange={(e) => setForm({ ...form, availableOn: e.target.value })} />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth label="First Question" value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth label="Options (comma separated)" value={form.options} onChange={(e) => setForm({ ...form, options: e.target.value })} />
+            <TextField fullWidth label="Quiz Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField fullWidth type="number" label="Correct Option Index (0-based)" value={form.correctIndex} onChange={(e) => setForm({ ...form, correctIndex: Number(e.target.value) })} />
+            <TextField fullWidth select label="Link to Lesson (Optional)" value={form.lesson} onChange={(e) => setForm({ ...form, lesson: e.target.value })}>
+              <MenuItem value=""><em>None</em></MenuItem>
+              {course?.lessons?.map(lesson => (
+                <MenuItem key={lesson._id} value={lesson._id}>{lesson.title}</MenuItem>
+              ))}
+            </TextField>
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField fullWidth type="date" label="Available On" InputLabelProps={{ shrink: true }} value={form.availableOn} onChange={(e) => setForm({ ...form, availableOn: e.target.value })} />
+          </Grid>
+
+          {form.questions.map((q, qIndex) => (
+            <Grid item xs={12} key={qIndex} component={Paper} variant="outlined" sx={{ p: 2, mt: 2, position: 'relative' }}>
+              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>Question {qIndex + 1}</Typography>
+              {form.questions.length > 1 && (
+                <IconButton onClick={() => removeQuestion(qIndex)} size="small" sx={{ position: 'absolute', top: 8, right: 8 }}><DeleteIcon color="error" /></IconButton>
+              )}
+              <TextField fullWidth label="Question Text" value={q.question} onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)} sx={{ mb: 1 }} />
+              {q.options.map((opt, oIndex) => (
+                <TextField key={oIndex} fullWidth label={`Option ${oIndex + 1}`} value={opt} onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)} sx={{ mb: 1 }} />
+              ))}
+              <TextField
+                fullWidth
+                select
+                label="Correct Answer"
+                value={q.correctAnswer}
+                onChange={(e) => handleQuestionChange(qIndex, 'correctAnswer', Number(e.target.value))}
+              >
+                {q.options.map((opt, oIndex) => (
+                  <MenuItem key={oIndex} value={oIndex}>Option {oIndex + 1}</MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          ))}
+
+          <Grid item xs={12}><Button onClick={addQuestion} startIcon={<AddIcon />}>Add Another Question</Button></Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -142,15 +204,9 @@ const QuizTab = ({ courseId, quizzes, setQuizzes, course }) => {
       const payload = {
         title: form.title,
         course: courseId, // Use courseId from props
+        lesson: form.lesson || undefined,
         availableOn: form.availableOn || undefined,
-        questions: [
-          {
-            question: form.question || 'Sample question',
-            options: form.options ? form.options.split(',').map((s) => s.trim()) : ['Option A', 'Option B'],
-            correctAnswer: Number.isInteger(form.correctIndex) ? form.correctIndex : 0,
-            points: 1,
-          },
-        ],
+        questions: form.questions,
       };
       await api.post('/quizzes', payload);
       setOpenCreateQuiz(false);
@@ -209,7 +265,10 @@ const QuizTab = ({ courseId, quizzes, setQuizzes, course }) => {
                   <Card>
                     <CardContent>
                       <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32' }}>{q.title}</Typography>
-                      <Chip size="small" label={`${q.questions?.length || 0} Questions`} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766' }} />
+                      <Box>
+                        <Chip size="small" label={`${q.questions?.length || 0} Questions`} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766', mr: 1 }} />
+                        {q.lesson && <Chip size="small" label={`Lesson: ${q.lesson.title}`} variant="outlined" />}
+                      </Box>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -230,6 +289,7 @@ const QuizTab = ({ courseId, quizzes, setQuizzes, course }) => {
         open={openCreateQuiz}
         onClose={() => setOpenCreateQuiz(false)}
         courseId={courseId}
+        course={course}
         onSaved={handleSaveQuiz}
       />
     </Box>
