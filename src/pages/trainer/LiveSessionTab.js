@@ -27,16 +27,16 @@ import api from '../../utils/api';
 
 const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [form, setForm] = useState({ title: '', date: '', time: '', duration: 60 });
+  const [form, setForm] = useState({ title: '', date: '', time: '', duration: 60, meetingUrl: '' });
 
   const handleOpenDialog = () => {
-    setForm({ title: '', date: '', time: '', duration: 60 });
+    setForm({ title: '', date: '', time: '', duration: 60, meetingUrl: '' });
     setOpenDialog(true);
   };
 
   // This would be replaced with API call logic
   const handleScheduleSession = async () => {
-    if (!form.title || !form.date || !form.time) {
+    if (!form.title || !form.date || !form.time || !form.meetingUrl) {
       alert('Please fill all required fields.');
       return;
     }
@@ -45,6 +45,7 @@ const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
         ...form,
         course: courseId,
         scheduledAt: `${form.date}T${form.time}:00`, // Combine date and time for the backend
+        meetingUrl: form.meetingUrl,
       };
       await api.post('/live-sessions', payload);
       setOpenDialog(false);
@@ -102,7 +103,15 @@ const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
                     <strong>Time:</strong> {format(new Date(session.scheduledAt), 'p')}
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-                    <Button size="small" variant="contained" startIcon={<PlayIcon />} sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Start</Button>
+                    <Button
+                      component="a"
+                      href={session.meetingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      size="small"
+                      variant="contained"
+                      startIcon={<PlayIcon />}
+                      sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Start</Button>
                     <IconButton size="small"><EditIcon /></IconButton>
                     <IconButton size="small" color="error"><DeleteIcon /></IconButton>
                   </Box>
@@ -114,7 +123,7 @@ const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
       </Grid>
 
       {/* Schedule Session Dialog */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth onSchedule={handleScheduleSession}>
         <DialogTitle>Schedule Live Session</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -129,6 +138,9 @@ const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
             </Grid>
             <Grid item xs={12}>
               <TextField fullWidth label="Duration (minutes)" type="number" value={form.duration} onChange={e => setForm({...form, duration: parseInt(e.target.value) || 60})} required />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField fullWidth label="Meeting URL (e.g., Google Meet, Zoom)" value={form.meetingUrl} onChange={e => setForm({...form, meetingUrl: e.target.value})} required />
             </Grid>
           </Grid>
         </DialogContent>
