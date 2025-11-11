@@ -38,6 +38,7 @@ import {
   CloudUpload as UploadCloudIcon,
   Close as XIcon,
   InsertDriveFile as FileIcon,
+  CardMembership as CertificateIcon,
   ViewList as LayoutIcon,
   Settings as SettingsIcon,
 } from '@mui/icons-material';
@@ -46,6 +47,7 @@ import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import QuizTab from './QuizTab';
 import LiveSessionTab from './LiveSessionTab';
+import CertificateTab from './CertificateTab';
 import QuizIcon from '@mui/icons-material/Quiz';
 import DuoIcon from '@mui/icons-material/Duo';
 import TrainerLayout from '../../components/TrainerLayout';
@@ -58,6 +60,7 @@ const TrainerCourseContent = () => {
   const [lessons, setLessons] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
+  const [certificates, setCertificates] = useState([]);
   const [liveSessions, setLiveSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -87,17 +90,20 @@ const TrainerCourseContent = () => {
       if (courseData) {
         setCourse(courseData);
         setCourseForm(courseData);
-        // Then fetch lessons
-        const [lessonsRes, assignmentsRes, quizzesRes] = await Promise.all([
+        // Then fetch related content
+        const [lessonsRes, assignmentsRes, quizzesRes, certsRes, liveSessionsRes] = await Promise.all([
           api.get(`/lessons/course/${courseId}`),
           api.get(`/assignments/course/${courseId}`),
           api.get(`/quizzes/course/${courseId}`),
+          api.get(`/certificates/course/${courseId}`), // Assuming this endpoint exists
+          api.get(`/live-sessions/course/${courseId}`), // Fetch live sessions
         ]);
 
         setLessons(lessonsRes.data?.data || []);
         setAssignments(assignmentsRes.data?.data || []);
         setQuizzes(quizzesRes.data?.data || []);
-        // setLiveSessions(liveSessionsRes.data?.data || []);
+        setCertificates(certsRes.data?.data || []);
+        setLiveSessions(liveSessionsRes.data?.data || []);
       }
     } catch (error) {
       console.error("Failed to fetch course content:", error);
@@ -271,6 +277,7 @@ const TrainerCourseContent = () => {
           <Tab icon={<AssignmentIcon />} iconPosition="start" label="Assignments" />
           <Tab icon={<QuizIcon />} iconPosition="start" label="Quizzes" />
           <Tab icon={<DuoIcon />} iconPosition="start" label="Live Sessions" />
+          <Tab icon={<CertificateIcon />} iconPosition="start" label="Certificates" />
         </Tabs>
       </Paper>
 
@@ -439,6 +446,11 @@ const TrainerCourseContent = () => {
         {/* LIVE SESSIONS TAB */}
         {activeTab === 4 && (
           <LiveSessionTab courseId={courseId} liveSessions={liveSessions} setLiveSessions={setLiveSessions} />
+        )}
+
+        {/* CERTIFICATES TAB */}
+        {activeTab === 5 && (
+          <CertificateTab courseId={courseId} certificates={certificates} course={course} />
         )}
       </Paper>
 

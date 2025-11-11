@@ -68,14 +68,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
       key: 'dashboard',
     },
     {
-      header: { text: 'Course Management', icon: <CoursesIcon /> },
-      children: [
-        { text: 'Courses', icon: <CoursesIcon />, path: '/trainer/courses' },
-        { text: 'Assignments', icon: <AssignmentIcon />, path: '/trainer/assignments' },
-        { text: 'Quizzes', icon: <QuizIcon />, path: '/trainer/quizzes' },
-        { text: 'Live Sessions', icon: <LiveSessionIcon />, path: '/trainer/live-sessions' },
-        { text: 'Certifications', icon: <CertificateIcon />, path: '/trainer/certifications' },
-      ],
+      header: { text: 'Course Management', icon: <CoursesIcon />, path: '/trainer/courses' }, children: [ ],
       key: 'courses',
     },
     {
@@ -371,4 +364,3 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
 };
 
 export default TrainerSidebar;
-
