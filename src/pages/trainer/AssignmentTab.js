@@ -107,7 +107,7 @@ const CreateAssignmentDialog = ({ open, onClose, onSaved, lessons = [] }) => {
   );
 };
 
-const AssignmentTab = ({ courseId, assignments, setAssignments, course }) => {
+const AssignmentTab = ({ courseId, assignments, course, fetchData }) => {
   const [assignmentTab, setAssignmentTab] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('week');
@@ -124,9 +124,7 @@ const AssignmentTab = ({ courseId, assignments, setAssignments, course }) => {
         course: courseId, // Ensure assignment is linked to the current course
       });
       setOpenCreateAssignment(false);
-      // After saving, fetch the updated assignments
-      const res = await api.get(`/assignments/course/${courseId}`);
-      setAssignments(res.data?.data || []);
+      fetchData(); // Use the parent's fetch function to ensure all data is consistent
     } catch (e) {
       console.error("Failed to save assignment", e);
       alert("Failed to save assignment");

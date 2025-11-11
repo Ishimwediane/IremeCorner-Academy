@@ -58,8 +58,8 @@ const TrainerCourseContent = () => {
         // Then fetch related content
         const [assignmentsRes, quizzesRes, certsRes, liveSessionsRes] = await Promise.all([
           api.get(`/assignments/course/${courseId}`),
-          api.get(`/quizzes/course/${courseId}`),
-          api.get(`/certificates/course/${courseId}`), // Assuming this endpoint exists
+          api.get(`/quizzes/course/${courseId}`), // Corrected this line
+          api.get(`/certificates?course=${courseId}`), // Corrected endpoint for certificates
           api.get(`/live-sessions/course/${courseId}`), // Fetch live sessions
         ]);
 
@@ -152,17 +152,17 @@ const TrainerCourseContent = () => {
 
         {/* ASSIGNMENTS TAB */}
         {activeTab === 2 && (
-          <AssignmentTab courseId={courseId} assignments={assignments} setAssignments={setAssignments} course={course} /> 
+          <AssignmentTab courseId={courseId} assignments={assignments} course={course} fetchData={fetchData} /> 
         )}
 
         {/* QUIZZES TAB */}
         {activeTab === 3 && (
-          <QuizTab courseId={courseId} quizzes={quizzes} setQuizzes={setQuizzes} course={course} />
+          <QuizTab courseId={courseId} quizzes={quizzes} course={course} fetchData={fetchData} />
         )}
 
         {/* LIVE SESSIONS TAB */}
         {activeTab === 4 && (
-          <LiveSessionTab courseId={courseId} liveSessions={liveSessions} setLiveSessions={setLiveSessions} />
+          <LiveSessionTab courseId={courseId} liveSessions={liveSessions} fetchData={fetchData} />
         )}
 
         {/* CERTIFICATES TAB */}

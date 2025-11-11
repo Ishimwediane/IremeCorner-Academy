@@ -23,9 +23,11 @@ import {
   PlayArrow as PlayIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
+import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 
-const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
+const LiveSessionTab = ({ courseId, liveSessions, fetchData }) => {
+  const { user } = useAuth();
   const [openDialog, setOpenDialog] = useState(false);
   const [form, setForm] = useState({ title: '', date: '', time: '', duration: 60, meetingUrl: '' });
 
@@ -41,17 +43,21 @@ const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
       return;
     }
     try {
+      // Manually construct ISO string to avoid timezone issues.
+      const scheduledISOString = `${form.date}T${form.time}:00.000Z`;
       const payload = {
-        ...form,
+        title: form.title,
+        duration: parseInt(form.duration, 10) || 60,
         course: courseId,
-        scheduledAt: `${form.date}T${form.time}:00`, // Combine date and time for the backend
+        scheduledAt: scheduledISOString,
+        trainer: user?._id || user?.id,
         meetingUrl: form.meetingUrl,
       };
       await api.post('/live-sessions', payload);
       setOpenDialog(false);
       // Refetch sessions to show the new one
-      const res = await api.get(`/live-sessions/course/${courseId}`);
-      setLiveSessions(res.data?.data || []);
+      alert('Live session scheduled successfully!');
+      fetchData(); // Use the parent's fetch function
     } catch (error) {
       console.error("Failed to schedule session:", error);
       alert('Failed to schedule session.');
@@ -123,7 +129,7 @@ const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
       </Grid>
 
       {/* Schedule Session Dialog */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth onSchedule={handleScheduleSession}>
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Schedule Live Session</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -137,7 +143,7 @@ const LiveSessionTab = ({ courseId, liveSessions, setLiveSessions }) => {
               <TextField fullWidth label="Time" type="time" InputLabelProps={{ shrink: true }} value={form.time} onChange={e => setForm({...form, time: e.target.value})} required />
             </Grid>
             <Grid item xs={12}>
-              <TextField fullWidth label="Duration (minutes)" type="number" value={form.duration} onChange={e => setForm({...form, duration: parseInt(e.target.value) || 60})} required />
+              <TextField fullWidth label="Duration (minutes)" type="number" value={form.duration} onChange={e => setForm({...form, duration: e.target.value})} required />
             </Grid>
             <Grid item xs={12}>
               <TextField fullWidth label="Meeting URL (e.g., Google Meet, Zoom)" value={form.meetingUrl} onChange={e => setForm({...form, meetingUrl: e.target.value})} required />

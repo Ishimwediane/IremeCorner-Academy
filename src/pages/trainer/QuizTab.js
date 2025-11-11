@@ -178,26 +178,11 @@ const ScheduleGrid = ({ days, items, viewMode }) => (
   </Paper>
 );
 
-const QuizTab = ({ courseId, quizzes, setQuizzes, course }) => {
+const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
   const [tab, setTab] = useState(0);
   const [openCreateQuiz, setOpenCreateQuiz] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('week');
-
-  // Fetch quizzes for the current course
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      if (!courseId) return;
-      try {
-        const res = await api.get(`/quizzes/course/${courseId}`);
-        setQuizzes(res.data?.data || []);
-      } catch (error) {
-        console.error("Failed to fetch quizzes:", error);
-        setQuizzes([]);
-      }
-    };
-    fetchQuizzes();
-  }, [courseId, setQuizzes]);
 
   const handleSaveQuiz = async (form) => {
     try {
@@ -210,9 +195,7 @@ const QuizTab = ({ courseId, quizzes, setQuizzes, course }) => {
       };
       await api.post('/quizzes', payload);
       setOpenCreateQuiz(false);
-      // Refetch quizzes for the current course
-      const res = await api.get(`/quizzes/course/${courseId}`);
-      setQuizzes(res.data?.data || []);
+      fetchData(); // Use the parent's fetch function
     } catch (e) {
       console.error("Failed to save quiz", e);
       alert("Failed to save quiz");
