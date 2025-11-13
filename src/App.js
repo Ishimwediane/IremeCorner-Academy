@@ -20,9 +20,10 @@ import Notifications from './pages/learnerdashboard/Notifications';
 import Profile from './pages/Profile';
 import MyCourses from './pages/MyCourses';
 import LessonView from './pages/LessonView';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './pages/admin/AdminDashboard';
 import CreateCourse from './pages/CreateCourse';
 import TrainerDashboard from './pages/TrainerDashboard';
+import AdminLayout from './pages/admin/AdminLayout'; // Corrected Path
 import TrainerCourses from './pages/trainer/TrainerCourses';
 import TrainerStudents from './pages/trainer/TrainerStudents';
 import TrainerAssignments from './pages/trainer/TrainerAssignments';
@@ -43,6 +44,7 @@ import TrainerCourseContent from './pages/trainer/TrainerCourseContent';
 function AppContent() {
   const location = useLocation();
   const learnerPages = ['/dashboard', '/profile', '/my-courses', '/learner/courses', '/learner/notifications'];
+  const adminPages = ['/admin'];
   const trainerPages = [
     '/trainer/dashboard',
     '/trainer/courses',
@@ -59,9 +61,10 @@ function AppContent() {
   ];
   const isLearnerPage = learnerPages.some(path => location.pathname.startsWith(path)) || 
                      location.pathname.includes('/lessons/');
+  const isAdminPage = adminPages.some(path => location.pathname.startsWith(path));
   const isTrainerPage = trainerPages.some(path => location.pathname.startsWith(path));
   const showDashboardNavbar = isLearnerPage && !isTrainerPage;
-  const showNavbar = !isLearnerPage && !isTrainerPage;
+  const showNavbar = !isLearnerPage && !isTrainerPage && !isAdminPage;
 
   return (
     <div className="App">
@@ -126,7 +129,9 @@ function AppContent() {
             path="/admin"
             element={
               <PrivateRoute requiredRole="admin">
-                <AdminDashboard />
+                <AdminLayout> {/* Wrap AdminDashboard with AdminLayout */}
+                  <AdminDashboard />
+                </AdminLayout>
               </PrivateRoute>
             }
           />
@@ -250,8 +255,8 @@ function AppContent() {
           <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>
-        {!isTrainerPage && <Footer />}
-        {!isTrainerPage && <ChatWidget />}
+        {!isTrainerPage && !isAdminPage && <Footer />}
+        {!isTrainerPage && !isAdminPage && <ChatWidget />}
         <ToastContainer
           position="top-right"
           autoClose={3000}

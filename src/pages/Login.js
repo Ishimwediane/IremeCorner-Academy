@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -18,32 +18,43 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log('Form submit clicked. Current state:', { email, password });
-  
-  if (!email || !password) {
-    setError('Please enter both email and password');
-    return;
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  setError('');
-  setLoading(true);
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      return;
+    }
 
-  try {
-    const loginData = { email: email.trim(), password };
-    console.log('Calling login with:', loginData);
-    const user = await login(loginData);
-    toast.success(`Welcome back, ${user.name}!`);
-  } catch (err) {
-    console.error('Login error in handleSubmit:', err);
-    setError(err.message);
-    toast.error(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+    setError('');
+    setLoading(true);
+
+    try {
+      const loginData = { email: email.trim(), password };
+      const result = await login(loginData.email, loginData.password);
+
+      if (result.success) {
+        toast.success(`Welcome back, ${result.user.name}!`);
+        if (result.user.role === 'admin') {
+          navigate('/admin');
+        } else if (result.user.role === 'trainer') {
+          navigate('/trainer-dashboard');
+        }
+      } else {
+        setError(result.error);
+        toast.error(result.error);
+      }
+    } catch (err) {
+      console.error('Login error in handleSubmit:', err);
+      const errorMessage = err.message || 'An unexpected error occurred.';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
