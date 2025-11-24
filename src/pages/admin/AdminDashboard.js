@@ -154,9 +154,11 @@ const AdminDashboard = () => {
                             <Button
                               size="small"
                               variant="contained"
-                              onClick={async () => {
-                                await api.put(`/courses/${course._id}/approve`, { status: 'approved' });
-                                window.location.reload(); // Simple refresh to update data
+                              onClick={() => {
+                                if (window.confirm('Are you sure you want to approve this course?')) {
+                                  api.put(`/courses/${course._id}/approve`, { status: 'approved' })
+                                    .then(() => window.location.reload()); // Simple refresh to update data
+                                }
                               }}
                             >
                               Approve

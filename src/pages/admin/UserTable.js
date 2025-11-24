@@ -15,10 +15,12 @@ import {
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Edit, Delete, Add } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 
 const UserTable = ({ roleFilter, title }) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [filterActive, setFilterActive] = useState(true);
 
@@ -51,6 +53,21 @@ const UserTable = ({ roleFilter, title }) => {
 
   const handleStatusChange = (id, isActive) => {
     updateUserStatus.mutate({ id, isActive: !isActive });
+  };
+
+  const deleteUserMutation = useMutation(
+    (id) => api.delete(`/admin/users/${id}`),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('admin-users');
+      },
+    }
+  );
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to permanently delete this user? This action cannot be undone.')) {
+      deleteUserMutation.mutate(id);
+    }
   };
 
   const columns = useMemo(
@@ -119,12 +136,12 @@ const UserTable = ({ roleFilter, title }) => {
         renderCell: (params) => (
           <Box>
             <Tooltip title="Edit User">
-              <IconButton onClick={() => console.log('Edit', params.id)}>
+              <IconButton onClick={(e) => { e.stopPropagation(); console.log('Edit', params.id); }}>
                 <Edit />
               </IconButton>
             </Tooltip>
             <Tooltip title="Delete User">
-              <IconButton onClick={() => console.log('Delete', params.id)}>
+              <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(params.id); }}>
                 <Delete />
               </IconButton>
             </Tooltip>
@@ -132,7 +149,7 @@ const UserTable = ({ roleFilter, title }) => {
         ),
       },
     ],
-    []
+    [handleDelete]
   );
 
   return (
@@ -180,6 +197,7 @@ const UserTable = ({ roleFilter, title }) => {
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
+            onRowClick={(params) => navigate(`/admin/users/${params.id}`)}
             getRowId={(row) => row._id}
             loading={isLoading}
             rowHeight={70}
@@ -190,6 +208,9 @@ const UserTable = ({ roleFilter, title }) => {
               '& .MuiDataGrid-columnHeaders': {
                 backgroundColor: '#f5f5f5',
                 borderBottom: '2px solid #e0e0e0',
+              },
+              '& .MuiDataGrid-row': {
+                cursor: 'pointer',
               },
             }}
           />

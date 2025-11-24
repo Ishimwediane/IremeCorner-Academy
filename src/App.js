@@ -46,6 +46,7 @@ import AllUsers from './pages/admin/AllUsers';
 import AllTrainers from './pages/admin/AllTrainers';
 import AllStudents from './pages/admin/AllStudents';
 import AllCourses from './pages/admin/AllCourses';
+import AdminUserDetail from './pages/admin/AdminUserDetail';
 import AdminCourseDetail from './pages/admin/AdminCourseDetail';
 import AdminLessonView from './pages/admin/AdminLessonView';
 import PendingCourses from './pages/admin/PendingCourses';
@@ -153,6 +154,16 @@ function AppContent() {
               <PrivateRoute requiredRole="admin">
                 <AdminLayout title="User Management">
                   <AllUsers />
+                </AdminLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/users/:id"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminLayout title="User Details">
+                  <AdminUserDetail />
                 </AdminLayout>
               </PrivateRoute>
             }
