@@ -1,25 +1,21 @@
 import React, { useState, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import {
   Box,
   TextField,
   Button,
   CircularProgress,
-  Alert,
   Chip,
   Avatar,
   Typography,
-  IconButton,
-  Tooltip,
   Paper,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { Edit, Delete, Add, Visibility } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 
 const AllCourses = () => {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
 
@@ -34,21 +30,6 @@ const AllCourses = () => {
       keepPreviousData: true,
     }
   );
-
-  const deleteMutation = useMutation(
-    (id) => api.delete(`/courses/${id}`),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('admin-courses');
-      },
-    }
-  );
-
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this course?')) {
-      deleteMutation.mutate(id);
-    }
-  };
 
   const columns = useMemo(
     () => [
@@ -97,33 +78,8 @@ const AllCourses = () => {
         type: 'number',
         valueGetter: (params) => params.row?.enrolledStudents?.length || 0,
       },
-      {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 150,
-        sortable: false,
-        renderCell: (params) => (
-          <Box>
-            <Tooltip title="View Course">
-              <IconButton onClick={() => navigate(`/admin/courses/${params.id}`)}>
-                <Visibility />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Edit Course">
-              <IconButton onClick={() => navigate(`/admin/edit-course/${params.id}`)}>
-                <Edit />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete Course">
-              <IconButton onClick={() => handleDelete(params.id)}>
-                <Delete />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        ),
-      },
     ],
-    [navigate]
+    []
   );
 
   return (
@@ -147,8 +103,24 @@ const AllCourses = () => {
             rows={coursesData || []}
             columns={columns}
             getRowId={(row) => row._id}
+            onRowClick={(params) => navigate(`/admin/courses/${params.id}`)}
             loading={isLoading}
             rowHeight={70}
+            sx={{
+              '& .MuiDataGrid-cell': {
+                borderBottom: '1px solid #e0e0e0',
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: '#f5f5f5',
+                borderBottom: '2px solid #e0e0e0',
+              },
+              '& .MuiDataGrid-row': {
+                cursor: 'pointer',
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                }
+              },
+            }}
           />
         </Box>
       </Paper>
