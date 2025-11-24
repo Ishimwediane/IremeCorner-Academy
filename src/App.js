@@ -50,6 +50,7 @@ import AdminCourseDetail from './pages/admin/AdminCourseDetail';
 import AdminLessonView from './pages/admin/AdminLessonView';
 import PendingCourses from './pages/admin/PendingCourses';
 import AdminReports from './pages/admin/AdminReports';
+import AdminSettings from './pages/admin/AdminSettings';
 
 
 function AppContent() {
@@ -222,6 +223,16 @@ function AppContent() {
               <PrivateRoute requiredRole="admin">
                 <AdminLayout title="Reports & Analytics">
                   <AdminReports />
+                </AdminLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminLayout title="Platform Settings">
+                  <AdminSettings />
                 </AdminLayout>
               </PrivateRoute>
             }
