@@ -119,10 +119,11 @@ const CourseDetail = () => {
     }
   );
 
-  const isEnrolled = enrollmentData || (user && course?.enrolledStudents?.some(
+  const isAdmin = user?.role === 'admin';
+
+  const isEnrolled = isAdmin || enrollmentData || (user && course?.enrolledStudents?.some(
     (student) => student._id === user.id || student?._id?.toString() === user.id || student?.toString() === user.id
   ));
-
   // Get completed lessons for enrolled users
   const completedLessons = enrollmentData?.completedLessons || [];
 
@@ -294,7 +295,7 @@ const CourseDetail = () => {
                   ) : (
                     lessons.map((lesson, index) => {
                       const isCompleted = isEnrolled && completedLessons.some(
-                        (id) => id === lesson._id || id._id === lesson._id || id.toString() === lesson._id
+                        (id) => id === lesson._id || id?._id === lesson._id || id?.toString() === lesson._id
                       );
                       
                       return (
@@ -306,6 +307,7 @@ const CourseDetail = () => {
                             mb: 1,
                           }}
                         >
+                          <Link to={isEnrolled ? `/courses/${id}/lessons/${lesson._id}` : '#'} style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                             {isCompleted ? (
                               <CheckCircle
@@ -354,6 +356,7 @@ const CourseDetail = () => {
                               secondary={lesson.description || `${lesson.duration || 0} min`}
                             />
                           </Box>
+                          </Link>
                         </ListItem>
                       );
                     })
@@ -499,7 +502,7 @@ const CourseDetail = () => {
                   </Typography>
                 </Box>
               </Box>
-              {user && isEnrolled ? (
+              {isEnrolled ? (
                 <Button
                   fullWidth
                   variant="contained"
@@ -537,5 +540,3 @@ const CourseDetail = () => {
 };
 
 export default CourseDetail;
-
-
