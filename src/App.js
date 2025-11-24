@@ -41,6 +41,12 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import TrainerCourseContent from './pages/trainer/TrainerCourseContent';
 
+
+import AllUsers from './pages/admin/AllUsers';
+import AllTrainers from './pages/admin/AllTrainers';
+import AllStudents from './pages/admin/AllStudents';
+
+
 function AppContent() {
   const location = useLocation();
   const learnerPages = ['/dashboard', '/profile', '/my-courses', '/learner/courses', '/learner/notifications'];
@@ -131,6 +137,36 @@ function AppContent() {
               <PrivateRoute requiredRole="admin">
                 <AdminLayout> {/* Wrap AdminDashboard with AdminLayout */}
                   <AdminDashboard />
+                </AdminLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminLayout title="User Management">
+                  <AllUsers />
+                </AdminLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/trainers"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminLayout title="Trainer Management">
+                  <AllTrainers />
+                </AdminLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/students"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminLayout title="Student Management">
+                  <AllStudents />
                 </AdminLayout>
               </PrivateRoute>
             }

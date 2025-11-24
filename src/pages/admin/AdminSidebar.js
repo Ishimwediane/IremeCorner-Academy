@@ -82,6 +82,14 @@ const AdminSidebar = ({ mobileOpen, onMobileClose }) => {
       key: 'course-management',
     },
     {
+      header: { text: 'Course Management', icon: <BookIcon /> },
+      children: [
+        { text: 'All Courses', icon: <MenuBookIcon />, path: '/admin/courses' },
+        { text: 'Pending Courses', icon: <PendingActionsIcon />, path: '/admin/pending-courses' },
+      ],
+      key: 'course-management',
+    },
+    {
       header: { text: 'Reports', icon: <AssessmentIcon />, path: '/admin/reports' },
       children: [],
       key: 'reports',
