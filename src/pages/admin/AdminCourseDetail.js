@@ -1,190 +1,132 @@
-import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import api from '../../utils/api';
 import {
   Box,
   Typography,
-  Paper,
-  CircularProgress,
-  Alert,
-  Grid,
   Button,
+  IconButton,
+  Chip,
   Tabs,
   Tab,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Chip,
-  Avatar,
+  Paper,
+  CircularProgress,
 } from '@mui/material';
 import {
-  ArrowBack,
-  Edit,
-  School,
-  Person,
-  Assessment,
-  Quiz,
-  Assignment,
-  PlayCircleOutline,
+  ArrowBack as ArrowBackIcon,
+  CardMembership as CertificateIcon,
+  ViewList as LayoutIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
-import { useQuery } from 'react-query';
-import api from '../../utils/api';
+import AssignmentTab from '../trainer/AssignmentTab';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import QuizTab from '../trainer/QuizTab';
+import LiveSessionTab from '../trainer/LiveSessionTab';
+import CertificateTab from '../trainer/CertificateTab';
+import QuizIcon from '@mui/icons-material/Quiz';
+import CourseSettingsTab from '../trainer/CourseSettingsTab';
+import CurriculumTab from '../trainer/CurriculumTab';
+import DuoIcon from '@mui/icons-material/Duo';
 
 const AdminCourseDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [tab, setTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
+  const [course, setCourse] = useState(null);
+  const [lessons, setLessons] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
+  const [certificates, setCertificates] = useState([]);
+  const [liveSessions, setLiveSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const { data: course, isLoading: courseLoading, error: courseError } = useQuery(
-    ['admin-course-detail', id],
-    async () => {
-      const response = await api.get(`/courses/${id}`);
-      return response.data.data;
+  const fetchData = async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const courseRes = await api.get(`/courses/${id}`);
+      const courseData = courseRes.data?.data;
+
+      if (courseData) {
+        setCourse(courseData);
+        setLessons(courseData.lessons || []);
+
+        const [assignmentsRes, quizzesRes, certsRes, liveSessionsRes] = await Promise.all([
+          api.get(`/assignments/course/${id}`),
+          api.get(`/quizzes/course/${id}`),
+          api.get(`/certificates?course=${id}`),
+          api.get(`/live-sessions/course/${id}`),
+        ]);
+
+        setAssignments(assignmentsRes.data?.data || []);
+        setQuizzes(quizzesRes.data?.data || []);
+        setCertificates(certsRes.data?.data || []);
+        setLiveSessions(liveSessionsRes.data?.data || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch course content for admin:", error);
+    } finally {
+      setLoading(false);
     }
-  );
+  };
 
-  const { data: lessons, isLoading: lessonsLoading } = useQuery(
-    ['admin-course-lessons', id],
-    async () => {
-      const response = await api.get(`/lessons/course/${id}`);
-      return response.data.data;
-    },
-    { enabled: !!course }
-  );
+  useEffect(() => {
+    fetchData();
+  }, [id]);
 
-  if (courseLoading) {
+  if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
         <CircularProgress />
       </Box>
     );
   }
 
-  if (courseError || !course) {
-    return <Alert severity="error">Could not load course details.</Alert>;
+  if (!course) {
+    return <Typography sx={{ textAlign: 'center', mt: 4 }}>Course not found</Typography>;
   }
 
-  const handleTabChange = (event, newValue) => {
-    setTab(newValue);
-  };
-
   return (
-    <Box>
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Button startIcon={<ArrowBack />} onClick={() => navigate('/admin/courses')}>
-          Back to All Courses
-        </Button>
-        <Button variant="contained" startIcon={<Edit />} onClick={() => navigate(`/admin/edit-course/${id}`)}>
-          Edit Course
-        </Button>
+    <>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <IconButton onClick={() => navigate('/admin/courses')} sx={{ bgcolor: 'white', border: '1px solid #e0e0e0' }}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Box>
+            <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>{course.title}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5, color: 'text.secondary' }}>
+              <Chip label={course.status} size="small" color={course.status === 'approved' ? 'success' : 'warning'} />
+              <Typography variant="body2">•</Typography>
+              <Typography variant="body2">{lessons.length} Lessons</Typography>
+              <Typography variant="body2">•</Typography>
+              <Typography variant="body2">{course.duration} Hours Total</Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Button variant="outlined">Preview Course</Button>
       </Box>
 
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={2}>
-            <Avatar
-              src={course.thumbnail}
-              variant="rounded"
-              sx={{ width: '100%', height: 'auto', aspectRatio: '1 / 1' }}
-            >
-              <School />
-            </Avatar>
-          </Grid>
-          <Grid item xs={12} md={10}>
-            <Typography variant="h4" fontWeight="700">{course.title}</Typography>
-            <Typography variant="body1" color="text.secondary" paragraph>
-              {course.description}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
-              <Chip label={course.category} size="small" />
-              <Chip label={course.level} size="small" color="primary" />
-              <Chip
-                label={course.status}
-                size="small"
-                color={course.status === 'approved' ? 'success' : 'warning'}
-              />
-              <Chip icon={<Person />} label={`${course.enrolledStudents?.length || 0} Students`} size="small" />
-              <Chip icon={<School />} label={course.trainer?.name || 'N/A'} size="small" />
-            </Box>
-          </Grid>
-        </Grid>
-      </Paper>
-
-      <Paper>
-        <Tabs value={tab} onChange={handleTabChange} centered>
-          <Tab icon={<School />} label="Curriculum" />
-          <Tab icon={<Assessment />} label="Assignments" />
-          <Tab icon={<Quiz />} label="Quizzes" />
-          <Tab icon={<Person />} label="Enrolled Students" />
+      <Paper sx={{ borderBottom: 1, borderColor: 'divider', borderRadius: '12px 12px 0 0' }}>
+        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none' } }}>
+          <Tab icon={<LayoutIcon />} iconPosition="start" label="Curriculum" />
+          <Tab icon={<SettingsIcon />} iconPosition="start" label="Course Info & Settings" />
+          <Tab icon={<AssignmentIcon />} iconPosition="start" label="Assignments" />
+          <Tab icon={<QuizIcon />} iconPosition="start" label="Quizzes" />
+          <Tab icon={<DuoIcon />} iconPosition="start" label="Live Sessions" />
+          <Tab icon={<CertificateIcon />} iconPosition="start" label="Certificates" />
         </Tabs>
-
-        <Box sx={{ p: 3 }}>
-          {tab === 0 && (
-            <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>Course Lessons</Typography>
-              {lessonsLoading ? (
-                <CircularProgress />
-              ) : (
-                <List>
-                  {lessons && lessons.length > 0 ? (
-                    lessons.map((lesson, index) => (
-                      <ListItem
-                        key={lesson._id}
-                        button
-                        component={Link}
-                        to={`/courses/${course._id}/lessons/${lesson._id}`}
-                        divider
-                      >
-                        <ListItemIcon>
-                          <PlayCircleOutline />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={`Chapter ${index + 1}: ${lesson.title}`}
-                          secondary={`${lesson.duration || 0} min`}
-                        />
-                      </ListItem>
-                    ))
-                  ) : (
-                    <Typography color="text.secondary">No lessons have been added to this course yet.</Typography>
-                  )}
-                </List>
-              )}
-            </Box>
-          )}
-          {tab === 1 && (
-            <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>Assignments</Typography>
-              <Typography color="text.secondary">Assignment management is not yet implemented.</Typography>
-            </Box>
-          )}
-          {tab === 2 && (
-            <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>Quizzes</Typography>
-              <Typography color="text.secondary">Quiz management is not yet implemented.</Typography>
-            </Box>
-          )}
-          {tab === 3 && (
-            <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>Enrolled Students</Typography>
-              {course.enrolledStudents && course.enrolledStudents.length > 0 ? (
-                <List>
-                  {course.enrolledStudents.map((student) => (
-                    <ListItem key={student._id} divider>
-                      <ListItemText
-                        primary={student.name}
-                        secondary={student.email}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              ) : (
-                <Typography color="text.secondary">No students are enrolled in this course.</Typography>
-              )}
-            </Box>
-          )}
-        </Box>
       </Paper>
-    </Box>
+
+      <Paper sx={{ minHeight: '600px', p: 3, borderRadius: '0 0 12px 12px' }}>
+        {activeTab === 0 && <CurriculumTab courseId={id} lessons={lessons} fetchData={fetchData} />}
+        {activeTab === 1 && <CourseSettingsTab course={course} fetchData={fetchData} />}
+        {activeTab === 2 && <AssignmentTab courseId={id} assignments={assignments} course={course} fetchData={fetchData} />}
+        {activeTab === 3 && <QuizTab courseId={id} quizzes={quizzes} course={course} fetchData={fetchData} />}
+        {activeTab === 4 && <LiveSessionTab courseId={id} liveSessions={liveSessions} fetchData={fetchData} />}
+        {activeTab === 5 && <CertificateTab courseId={id} certificates={certificates} course={course} />}
+      </Paper>
+    </>
   );
 };
 

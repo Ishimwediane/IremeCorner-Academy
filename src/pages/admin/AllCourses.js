@@ -138,7 +138,7 @@ const AllCourses = () => {
             size="small"
             sx={{ minWidth: '300px' }}
           />
-          <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/admin/create-course')}>
+          <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/create-course')}>
             Create Course
           </Button>
         </Box>

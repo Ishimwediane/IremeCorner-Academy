@@ -47,6 +47,7 @@ import AllTrainers from './pages/admin/AllTrainers';
 import AllStudents from './pages/admin/AllStudents';
 import AllCourses from './pages/admin/AllCourses';
 import AdminCourseDetail from './pages/admin/AdminCourseDetail';
+import AdminLessonView from './pages/admin/AdminLessonView';
 
 
 function AppContent() {
@@ -189,6 +190,16 @@ function AppContent() {
               <PrivateRoute requiredRole="admin">
                 <AdminLayout title="Course Details">
                   <AdminCourseDetail />
+                </AdminLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/courses/:courseId/lessons/:lessonId"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminLayout title="Lesson View">
+                  <AdminLessonView />
                 </AdminLayout>
               </PrivateRoute>
             }

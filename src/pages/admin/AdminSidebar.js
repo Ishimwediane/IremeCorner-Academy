@@ -27,6 +27,9 @@ import {
   MenuBook as MenuBookIcon, // For all courses
   PendingActions as PendingActionsIcon, // For pending courses
   Assessment as AssessmentIcon, // For reports
+  Assignment as AssignmentIcon,
+  Quiz as QuizIcon,
+  Duo as DuoIcon,
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   ExpandMore as ExpandMoreIcon,
@@ -80,6 +83,15 @@ const AdminSidebar = ({ mobileOpen, onMobileClose }) => {
         { text: 'Pending Courses', icon: <PendingActionsIcon />, path: '/admin/pending-courses' },
       ],
       key: 'course-management',
+    },
+    {
+      header: { text: 'Content Management', icon: <AssessmentIcon /> },
+      children: [
+        { text: 'Assignments', icon: <AssignmentIcon />, path: '/trainer/assignments' },
+        { text: 'Quizzes', icon: <QuizIcon />, path: '/trainer/quizzes' },
+        { text: 'Live Sessions', icon: <DuoIcon />, path: '/trainer/live-sessions' },
+      ],
+      key: 'content-management',
     },
     {
       header: { text: 'Reports', icon: <AssessmentIcon />, path: '/admin/reports' },
