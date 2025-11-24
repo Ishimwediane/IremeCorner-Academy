@@ -49,6 +49,7 @@ import AllCourses from './pages/admin/AllCourses';
 import AdminCourseDetail from './pages/admin/AdminCourseDetail';
 import AdminLessonView from './pages/admin/AdminLessonView';
 import PendingCourses from './pages/admin/PendingCourses';
+import AdminReports from './pages/admin/AdminReports';
 
 
 function AppContent() {
@@ -211,6 +212,16 @@ function AppContent() {
               <PrivateRoute requiredRole="admin">
                 <AdminLayout title="Pending Courses">
                   <PendingCourses />
+                </AdminLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin/reports"
+            element={
+              <PrivateRoute requiredRole="admin">
+                <AdminLayout title="Reports & Analytics">
+                  <AdminReports />
                 </AdminLayout>
               </PrivateRoute>
             }
