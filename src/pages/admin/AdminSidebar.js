@@ -85,15 +85,6 @@ const AdminSidebar = ({ mobileOpen, onMobileClose }) => {
       key: 'course-management',
     },
     {
-      header: { text: 'Content Management', icon: <AssessmentIcon /> },
-      children: [
-        { text: 'Assignments', icon: <AssignmentIcon />, path: '/trainer/assignments' },
-        { text: 'Quizzes', icon: <QuizIcon />, path: '/trainer/quizzes' },
-        { text: 'Live Sessions', icon: <DuoIcon />, path: '/trainer/live-sessions' },
-      ],
-      key: 'content-management',
-    },
-    {
       header: { text: 'Reports', icon: <AssessmentIcon />, path: '/admin/reports' },
       children: [],
       key: 'reports',
