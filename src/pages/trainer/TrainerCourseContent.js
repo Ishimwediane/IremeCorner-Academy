@@ -79,6 +79,33 @@ const TrainerCourseContent = () => {
     fetchData();
   }, [courseId]);
 
+  const handleCreateLessonLocal = (newLessonData) => {
+    const newLesson = {
+      _id: `new-${Date.now()}`, // Temporary ID
+      ...newLessonData,
+      materials: newLessonData.materials.map(f => ({ originalName: f.name, fileSize: f.size })),
+    };
+    setLessons(prevLessons => [...prevLessons, newLesson]);
+  };
+
+  const handleUpdateLessonLocal = (lessonId, updatedLessonData) => {
+    setLessons(prevLessons =>
+      prevLessons.map(lesson =>
+        lesson._id === lessonId
+          ? {
+              ...lesson,
+              ...updatedLessonData,
+              materials: [...(updatedLessonData.existingMaterials || []), ...updatedLessonData.materials.map(f => ({ originalName: f.name, fileSize: f.size }))]
+            }
+          : lesson
+      )
+    );
+  };
+
+  const handleDeleteLessonLocal = (lessonId) => {
+    setLessons(prevLessons => prevLessons.filter(lesson => lesson._id !== lessonId));
+  };
+
   if (loading) {
     return (
       <TrainerLayout title="Loading...">
@@ -142,7 +169,14 @@ const TrainerCourseContent = () => {
         
         {/* CURRICULUM TAB */}
         {activeTab === 0 && (
-          <CurriculumTab courseId={courseId} lessons={lessons} fetchData={fetchData} />
+          <CurriculumTab
+            lessons={lessons}
+            courseId={courseId}
+            fetchData={fetchData}
+            onCreateLesson={handleCreateLessonLocal}
+            onUpdateLesson={handleUpdateLessonLocal}
+            onDeleteLesson={handleDeleteLessonLocal}
+          />
         )}
 
         {/* SETTINGS TAB */}

@@ -40,7 +40,9 @@ const Login = () => {
         if (result.user.role === 'admin') {
           navigate('/admin');
         } else if (result.user.role === 'trainer') {
-          navigate('/trainer-dashboard');
+          navigate('/trainer/dashboard');
+        } else {
+          navigate('/learner/dashboard');
         }
       } else {
         setError(result.error);
@@ -113,16 +115,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
-
-
-
-
-
-
-
-
-
-
-

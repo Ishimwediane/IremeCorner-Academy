@@ -29,19 +29,15 @@ const LessonView = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // Get enrollment data to check completed lessons
-  const { data: enrollmentData } = useQuery(
-    ['enrollment', courseId],
+  // Get lesson progress for the current user and course
+  const { data: progressData } = useQuery(
+    ['progress', courseId],
     async () => {
-      const response = await api.get('/enrollments');
-      const enrollments = response.data.data || [];
-      return enrollments.find(e => 
-        e.course._id === courseId || e.course === courseId
-      );
+      const response = await api.get(`/progress/courses/${courseId}`);
+      return response.data.data || [];
     },
     {
       refetchOnWindowFocus: false,
-      retry: false,
     }
   );
 
@@ -61,6 +57,12 @@ const LessonView = () => {
     }
   );
 
+  React.useEffect(() => {
+    if (lesson) {
+      console.log('Lesson data:', lesson);
+    }
+  }, [lesson]);
+
   const lesson = lessonData?.data;
   const lessons = lessonsData?.data || [];
   const currentIndex = lessons.findIndex((l) => l._id === lessonId);
@@ -68,40 +70,36 @@ const LessonView = () => {
   const prevLesson = lessons[currentIndex - 1];
 
   // Check if current lesson is completed
-  const completedLessons = enrollmentData?.completedLessons || [];
+  const completedLessons = progressData || [];
   const isLessonCompleted = completedLessons.some(
-    (id) => id === lessonId || id._id === lessonId || id.toString() === lessonId
+    (p) => p.lesson === lessonId && p.isCompleted
   );
 
   const progressMutation = useMutation(
-    async () => {
-      if (!enrollmentData) {
-        throw new Error('You must be enrolled in this course');
-      }
-
-      // Mark this specific lesson as complete
-      await api.put(`/enrollments/${enrollmentData._id}/progress`, {
-        lessonId: lessonId,
+    async (isCompleted) => {
+      await api.post('/progress/lessons', {
+        lessonId,
+        courseId,
+        isCompleted,
       });
     },
     {
-      onSuccess: () => {
-        // Invalidate all related queries
-        queryClient.invalidateQueries(['enrollment', courseId]);
-        queryClient.invalidateQueries('my-enrollments');
-        queryClient.invalidateQueries(['lessons', courseId]);
-        toast.success(`Lesson ${currentIndex + 1} marked as complete!`);
+      onSuccess: (_, isCompleted) => {
+        queryClient.invalidateQueries(['progress', courseId]);
+        if (isCompleted) {
+          toast.success(`Lesson ${currentIndex + 1} marked as complete!`);
+        } else {
+          toast.info(`Lesson ${currentIndex + 1} marked as incomplete.`);
+        }
       },
       onError: (error) => {
-        toast.error(error.response?.data?.message || 'Failed to mark lesson as complete');
+        toast.error(error.response?.data?.message || 'Failed to update lesson progress');
       },
     }
   );
 
   const handleComplete = () => {
-    if (!isLessonCompleted) {
-      progressMutation.mutate();
-    }
+    progressMutation.mutate(!isLessonCompleted);
   };
 
   if (isLoading) {
@@ -189,30 +187,21 @@ const LessonView = () => {
 
             <Divider sx={{ my: 3 }} />
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mt: 3 }}>
-              {isLessonCompleted ? (
-                <Alert severity="success" sx={{ flexGrow: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <CheckCircle />
-                    <Typography variant="body1">
-                      Chapter {currentIndex + 1} Completed!
-                    </Typography>
-                  </Box>
-                </Alert>
-              ) : (
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="large"
-                  onClick={handleComplete}
-                  disabled={progressMutation.isLoading || !enrollmentData}
-                  startIcon={<CheckCircle />}
-                  sx={{ flexGrow: 1 }}
-                >
-                  {progressMutation.isLoading
-                    ? 'Marking as Complete...'
-                    : `Mark Chapter ${currentIndex + 1} as Complete`}
-                </Button>
-              )}
+              <Button
+                variant={isLessonCompleted ? "outlined" : "contained"}
+                color="secondary"
+                size="large"
+                onClick={handleComplete}
+                disabled={progressMutation.isLoading}
+                startIcon={<CheckCircle />}
+                sx={{ flexGrow: 1 }}
+              >
+                {progressMutation.isLoading
+                  ? 'Updating...'
+                  : isLessonCompleted
+                  ? `Mark as Incomplete`
+                  : `Mark Chapter ${currentIndex + 1} as Complete`}
+              </Button>
             </Box>
           </Paper>
 
@@ -248,7 +237,7 @@ const LessonView = () => {
             <List>
               {lessons.map((l, index) => {
                 const isCompleted = completedLessons.some(
-                  (id) => id === l._id || id._id === l._id || id.toString() === l._id
+                  (p) => p.lesson === l._id && p.isCompleted
                 );
                 const isCurrent = l._id === lessonId;
                 
@@ -299,13 +288,13 @@ const LessonView = () => {
                 );
               })}
             </List>
-            {enrollmentData && (
+            {progressData && (
               <Box sx={{ mt: 2, p: 2, bgcolor: 'primary.light', borderRadius: 1 }}>
                 <Typography variant="body2" color="text.secondary">
-                  Progress: {enrollmentData.progress}%
+                  Progress: {Math.round((completedLessons.filter(p => p.isCompleted).length / lessons.length) * 100)}%
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {completedLessons.length} of {lessons.length} chapters completed
+                  {completedLessons.filter(p => p.isCompleted).length} of {lessons.length} chapters completed
                 </Typography>
               </Box>
             )}

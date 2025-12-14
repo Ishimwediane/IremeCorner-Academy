@@ -637,7 +637,6 @@ const Course = () => {
                   ))}
                 </FormGroup>
               </Box>
-
               {/* Certification Filter */}
               <Box>
                 <Typography
@@ -855,11 +854,4 @@ const Course = () => {
     </Container>
   );
 };
-
 export default Course;
-
-
-
-
-
-

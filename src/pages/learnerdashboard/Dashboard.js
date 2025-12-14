@@ -19,21 +19,14 @@ import {
   CheckCircle,
   Assignment,
   TrendingUp,
-  MoreVert,
-  Edit,
-  Share,
-  Email,
-  Phone,
-  CalendarToday,
-  Folder,
-  Add,
-  Visibility,
+  Quiz,
 } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import Calendar from '../../components/Calendar';
 import { format } from 'date-fns';
+import CourseProgressCard from './CourseProgressCard';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -63,9 +56,25 @@ const Dashboard = () => {
     }
   );
 
+  const { data: assessmentsData } = useQuery(
+    ['my-assessments', user?._id],
+    async () => {
+      const response = await api.get(`/assessments/student/${user._id}`);
+      return response.data.data;
+    },
+    {
+      enabled: !!user?._id,
+      staleTime: 5 * 60 * 1000,
+    }
+  );
+
+  const upcomingTasks = (assessmentsData?.assignments || []).concat(assessmentsData?.quizzes || []);
+
   const enrollments = enrollmentsData?.data || [];
   const notifications = notificationsData?.data || [];
-  const inProgressCourses = enrollments.filter((e) => e.status === 'in-progress');
+  const inProgressCourses = enrollments.filter(
+    (e) => e.status === 'in-progress' || e.status === 'enrolled'
+  );
   const completedCourses = enrollments.filter((e) => e.status === 'completed');
   const certificatesCount = completedCourses.filter((e) => e.certificateIssued).length;
 
@@ -149,92 +158,8 @@ const Dashboard = () => {
                 }}
               >
                 {inProgressCourses.slice(0, 6).map((enrollment, index) => {
-                  const colorScheme = cardColors[index % cardColors.length];
-                  const progress = enrollment.progress || 0;
-                  const courseTitle = enrollment.course?.title || 'Untitled Course';
-                  const enrolledDate = enrollment.createdAt
-                    ? format(new Date(enrollment.createdAt), 'MMM d')
-                    : 'Recent';
-
                   return (
-                    <Card
-                      key={enrollment._id}
-                      sx={{
-                        borderRadius: '12px',
-                        bgcolor: colorScheme.bg,
-                        color: colorScheme.text,
-                        position: 'relative',
-                        overflow: 'hidden',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                        transition: 'transform 0.2s, box-shadow 0.2s',
-                        '&:hover': {
-                          transform: 'translateY(-4px)',
-                          boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
-                        },
-                      }}
-                    >
-                      <CardContent sx={{ p: 2, position: 'relative', zIndex: 1 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                          <Typography variant="caption" sx={{ opacity: 0.9, fontSize: '0.75rem' }}>
-                            {enrolledDate}
-                          </Typography>
-                          <IconButton
-                            size="small"
-                            sx={{
-                              color: colorScheme.text,
-                              opacity: 0.8,
-                              '&:hover': { opacity: 1 },
-                            }}
-                          >
-                            <MoreVert fontSize="small" />
-                          </IconButton>
-                        </Box>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            fontWeight: 600,
-                            mb: 1.5,
-                            fontSize: '0.9rem',
-                            lineHeight: 1.3,
-                            minHeight: 36,
-                          }}
-                        >
-                          {courseTitle.length > 40 ? `${courseTitle.substring(0, 40)}...` : courseTitle}
-                        </Typography>
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            fontWeight: 700,
-                            mb: 1.5,
-                            fontSize: '1.1rem',
-                          }}
-                        >
-                          {progress}%
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            gap: 0.5,
-                            alignItems: 'center',
-                          }}
-                        >
-                          {[1, 2, 3].map((i) => (
-                            <Avatar
-                              key={i}
-                              sx={{
-                                width: 24,
-                                height: 24,
-                                bgcolor: 'rgba(255,255,255,0.3)',
-                                fontSize: '0.7rem',
-                                border: `1px solid ${colorScheme.text}`,
-                              }}
-                            >
-                              {i}
-                            </Avatar>
-                          ))}
-                        </Box>
-                      </CardContent>
-                    </Card>
+                    <CourseProgressCard key={enrollment._id} enrollment={enrollment} colorScheme={cardColors[index % cardColors.length]} />
                   );
                 })}
                 {inProgressCourses.length === 0 && (
@@ -273,16 +198,7 @@ const Dashboard = () => {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
-                      Learning Progress
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <IconButton size="small" sx={{ color: '#202F32' }}>
-                        <MoreVert fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" sx={{ color: '#202F32' }}>
-                        <Edit fontSize="small" />
-                      </IconButton>
-                    </Box>
+                      Learning Progress</Typography>
                   </Box>
 
                   <Box sx={{ mb: 3 }}>
@@ -464,6 +380,59 @@ const Dashboard = () => {
                 </Grid>
               </Grid>
             </Grid>
+
+            {/* My Tasks - Bottom Right */}
+            <Grid item xs={12}>
+              <Card sx={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', height: '100%' }}>
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
+                      My Tasks
+                    </Typography>
+                    <Button size="small" sx={{ color: '#C39766' }}>View All</Button>
+                  </Box>
+                  {upcomingTasks.length > 0 ? (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      {upcomingTasks.slice(0, 4).map((task) => (
+                        <Paper
+                          key={task.id}
+                          variant="outlined"
+                          sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2, borderRadius: '12px' }}
+                        >
+                          <Avatar sx={{ bgcolor: task.type === 'assignment' ? 'rgba(74, 144, 226, 0.1)' : 'rgba(80, 200, 120, 0.1)' }}>
+                            {task.type === 'assignment' ? (
+                              <Assignment sx={{ color: '#4A90E2' }} />
+                            ) : (
+                              <Quiz sx={{ color: '#50C878' }} />
+                            )}
+                          </Avatar>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
+                              {task.title}
+                            </Typography>
+                            <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
+                              {task.course}
+                            </Typography>
+                          </Box>
+                          <Chip
+                            label={task.dueDate ? `Due ${format(new Date(task.dueDate), 'MMM dd')}` : 'No Due Date'}
+                            size="small"
+                            variant="outlined"
+                          />
+                        </Paper>
+                      ))}
+                    </Box>
+                  ) : (
+                    <Box sx={{ textAlign: 'center', py: 3 }}>
+                      <Assignment sx={{ fontSize: 48, color: 'rgba(32,47,50,0.2)', mb: 1 }} />
+                      <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.7)' }}>
+                        No upcoming tasks.
+                      </Typography>
+                    </Box>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
 
@@ -491,14 +460,6 @@ const Dashboard = () => {
                       position: 'relative',
                     }}
                   >
-                    <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 1 }}>
-                      <IconButton size="small" sx={{ color: '#202F32' }}>
-                        <Share fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" sx={{ color: '#202F32' }}>
-                        <Edit fontSize="small" />
-                      </IconButton>
-                    </Box>
                     <Avatar
                       sx={{
                         width: 80,
@@ -516,26 +477,6 @@ const Dashboard = () => {
                     <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)', mb: 2 }}>
                       {user?.role === 'student' ? 'Learner' : user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1)}
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <IconButton size="small" sx={{ bgcolor: 'white', color: '#202F32' }}>
-                        <Edit fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" sx={{ bgcolor: 'white', color: '#202F32' }}>
-                        <Email fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" sx={{ bgcolor: 'white', color: '#202F32' }}>
-                        <Phone fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" sx={{ bgcolor: 'white', color: '#202F32' }}>
-                        <Add fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" sx={{ bgcolor: 'white', color: '#202F32' }}>
-                        <CalendarToday fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" sx={{ bgcolor: 'white', color: '#202F32' }}>
-                        <Folder fontSize="small" />
-                      </IconButton>
-                    </Box>
                   </Box>
                 </CardContent>
               </Card>
@@ -553,10 +494,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
-
-
-
-
-

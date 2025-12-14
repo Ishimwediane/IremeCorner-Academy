@@ -31,7 +31,10 @@ const MyCourses = () => {
     }
   );
 
-  const enrollments = enrollmentsData?.data || [];
+  // Filter out enrollments where the course object is null to prevent crashes
+  const enrollments = (enrollmentsData?.data || []).filter(
+    (enrollment) => enrollment.course
+  );
 
   if (isLoading) {
     return (
@@ -120,7 +123,7 @@ const MyCourses = () => {
                       size="small"
                       variant="contained"
                       component={Link}
-                      to={`/courses/${course._id}`}
+                      to={`/learner/course/${course._id}`}
                       startIcon={<PlayArrow />}
                     >
                       Continue
@@ -137,29 +140,3 @@ const MyCourses = () => {
 };
 
 export default MyCourses;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Navbar from './components/Navbar';
-import DashboardNavbar from './components/DashboardNavbar';
 import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
 import Home from './pages/Home';
@@ -15,11 +14,12 @@ import Auth from './pages/Auth';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
 import Dashboard from './pages/learnerdashboard/Dashboard';
-import Course from './pages/learnerdashboard/Course';
+import BrowseCourses from './pages/learnerdashboard/BrowseCourses';
+import CourseContent from './pages/learnerdashboard/CourseContent';
 import Notifications from './pages/learnerdashboard/Notifications';
 import Profile from './pages/Profile';
-import MyCourses from './pages/MyCourses';
-import LessonView from './pages/LessonView';
+import LearnerLayout from './pages/learnerdashboard/LearnerLayout';
+import MyLearning from './pages/learnerdashboard/MyLearning';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CreateCourse from './pages/CreateCourse';
 import TrainerDashboard from './pages/TrainerDashboard';
@@ -40,6 +40,8 @@ import TermsAndConditions from './pages/TermsAndConditions';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import TrainerCourseContent from './pages/trainer/TrainerCourseContent';
+import QuizPage from './pages/learnerdashboard/QuizPage';
+import AssignmentPage from './pages/learnerdashboard/AssignmentPage';
 
 
 import AllUsers from './pages/admin/AllUsers';
@@ -56,35 +58,17 @@ import AdminSettings from './pages/admin/AdminSettings';
 
 function AppContent() {
   const location = useLocation();
-  const learnerPages = ['/dashboard', '/profile', '/my-courses', '/learner/courses', '/learner/notifications'];
-  const adminPages = ['/admin'];
-  const trainerPages = [
-    '/trainer/dashboard',
-    '/trainer/courses',
-    '/trainer/course-content',
-    '/trainer/students',
-    '/trainer/assignments',
-    '/trainer/quizzes',
-    '/trainer/earnings',
-    '/trainer/messages',
-    '/trainer/reports',
-    '/trainer/settings',
-    '/trainer/certifications',
-    '/trainer/live-sessions'
-  ];
-  const isLearnerPage = learnerPages.some(path => location.pathname.startsWith(path)) || 
-                     location.pathname.includes('/lessons/');
-  const isAdminPage = adminPages.some(path => location.pathname.startsWith(path));
-  const isTrainerPage = trainerPages.some(path => location.pathname.startsWith(path));
-  const showDashboardNavbar = isLearnerPage && !isTrainerPage;
+  const isLearnerPage = location.pathname.startsWith('/learner');
+  const isAdminPage = location.pathname.startsWith('/admin');
+  const isTrainerPage = location.pathname.startsWith('/trainer');
+
   const showNavbar = !isLearnerPage && !isTrainerPage && !isAdminPage;
 
   return (
     <div className="App">
-      {showDashboardNavbar && <DashboardNavbar />}
       {showNavbar && <Navbar />}
-      <Box sx={{ pt: showDashboardNavbar ? '80px' : showNavbar ? '70px' : 0 }}>
-          <Routes>
+      <Box sx={{ pt: showNavbar ? '70px' : 0 }}>
+        <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Auth />} />
           <Route path="/register" element={<Auth />} />
@@ -93,24 +77,25 @@ function AppContent() {
           <Route
             path="/dashboard"
             element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
+              <Navigate to="/learner/dashboard" replace />
             }
           />
           <Route
-            path="/learner/courses"
+            path="/learner/*"
             element={
-              <PrivateRoute>
-                <Course />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/learner/notifications"
-            element={
-              <PrivateRoute>
-                <Notifications />
+              <PrivateRoute requiredRole="student">
+                <LearnerLayout>
+                  <Routes>
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="courses" element={<BrowseCourses />} />
+                    <Route path="notifications" element={<Notifications />} />
+                    <Route path="course/:courseId" element={<CourseContent />} />
+                    <Route path="course/:courseId/lessons/:lessonId" element={<CourseContent />} />
+                    <Route path="my-learning" element={<MyLearning />} />
+                    <Route path="quiz/:quizId" element={<QuizPage />} />
+                    <Route path="assignment/:assignmentId" element={<AssignmentPage />} />
+                  </Routes>
+                </LearnerLayout>
               </PrivateRoute>
             }
           />
@@ -123,26 +108,10 @@ function AppContent() {
             }
           />
           <Route
-            path="/my-courses"
-            element={
-              <PrivateRoute>
-                <MyCourses />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/courses/:courseId/lessons/:lessonId"
-            element={
-              <PrivateRoute>
-                <LessonView />
-              </PrivateRoute>
-            }
-          />
-          <Route
             path="/admin"
             element={
               <PrivateRoute requiredRole="admin">
-                <AdminLayout> {/* Wrap AdminDashboard with AdminLayout */}
+                <AdminLayout>
                   <AdminDashboard />
                 </AdminLayout>
               </PrivateRoute>
@@ -272,14 +241,14 @@ function AppContent() {
               </PrivateRoute>
             }
           />
-          <Route 
-          path="/trainer/course-content/:courseId" 
-          element={
-            <PrivateRoute requiredRole={['trainer', 'admin']}>
-              <TrainerCourseContent />
-            </PrivateRoute>    
-          } />
-
+          <Route
+            path="/trainer/course-content/:courseId"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <TrainerCourseContent />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/trainer/students"
             element={
@@ -366,22 +335,22 @@ function AppContent() {
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Box>
-        {!isTrainerPage && !isAdminPage && <Footer />}
-        {!isTrainerPage && !isAdminPage && <ChatWidget />}
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-      </div>
+        </Routes>
+      </Box>
+      {!isLearnerPage && !isTrainerPage && !isAdminPage && <Footer />}
+      {!isLearnerPage && !isTrainerPage && !isAdminPage && <ChatWidget />}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </div>
   );
 }
 

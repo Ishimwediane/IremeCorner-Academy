@@ -10,7 +10,10 @@ import {
   MenuItem,
   Alert,
   CircularProgress,
+  Box,
+  IconButton
 } from '@mui/material';
+import { PhotoCamera } from '@mui/icons-material';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 
@@ -25,6 +28,8 @@ const CreateCourse = () => {
     isFree: true,
     price: 0,
   });
+  const [thumbnail, setThumbnail] = useState(null);
+  const [preview, setPreview] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -49,6 +54,14 @@ const CreateCourse = () => {
     setError('');
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setThumbnail(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -57,17 +70,23 @@ const CreateCourse = () => {
     try {
       const formDataToSend = new FormData();
       Object.keys(formData).forEach((key) => {
-        formDataToSend.append(key, formData[key]);
+        if (key !== 'isFree') {
+          formDataToSend.append(key, formData[key]);
+        }
       });
+      formDataToSend.append('type', formData.isFree ? 'free' : 'paid');
+      if (thumbnail) {
+        formDataToSend.append('thumbnail', thumbnail);
+      }
 
-      const response = await api.post('/courses', formData, {
+      const response = await api.post('/courses', formDataToSend, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
       });
 
       toast.success('Course created successfully!');
-      navigate(`/courses/${response.data.data._id}`);
+      navigate(`/trainer/courses/${response.data.data._id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Course creation failed');
       toast.error('Course creation failed');
@@ -91,6 +110,40 @@ const CreateCourse = () => {
 
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom>Course Thumbnail</Typography>
+              <Box
+                sx={{
+                  border: '2px dashed #ccc',
+                  borderRadius: '4px',
+                  p: 2,
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                  },
+                }}
+                onClick={() => document.getElementById('thumbnail-upload').click()}
+              >
+                <input
+                  accept="image/*"
+                  id="thumbnail-upload"
+                  type="file"
+                  hidden
+                  onChange={handleFileChange}
+                />
+                {preview ? (
+                  <img src={preview} alt="Thumbnail preview" style={{ maxHeight: '200px', maxWidth: '100%' }} />
+                ) : (
+                  <>
+                    <IconButton color="primary" component="span">
+                      <PhotoCamera />
+                    </IconButton>
+                    <Typography>Click to upload</Typography>
+                  </>
+                )}
+              </Box>
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth

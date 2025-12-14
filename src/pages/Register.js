@@ -57,7 +57,14 @@ const Register = () => {
 
     if (result.success) {
       toast.success('Registration successful!');
-      navigate('/dashboard');
+      // Role-based redirection
+      if (result.user.role === 'admin') {
+        navigate('/admin');
+      } else if (result.user.role === 'trainer') {
+        navigate('/trainer/dashboard');
+      } else {
+        navigate('/learner/dashboard');
+      }
     } else {
       setError(result.error || 'Registration failed');
       toast.error(result.error || 'Registration failed');
@@ -161,16 +168,3 @@ const Register = () => {
 };
 
 export default Register;
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -55,7 +55,13 @@ const Auth = () => {
       const result = await login(formData.email, formData.password);
       if (result.success) {
         toast.success('Login successful!');
-        navigate('/dashboard');
+        if (result.user.role === 'admin') {
+          navigate('/admin');
+        } else if (result.user.role === 'trainer') {
+          navigate('/trainer/dashboard');
+        } else {
+          navigate('/learner/dashboard');
+        }
       } else {
         setError(result.error || 'Login failed');
         toast.error(result.error || 'Login failed');
@@ -76,7 +82,13 @@ const Auth = () => {
       const result = await register(registerData);
       if (result.success) {
         toast.success('Registration successful!');
-        navigate('/dashboard');
+        if (result.user.role === 'admin') {
+          navigate('/admin');
+        } else if (result.user.role === 'trainer') {
+          navigate('/trainer/dashboard');
+        } else {
+          navigate('/learner/dashboard');
+        }
       } else {
         setError(result.error || 'Registration failed');
         toast.error(result.error || 'Registration failed');
@@ -307,4 +319,3 @@ const Auth = () => {
 };
 
 export default Auth;
-
