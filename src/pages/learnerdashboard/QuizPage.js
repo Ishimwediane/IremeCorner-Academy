@@ -68,7 +68,7 @@ const QuizPage = () => {
   }
 
   if (showResult && result) {
-    const { score, maxScore, percentage, answers: gradedAnswers } = result.data;
+    const { score, maxScore, percentage, answers: gradedAnswers } = result.data.data;
     return (
       <Container component={Paper} sx={{ p: 4, mt: 4 }}>
         <Typography variant="h4" gutterBottom>Quiz Result</Typography>
