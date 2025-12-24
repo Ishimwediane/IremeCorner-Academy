@@ -13,9 +13,13 @@ import {
   ListItemText,
   CircularProgress,
   Button,
-  Tabs,
-  Tab,
   Stack,
+  Chip,
+  Divider,
+  Card,
+  CardContent,
+  IconButton,
+  Drawer,
 } from '@mui/material';
 import {
   PlayCircleOutline,
@@ -26,39 +30,30 @@ import {
   Assignment,
   Quiz,
   Event,
+  Menu as MenuIcon,
+  Close,
+  RadioButtonUnchecked,
 } from '@mui/icons-material';
 import ReactPlayer from 'react-player';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import api from '../../utils/api';
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
 const CourseContent = () => {
   const { courseId, lessonId } = useParams();
   const [selectedLesson, setSelectedLesson] = useState(null);
-  const [currentTab, setCurrentTab] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // Fetch course data (lessons, title, etc.)
+  // Brand colors
+  const colors = {
+    chocolate: '#C39766',
+    black: '#1a1a1a',
+    cream: '#f5f1ed',
+    lightCream: '#faf8f5',
+  };
+
+  // Fetch course data
   const { data: courseData, isLoading: isCourseLoading } = useQuery(
     ['course', courseId],
     async () => {
@@ -66,7 +61,7 @@ const CourseContent = () => {
       return response.data.data;
     }
   );
-    
+
   // Fetch assignments for the lesson
   const { data: assignments, isLoading: assignmentsLoading } = useQuery(
     ['assignments', lessonId],
@@ -97,47 +92,17 @@ const CourseContent = () => {
     { enabled: !!courseId }
   );
 
-
-  // Fetch user's progress for this course
+  // Fetch progress data
   const { data: progressData, isLoading: isProgressLoading } = useQuery(
     ['progress', courseId],
     async () => {
       const response = await api.get(`/progress/courses/${courseId}`);
-      return response.data.data || [];
+      return response.data.data;
     },
-    {
-      enabled: !!courseId,
-    }
+    { enabled: !!courseId }
   );
 
-  useEffect(() => {
-    if (courseData?.lessons && progressData) {
-      const lessons = courseData.lessons;
-      // If a lesson ID is in the URL, try to select that lesson
-      if (lessonId) {
-        const lessonFromUrl = lessons.find(l => l._id === lessonId);
-        if (lessonFromUrl) {
-          setSelectedLesson(lessonFromUrl);
-          return;
-        }
-      }
-      
-      // Otherwise, determine the first uncompleted lesson
-      const completedLessonIds = new Set(progressData.filter(p => p.isCompleted).map(p => p.lesson));
-      const firstUncompleted = lessons.find(lesson => !completedLessonIds.has(lesson._id));
-      
-      // Select the first uncompleted lesson, or the very first lesson if all are complete or none started
-      const lessonToSelect = firstUncompleted || lessons[0];
-
-      if (lessonToSelect && lessonToSelect._id !== lessonId) {
-        setSelectedLesson(lessonToSelect);
-        navigate(`/learner/course/${courseId}/lessons/${lessonToSelect._id}`, { replace: true });
-      } else if (lessonToSelect) {
-        setSelectedLesson(lessonToSelect);
-      }
-    }
-  }, [courseData, progressData, courseId, lessonId, navigate]);
-
+  // Mutation to update lesson progress
   const updateProgressMutation = useMutation(
     ({ lessonId, isCompleted }) => api.post('/progress/lessons', { courseId, lessonId, isCompleted }),
     {
@@ -147,22 +112,34 @@ const CourseContent = () => {
     }
   );
 
+  useEffect(() => {
+    if (lessonId && courseData) {
+      const lesson = courseData.lessons?.find(l => l._id === lessonId);
+      if (lesson) {
+        setSelectedLesson(lesson);
+      }
+    } else if (courseData?.lessons?.length > 0 && !lessonId) {
+      const firstIncompleteLesson = courseData.lessons.find(
+        lesson => !completedLessonIds.has(lesson._id)
+      ) || courseData.lessons[0];
+      setSelectedLesson(firstIncompleteLesson);
+      navigate(`/learner/course/${courseId}/lessons/${firstIncompleteLesson._id}`, { replace: true });
+    }
+  }, [lessonId, courseData, courseId, navigate]);
+
   const lessons = courseData?.lessons || [];
   const completedLessonIds = new Set(progressData?.filter(p => p.isCompleted).map(p => p.lesson) || []);
 
   const handleLessonClick = (lesson) => {
     setSelectedLesson(lesson);
     navigate(`/learner/course/${courseId}/lessons/${lesson._id}`, { replace: true });
+    setSidebarOpen(false);
   };
-  
-  const handleTabChange = (event, newValue) => {
-    setCurrentTab(newValue);
-  };
-  
+
   if (isCourseLoading || isProgressLoading) {
     return (
       <Container sx={{ py: 4, textAlign: 'center' }}>
-        <CircularProgress />
+        <CircularProgress sx={{ color: colors.chocolate }} />
         <Typography>Loading course content...</Typography>
       </Container>
     );
@@ -172,7 +149,7 @@ const CourseContent = () => {
     return (
       <Container sx={{ py: 4, textAlign: 'center' }}>
         <Typography variant="h5">Course not found</Typography>
-        <Button component={Link} to="/learner/courses" startIcon={<ArrowBack />} sx={{ mt: 2 }}>
+        <Button component={Link} to="/learner/courses" startIcon={<ArrowBack />} sx={{ mt: 2, color: colors.chocolate }}>
           Back to Courses
         </Button>
       </Container>
@@ -182,26 +159,158 @@ const CourseContent = () => {
   const isSelectedLessonCompleted = selectedLesson && completedLessonIds.has(selectedLesson._id);
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
-
-  return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box sx={{ mb: 3 }}>
-        <Button component={Link} to="/learner/courses" startIcon={<ArrowBack />} sx={{ mb: 2 }}>
-          Back to All Courses
-        </Button>
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>{courseData.title}</Typography>
-        <Typography variant="body1" color="text.secondary">{courseData.description}</Typography>
+  const sidebarContent = (
+    <Box sx={{ width: { xs: 280, md: 320 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Course Header */}
+      <Box sx={{ p: 3, bgcolor: colors.black, color: 'white' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', flex: 1 }}>
+            {courseData.title}
+          </Typography>
+          <IconButton
+            onClick={() => setSidebarOpen(false)}
+            sx={{ color: 'white', display: { md: 'none' } }}
+          >
+            <Close />
+          </IconButton>
+        </Box>
+        <Typography variant="body2" sx={{ opacity: 0.9, mb: 2 }}>
+          {lessons.length} Lessons • {completedLessonIds.size}/{lessons.length} Completed
+        </Typography>
+        {/* Message Trainer Button */}
+        {courseData.trainer && (
+          <Button
+            fullWidth
+            variant="outlined"
+            size="small"
+            onClick={() => navigate(`/learner/messages?trainer=${courseData.trainer._id || courseData.trainer}`)}
+            sx={{
+              color: 'white',
+              borderColor: colors.chocolate,
+              '&:hover': {
+                borderColor: 'white',
+                bgcolor: 'rgba(255,255,255,0.1)',
+              },
+            }}
+          >
+            💬 Message Trainer
+          </Button>
+        )}
       </Box>
 
-      <Grid container spacing={4}>
-        {/* Main Content Area (Left) */}
-        <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 3, borderRadius: '16px', minHeight: '60vh' }}>
-            {selectedLesson ? (
-              <Box>
-                {/* Video Player */}
-                {(selectedLesson.videoUrl || selectedLesson.videoFile) && (
-                  <Box sx={{ position: 'relative', paddingTop: '56.25%', mb: 3, bgcolor: 'black', borderRadius: '12px', overflow: 'hidden' }}>
+      {/* Lessons List */}
+      <Box sx={{ flex: 1, overflow: 'auto', bgcolor: colors.lightCream }}>
+        <List sx={{ p: 0 }}>
+          {lessons.map((lesson, index) => {
+            const isCompleted = completedLessonIds.has(lesson._id);
+            const isActive = selectedLesson?._id === lesson._id;
+
+            return (
+              <ListItem key={lesson._id} disablePadding>
+                <ListItemButton
+                  onClick={() => handleLessonClick(lesson)}
+                  sx={{
+                    py: 2,
+                    px: 3,
+                    bgcolor: isActive ? colors.cream : 'transparent',
+                    borderLeft: isActive ? '4px solid' : '4px solid transparent',
+                    borderColor: colors.chocolate,
+                    '&:hover': {
+                      bgcolor: colors.cream,
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    {isCompleted ? (
+                      <CheckCircle sx={{ color: colors.chocolate }} />
+                    ) : (
+                      <RadioButtonUnchecked sx={{ color: 'text.secondary' }} />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontWeight: isActive ? 'bold' : 'medium',
+                          color: isActive ? colors.black : 'text.primary',
+                        }}
+                      >
+                        {index + 1}. {lesson.title}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="caption" color="text.secondary">
+                        {lesson.duration || '10'} min
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Box>
+    </Box>
+  );
+
+  return (
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: colors.lightCream }}>
+      {/* Desktop Sidebar */}
+      <Box
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          width: 320,
+          borderRight: 1,
+          borderColor: 'divider',
+          bgcolor: 'white',
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          overflow: 'hidden',
+        }}
+      >
+        {sidebarContent}
+      </Box>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="left"
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        sx={{ display: { xs: 'block', md: 'none' } }}
+      >
+        {sidebarContent}
+      </Drawer>
+
+      {/* Main Content */}
+      <Box sx={{ flex: 1, overflow: 'auto' }}>
+        <Container maxWidth="lg" sx={{ py: 3 }}>
+          {/* Top Bar */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+            <IconButton
+              onClick={() => setSidebarOpen(true)}
+              sx={{ display: { xs: 'flex', md: 'none' }, color: colors.black }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Button
+              component={Link}
+              to="/learner/my-learning"
+              startIcon={<ArrowBack />}
+              size="small"
+              sx={{ color: colors.black }}
+            >
+              Back
+            </Button>
+          </Box>
+
+          {selectedLesson ? (
+            <Box>
+              {/* Video Player */}
+              {(selectedLesson.videoUrl || selectedLesson.videoFile) && (
+                <Paper sx={{ mb: 3, borderRadius: 2, overflow: 'hidden', boxShadow: 3 }}>
+                  <Box sx={{ position: 'relative', paddingTop: '56.25%', bgcolor: 'black' }}>
                     <ReactPlayer
                       url={selectedLesson.videoUrl || `${backendUrl}${selectedLesson.videoFile}`}
                       controls
@@ -210,166 +319,242 @@ const CourseContent = () => {
                       style={{ position: 'absolute', top: 0, left: 0 }}
                     />
                   </Box>
-                )}
+                </Paper>
+              )}
 
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <Tabs value={currentTab} onChange={handleTabChange} aria-label="lesson content tabs">
-                    <Tab label="Description" icon={<DescriptionOutlined />} iconPosition="start" />
-                    <Tab label="Assignments" icon={<Assignment />} iconPosition="start" />
-                    <Tab label="Quizzes" icon={<Quiz />} iconPosition="start" />
-                    <Tab label="Live Sessions" icon={<Event />} iconPosition="start" />
-                  </Tabs>
-                </Box>
-                
-                <TabPanel value={currentTab} index={0}>
-                  {/* Lesson Title & Description */}
-                  <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>{selectedLesson.title}</Typography>
-                  <Typography variant="body1" sx={{ lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
-                    {selectedLesson.description || selectedLesson.content || 'No description for this lesson.'}
-                  </Typography>
-
-                  {/* Mark as Complete/Incomplete Button */}
-                  <Box sx={{ mt: 3 }}>
-                    <Button
-                      variant={isSelectedLessonCompleted ? "outlined" : "contained"}
-                      color="primary"
-                      onClick={() => updateProgressMutation.mutate({ lessonId: selectedLesson._id, isCompleted: !isSelectedLessonCompleted })}
-                      disabled={updateProgressMutation.isLoading}
-                      startIcon={<CheckCircle />}
-                    >
-                      {updateProgressMutation.isLoading ? 'Updating...' : (isSelectedLessonCompleted ? 'Mark as Incomplete' : 'Mark as Complete')}
-                    </Button>
+              {/* Lesson Info */}
+              <Paper sx={{ p: 3, mb: 3, borderRadius: 2, bgcolor: 'white' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1, color: colors.black }}>
+                      {selectedLesson.title}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                      {selectedLesson.description || selectedLesson.content || 'No description for this lesson.'}
+                    </Typography>
                   </Box>
+                  <Button
+                    variant={isSelectedLessonCompleted ? "outlined" : "contained"}
+                    onClick={() => updateProgressMutation.mutate({ lessonId: selectedLesson._id, isCompleted: !isSelectedLessonCompleted })}
+                    disabled={updateProgressMutation.isLoading}
+                    startIcon={<CheckCircle />}
+                    sx={{
+                      ml: 2,
+                      minWidth: 180,
+                      bgcolor: isSelectedLessonCompleted ? 'transparent' : colors.chocolate,
+                      borderColor: colors.chocolate,
+                      color: isSelectedLessonCompleted ? colors.chocolate : 'white',
+                      '&:hover': {
+                        bgcolor: isSelectedLessonCompleted ? colors.cream : '#A67A52',
+                        borderColor: colors.chocolate,
+                      }
+                    }}
+                  >
+                    {updateProgressMutation.isLoading ? 'Updating...' : (isSelectedLessonCompleted ? 'Completed ✓' : 'Mark Complete')}
+                  </Button>
+                </Box>
 
-                  {/* Downloadable Materials */}
-                  {selectedLesson.materials && selectedLesson.materials.length > 0 && (
-                    <Box sx={{ mt: 4, pt: 3, borderTop: 1, borderColor: 'divider' }}>
-                      <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Downloadable Materials</Typography>
-                      <Stack spacing={1}>
-                        {selectedLesson.materials.map((material, index) => (
-                          <Button
-                            key={index}
-                            component="a"
-                            href={`${backendUrl}${material.filePath}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            startIcon={<Download />}
-                            variant="outlined"
-                            sx={{ justifyContent: 'flex-start' }}
-                          >
-                            {material.originalName} ({(material.fileSize / 1024).toFixed(1)} KB)
-                          </Button>
-                        ))}
-                      </Stack>
-                    </Box>
-                  )}
-                </TabPanel>
-
-                <TabPanel value={currentTab} index={1}>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Assignments</Typography>
-                  <Typography>Lesson ID: {lessonId}</Typography>
-                  {assignmentsLoading ? <CircularProgress /> : (
-                    <Stack spacing={2}>
-                      {assignments?.length > 0 ? assignments.map(assignment => (
-                        <Paper key={assignment._id} sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography>{assignment.title}</Typography>
-                          <Button variant="contained" onClick={() => navigate(`/learner/assignment/${assignment._id}`)}>View Assignment</Button>
-                        </Paper>
-                      )) : <Typography>No assignments for this lesson.</Typography>}
-                    </Stack>
-                  )}
-                </TabPanel>
-
-                <TabPanel value={currentTab} index={2}>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Quizzes</Typography>
-                  <Typography>Lesson ID: {lessonId}</Typography>
-                  {quizzesLoading ? <CircularProgress /> : (
-                    <Stack spacing={2}>
-                      {quizzes?.length > 0 ? quizzes.map(quiz => (
-                        <Paper key={quiz._id} sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Typography>{quiz.title}</Typography>
-                          <Button variant="contained" onClick={() => navigate(`/learner/quiz/${quiz._id}`)}>Start Quiz</Button>
-                        </Paper>
-                      )) : <Typography>No quizzes for this lesson.</Typography>}
-                    </Stack>
-                  )}
-                </TabPanel>
-                
-                <TabPanel value={currentTab} index={3}>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Live Sessions</Typography>
-                  {liveSessionsLoading ? <CircularProgress /> : (
-                    <Stack spacing={2}>
-                      {liveSessions?.map(session => (
-                        <Paper key={session._id} sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Box>
-                            <Typography>{session.title}</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {new Date(session.scheduledAt).toLocaleString()}
-                            </Typography>
-                          </Box>
-                          <Button variant="contained" component="a" href={session.meetingUrl} target="_blank" rel="noopener noreferrer">Join Session</Button>
-                        </Paper>
+                {/* Downloadable Materials */}
+                {selectedLesson.materials && selectedLesson.materials.length > 0 && (
+                  <Box sx={{ mt: 3, pt: 3, borderTop: 1, borderColor: 'divider' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: colors.black }}>
+                      📎 Downloadable Materials
+                    </Typography>
+                    <Stack spacing={1}>
+                      {selectedLesson.materials.map((material, index) => (
+                        <Button
+                          key={index}
+                          variant="outlined"
+                          startIcon={<Download />}
+                          href={`${backendUrl}${material.filePath}`}
+                          target="_blank"
+                          sx={{
+                            justifyContent: 'flex-start',
+                            textAlign: 'left',
+                            borderColor: colors.chocolate,
+                            color: colors.black,
+                            '&:hover': {
+                              borderColor: colors.chocolate,
+                              bgcolor: colors.cream,
+                            }
+                          }}
+                        >
+                          {material.originalName || `Material ${index + 1}`}
+                        </Button>
                       ))}
                     </Stack>
-                  )}
-                </TabPanel>
-                
-              </Box>
-            ) : (
-              <Box sx={{ textAlign: 'center', pt: 8 }}>
-                <Typography variant="h6" color="text.secondary">Select a lesson to begin.</Typography>
-              </Box>
-            )}
-          </Paper>
-        </Grid>
+                  </Box>
+                )}
+              </Paper>
 
-        {/* Curriculum Sidebar (Right) */}
-        <Grid item xs={12} md={4}>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 2,
-              bgcolor: 'rgba(32,47,50,0.03)',
-              borderRadius: '16px',
-              position: { md: 'sticky' },
-              top: { md: 90 },
-              maxHeight: { md: 'calc(100vh - 100px)' },
-              overflowY: 'auto',
-            }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 'bold', p: 2 }}>Course Curriculum</Typography>
-            <List>
-              {lessons.map((lesson, index) => (
-                <ListItem key={lesson._id} disablePadding>
-                  <ListItemButton
-                    selected={selectedLesson?._id === lesson._id}
-                    onClick={() => handleLessonClick(lesson)}
-                    sx={{ borderRadius: '8px', mb: 1 }}
-                  >
-                    <ListItemIcon sx={{ minWidth: 32 }}>
-                      {lesson.videoUrl || lesson.videoFile ? (
-                        <PlayCircleOutline color={selectedLesson?._id === lesson._id ? 'primary' : 'inherit'} />
-                      ) : (
-                        <DescriptionOutlined color={selectedLesson?._id === lesson._id ? 'primary' : 'inherit'} />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={
-                        <Typography variant="body2" sx={{ fontWeight: selectedLesson?._id === lesson._id ? 'bold' : 'regular' }}>
-                          {index + 1}. {lesson.title}
-                        </Typography>
-                      }
-                      secondary={`${lesson.duration || 0} min`}
+              {/* Assignments Section */}
+              {assignments && assignments.length > 0 && (
+                <Paper sx={{ p: 3, mb: 3, borderRadius: 2, bgcolor: 'white' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+                    <Assignment sx={{ color: colors.chocolate, fontSize: 28 }} />
+                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: colors.black }}>
+                      Assignments
+                    </Typography>
+                    <Chip
+                      label={assignments.length}
+                      sx={{ bgcolor: colors.chocolate, color: 'white' }}
+                      size="small"
                     />
-                    {completedLessonIds.has(lesson._id) && <CheckCircle color="success" fontSize="small" />}
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Container>
+                  </Box>
+                  <Stack spacing={2}>
+                    {assignments.map((assignment) => (
+                      <Card key={assignment._id} variant="outlined" sx={{ borderColor: colors.cream, '&:hover': { boxShadow: 2, borderColor: colors.chocolate } }}>
+                        <CardContent>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <Box sx={{ flex: 1 }}>
+                              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, color: colors.black }}>
+                                {assignment.title}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                {assignment.description}
+                              </Typography>
+                              {assignment.dueDate && (
+                                <Typography variant="caption" color="text.secondary">
+                                  Due: {new Date(assignment.dueDate).toLocaleDateString()}
+                                </Typography>
+                              )}
+                            </Box>
+                            <Button
+                              variant="contained"
+                              onClick={() => navigate(`/learner/assignment/${assignment._id}`)}
+                              sx={{
+                                ml: 2,
+                                bgcolor: colors.chocolate,
+                                '&:hover': { bgcolor: '#A67A52' }
+                              }}
+                            >
+                              View Assignment
+                            </Button>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </Stack>
+                </Paper>
+              )}
+
+              {/* Quizzes Section */}
+              {quizzes && quizzes.length > 0 && (
+                <Paper sx={{ p: 3, mb: 3, borderRadius: 2, bgcolor: 'white' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+                    <Quiz sx={{ color: colors.black, fontSize: 28 }} />
+                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: colors.black }}>
+                      Quizzes
+                    </Typography>
+                    <Chip
+                      label={quizzes.length}
+                      sx={{ bgcolor: colors.black, color: 'white' }}
+                      size="small"
+                    />
+                  </Box>
+                  <Stack spacing={2}>
+                    {quizzes.map((quiz) => (
+                      <Card key={quiz._id} variant="outlined" sx={{ borderColor: colors.cream, '&:hover': { boxShadow: 2, borderColor: colors.black } }}>
+                        <CardContent>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <Box sx={{ flex: 1 }}>
+                              <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, color: colors.black }}>
+                                {quiz.title}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                {quiz.description || 'Test your knowledge'}
+                              </Typography>
+                              <Box sx={{ display: 'flex', gap: 1 }}>
+                                <Chip label={`${quiz.questions?.length || 0} Questions`} size="small" sx={{ bgcolor: colors.cream }} />
+                                <Chip label={`${quiz.passingPercent || 70}% to pass`} size="small" sx={{ bgcolor: colors.cream }} />
+                              </Box>
+                            </Box>
+                            <Button
+                              variant="contained"
+                              onClick={() => navigate(`/learner/quiz/${quiz._id}`)}
+                              sx={{
+                                ml: 2,
+                                bgcolor: colors.black,
+                                '&:hover': { bgcolor: '#333' }
+                              }}
+                            >
+                              Take Quiz
+                            </Button>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </Stack>
+                </Paper>
+              )}
+
+              {/* Live Sessions Section */}
+              {liveSessions && liveSessions.length > 0 && (
+                <Paper sx={{ p: 3, borderRadius: 2, bgcolor: 'white' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+                    <Event sx={{ color: colors.chocolate, fontSize: 28 }} />
+                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: colors.black }}>
+                      Live Sessions
+                    </Typography>
+                    <Chip
+                      label={liveSessions.length}
+                      sx={{ bgcolor: colors.chocolate, color: 'white' }}
+                      size="small"
+                    />
+                  </Box>
+                  <Stack spacing={2}>
+                    {liveSessions.map((session) => (
+                      <Card key={session._id} variant="outlined" sx={{ borderColor: colors.cream, '&:hover': { boxShadow: 2, borderColor: colors.chocolate } }}>
+                        <CardContent>
+                          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, color: colors.black }}>
+                            {session.title}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            {session.description}
+                          </Typography>
+                          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                            <Chip
+                              label={new Date(session.scheduledAt).toLocaleString()}
+                              size="small"
+                              icon={<Event />}
+                              sx={{ bgcolor: colors.cream }}
+                            />
+                            {session.meetingLink && (
+                              <Button
+                                variant="outlined"
+                                size="small"
+                                href={session.meetingLink}
+                                target="_blank"
+                                sx={{
+                                  borderColor: colors.chocolate,
+                                  color: colors.chocolate,
+                                  '&:hover': {
+                                    borderColor: colors.chocolate,
+                                    bgcolor: colors.cream,
+                                  }
+                                }}
+                              >
+                                Join Session
+                              </Button>
+                            )}
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </Stack>
+                </Paper>
+              )}
+            </Box>
+          ) : (
+            <Paper sx={{ p: 8, textAlign: 'center', bgcolor: 'white' }}>
+              <Typography variant="h5" color="text.secondary">
+                Select a lesson to start learning
+              </Typography>
+            </Paper>
+          )}
+        </Container>
+      </Box>
+    </Box>
   );
 };
 

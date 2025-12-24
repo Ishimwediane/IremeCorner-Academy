@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Typography, IconButton, Avatar } from '@mui/material';
-import { ChevronLeft, ChevronRight, MoreVert } from '@mui/icons-material';
+import { Box, Typography, IconButton, Avatar, Tooltip } from '@mui/material';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, getDay } from 'date-fns';
 
 const Calendar = ({ events = [] }) => {
@@ -10,12 +10,12 @@ const Calendar = ({ events = [] }) => {
   const monthEnd = endOfMonth(currentDate);
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
   const firstDayOfWeek = getDay(monthStart);
-  
+
   // Create array with empty cells for days before month starts
   const daysArray = Array(firstDayOfWeek).fill(null).concat(daysInMonth);
-  
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const monthName = format(currentDate, 'MMMM yyyy');
+
+  const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const monthName = format(currentDate, 'MMM yyyy');
 
   const handlePrevMonth = () => {
     setCurrentDate(subMonths(currentDate, 1));
@@ -33,49 +33,44 @@ const Calendar = ({ events = [] }) => {
     <Box
       sx={{
         bgcolor: 'white',
-        borderRadius: '16px',
-        p: 3,
+        borderRadius: '12px',
+        p: 2,
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         height: '100%',
       }}
     >
       {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="body1" sx={{ fontWeight: 700, color: '#202F32', fontSize: '0.95rem' }}>
           Schedule
         </Typography>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton size="small" sx={{ color: '#202F32', '&:hover': { bgcolor: 'rgba(195,151,102,0.1)' } }}>
-            <MoreVert fontSize="small" />
-          </IconButton>
-        </Box>
       </Box>
 
       {/* Month Navigation */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <IconButton onClick={handlePrevMonth} size="small" sx={{ color: '#202F32' }}>
-          <ChevronLeft />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+        <IconButton onClick={handlePrevMonth} size="small" sx={{ color: '#202F32', p: 0.5 }}>
+          <ChevronLeft fontSize="small" />
         </IconButton>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#202F32' }}>
+        <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32', fontSize: '0.85rem' }}>
           {monthName}
         </Typography>
-        <IconButton onClick={handleNextMonth} size="small" sx={{ color: '#202F32' }}>
-          <ChevronRight />
+        <IconButton onClick={handleNextMonth} size="small" sx={{ color: '#202F32', p: 0.5 }}>
+          <ChevronRight fontSize="small" />
         </IconButton>
       </Box>
 
       {/* Week Days Header */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 0.5, mb: 1 }}>
-        {weekDays.map((day) => (
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 0.5, mb: 0.5 }}>
+        {weekDays.map((day, index) => (
           <Typography
-            key={day}
+            key={index}
             variant="caption"
             sx={{
               textAlign: 'center',
               fontWeight: 600,
-              color: 'rgba(32,47,50,0.6)',
-              fontSize: '0.75rem',
-              py: 0.5,
+              color: 'rgba(32,47,50,0.5)',
+              fontSize: '0.65rem',
+              py: 0.25,
             }}
           >
             {day}
@@ -83,11 +78,11 @@ const Calendar = ({ events = [] }) => {
         ))}
       </Box>
 
-      {/* Calendar Grid */}
+      {/* Calendar Grid - Compact */}
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 0.5 }}>
         {daysArray.map((date, index) => {
           if (!date) {
-            return <Box key={`empty-${index}`} sx={{ aspectRatio: '1', p: 0.5 }} />;
+            return <Box key={`empty-${index}`} sx={{ aspectRatio: '1', p: 0.25 }} />;
           }
 
           const dayEvents = getEventsForDate(date);
@@ -95,62 +90,48 @@ const Calendar = ({ events = [] }) => {
           const isCurrentMonth = isSameMonth(date, currentDate);
 
           return (
-            <Box
+            <Tooltip
               key={date.toISOString()}
-              sx={{
-                aspectRatio: '1',
-                p: 0.5,
-                borderRadius: '8px',
-                bgcolor: dayEvents.length > 0 
-                  ? (isToday ? 'rgba(195,151,102,0.15)' : 'rgba(195,151,102,0.08)')
-                  : isToday 
-                    ? 'rgba(195,151,102,0.1)' 
-                    : 'transparent',
-                border: isToday ? '2px solid #C39766' : 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                cursor: 'pointer',
-                '&:hover': {
-                  bgcolor: 'rgba(195,151,102,0.1)',
-                },
-              }}
+              title={dayEvents.map(e => e.title).join(', ') || ''}
+              arrow
             >
-              <Typography
-                variant="caption"
+              <Box
                 sx={{
-                  fontWeight: isToday ? 700 : 500,
-                  color: isCurrentMonth ? '#202F32' : 'rgba(32,47,50,0.4)',
-                  fontSize: '0.85rem',
-                  mb: 0.5,
+                  aspectRatio: '1',
+                  p: 0.25,
+                  borderRadius: '6px',
+                  bgcolor: dayEvents.length > 0
+                    ? (isToday ? 'rgba(195,151,102,0.2)' : 'rgba(195,151,102,0.1)')
+                    : isToday
+                      ? 'rgba(195,151,102,0.15)'
+                      : 'transparent',
+                  border: isToday ? '1.5px solid #C39766' : 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    bgcolor: 'rgba(195,151,102,0.15)',
+                  },
                 }}
               >
-                {format(date, 'd')}
-              </Typography>
-              {dayEvents.length > 0 && (
-                <Box sx={{ display: 'flex', gap: 0.25, flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {dayEvents.slice(0, 2).map((event, idx) => (
-                    <Avatar
-                      key={idx}
-                      sx={{
-                        width: 20,
-                        height: 20,
-                        bgcolor: event.color || '#C39766',
-                        fontSize: '0.6rem',
-                      }}
-                    >
-                      {event.initials || '?'}
-                    </Avatar>
-                  ))}
-                  {dayEvents.length > 2 && (
-                    <Typography variant="caption" sx={{ fontSize: '0.6rem', color: '#202F32' }}>
-                      +{dayEvents.length - 2}
-                    </Typography>
-                  )}
-                </Box>
-              )}
-            </Box>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontWeight: isToday ? 700 : 500,
+                    color: isCurrentMonth ? '#202F32' : 'rgba(32,47,50,0.3)',
+                    fontSize: '0.7rem',
+                    lineHeight: 1,
+                  }}
+                >
+                  {format(date, 'd')}
+                </Typography>
+                {dayEvents.length > 0 && (
+                  <Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: '#C39766', mt: 0.25 }} />
+                )}
+              </Box>
+            </Tooltip>
           );
         })}
       </Box>
@@ -159,9 +140,3 @@ const Calendar = ({ events = [] }) => {
 };
 
 export default Calendar;
-
-
-
-
-
-

@@ -18,6 +18,7 @@ import {
   CardMembership as CertificateIcon,
   ViewList as LayoutIcon,
   Settings as SettingsIcon,
+  People as PeopleIcon,
 } from '@mui/icons-material';
 import AssignmentTab from './AssignmentTab';
 import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
@@ -29,6 +30,7 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import CourseSettingsTab from './CourseSettingsTab';
 import CurriculumTab from './CurriculumTab';
 import DuoIcon from '@mui/icons-material/Duo';
+import StudentsTab from './StudentsTab';
 import TrainerLayout from '../../components/TrainerLayout';
 
 const TrainerCourseContent = () => {
@@ -93,10 +95,10 @@ const TrainerCourseContent = () => {
       prevLessons.map(lesson =>
         lesson._id === lessonId
           ? {
-              ...lesson,
-              ...updatedLessonData,
-              materials: [...(updatedLessonData.existingMaterials || []), ...updatedLessonData.materials.map(f => ({ originalName: f.name, fileSize: f.size }))]
-            }
+            ...lesson,
+            ...updatedLessonData,
+            materials: [...(updatedLessonData.existingMaterials || []), ...updatedLessonData.materials.map(f => ({ originalName: f.name, fileSize: f.size }))]
+          }
           : lesson
       )
     );
@@ -161,12 +163,13 @@ const TrainerCourseContent = () => {
           <Tab icon={<QuizIcon />} iconPosition="start" label="Quizzes" />
           <Tab icon={<DuoIcon />} iconPosition="start" label="Live Sessions" />
           <Tab icon={<CertificateIcon />} iconPosition="start" label="Certificates" />
+          <Tab icon={<PeopleIcon />} iconPosition="start" label="Students" />
         </Tabs>
       </Paper>
 
       {/* Content Area */}
       <Paper sx={{ minHeight: '600px', p: 3, borderRadius: '0 0 12px 12px' }}>
-        
+
         {/* CURRICULUM TAB */}
         {activeTab === 0 && (
           <CurriculumTab
@@ -186,7 +189,7 @@ const TrainerCourseContent = () => {
 
         {/* ASSIGNMENTS TAB */}
         {activeTab === 2 && (
-          <AssignmentTab courseId={courseId} assignments={assignments} course={course} fetchData={fetchData} /> 
+          <AssignmentTab courseId={courseId} assignments={assignments} course={course} fetchData={fetchData} />
         )}
 
         {/* QUIZZES TAB */}
@@ -202,6 +205,11 @@ const TrainerCourseContent = () => {
         {/* CERTIFICATES TAB */}
         {activeTab === 5 && (
           <CertificateTab courseId={courseId} certificates={certificates} course={course} />
+        )}
+
+        {/* STUDENTS TAB */}
+        {activeTab === 6 && (
+          <StudentsTab courseId={courseId} />
         )}
       </Paper>
     </TrainerLayout>

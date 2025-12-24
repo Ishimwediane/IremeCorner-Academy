@@ -18,17 +18,27 @@ import {
   Tabs,
   Tab,
   ButtonGroup, // Added for PlannerHeader
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Avatar,
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Add as AddIcon, Delete as DeleteIcon, Visibility as VisibilityIcon, Quiz as QuizIcon } from '@mui/icons-material';
 import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import { useEffect } from 'react'; // Import useEffect
 import api from '../../utils/api';
+import QuizResultsModal from './QuizResultsModal';
 
 const CreateQuizDialog = ({ open, onClose, onSaved, courseId, course }) => {
   const [form, setForm] = useState({
     title: '',
+    description: '',
     lesson: '',
     availableOn: '',
+    passingPercent: 70,
+    timeLimit: '',
     questions: [{ question: '', options: ['', ''], correctAnswer: 0, points: 10 }],
   });
 
@@ -36,8 +46,11 @@ const CreateQuizDialog = ({ open, onClose, onSaved, courseId, course }) => {
     if (open) {
       setForm({
         title: '',
+        description: '',
         lesson: '',
         availableOn: '',
+        passingPercent: 70,
+        timeLimit: '',
         questions: [{ question: '', options: ['', ''], correctAnswer: 0, points: 10 }],
       });
     }
@@ -74,7 +87,10 @@ const CreateQuizDialog = ({ open, onClose, onSaved, courseId, course }) => {
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
           <Grid item xs={12}>
-            <TextField fullWidth label="Quiz Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+            <TextField fullWidth label="Quiz Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField fullWidth multiline rows={2} label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Test your understanding of..." />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField fullWidth select label="Link to Lesson (Optional)" value={form.lesson} onChange={(e) => setForm({ ...form, lesson: e.target.value })}>
@@ -86,6 +102,12 @@ const CreateQuizDialog = ({ open, onClose, onSaved, courseId, course }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField fullWidth type="date" label="Available On" InputLabelProps={{ shrink: true }} value={form.availableOn} onChange={(e) => setForm({ ...form, availableOn: e.target.value })} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField fullWidth type="number" label="Passing Percentage" value={form.passingPercent} onChange={(e) => setForm({ ...form, passingPercent: Number(e.target.value) })} inputProps={{ min: 0, max: 100 }} helperText="Minimum score to pass (%)" />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField fullWidth type="number" label="Time Limit (minutes)" value={form.timeLimit} onChange={(e) => setForm({ ...form, timeLimit: e.target.value })} inputProps={{ min: 1 }} helperText="Leave empty for no limit" />
           </Grid>
 
           {form.questions.map((q, qIndex) => (
@@ -181,6 +203,7 @@ const ScheduleGrid = ({ days, items, viewMode }) => (
 const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
   const [tab, setTab] = useState(0);
   const [openCreateQuiz, setOpenCreateQuiz] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('week');
 
@@ -248,10 +271,19 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
                   <Card>
                     <CardContent>
                       <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32' }}>{q.title}</Typography>
-                      <Box>
+                      <Box sx={{ mb: 2 }}>
                         <Chip size="small" label={`${q.questions?.length || 0} Questions`} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766', mr: 1 }} />
+                        <Chip size="small" label={`${q.attempts?.length || 0} Attempts`} color="primary" sx={{ mr: 1 }} />
                         {q.lesson && <Chip size="small" label={`Lesson: ${q.lesson.title}`} variant="outlined" />}
                       </Box>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        onClick={() => setSelectedQuiz(q)}
+                      >
+                        View Results
+                      </Button>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -262,10 +294,110 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
       )}
 
       {tab === 1 && (
-        <Paper sx={{ p: 3, borderRadius: '16px' }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 1 }}>Attempts</Typography>
-          <Typography variant="body2" sx={{ color: '#666' }}>Attempts view coming soon. We will list attempts by student with score, time, and status.</Typography>
-        </Paper>
+        <Box>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 3 }}>All Quiz Attempts</Typography>
+          {quizzes.length === 0 ? (
+            <Typography variant="body2" sx={{ color: '#666' }}>No quizzes found for this course.</Typography>
+          ) : (
+            <Box>
+              {quizzes.map((quiz) => {
+                const attempts = quiz.attempts || [];
+                if (attempts.length === 0) return null;
+
+                return (
+                  <Paper key={quiz._id} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Box>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>{quiz.title}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {attempts.length} attempt{attempts.length !== 1 ? 's' : ''} | Max Score: {quiz.maxScore} | Passing: {quiz.passingPercent || 70}%
+                        </Typography>
+                      </Box>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => setSelectedQuiz(quiz)}
+                      >
+                        View Details
+                      </Button>
+                    </Box>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow sx={{ bgcolor: 'grey.50' }}>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Student</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Completed</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Score</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Percentage</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Action</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {attempts.map((attempt, index) => {
+                          const passed = attempt.percentage >= (quiz.passingPercent || 70);
+                          return (
+                            <TableRow key={attempt._id || index} hover>
+                              <TableCell>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                  <Avatar sx={{ width: 28, height: 28, bgcolor: 'primary.main', fontSize: '0.875rem' }}>
+                                    {attempt.student?.name?.charAt(0).toUpperCase() || 'S'}
+                                  </Avatar>
+                                  <Typography variant="body2">{attempt.student?.name || 'Unknown'}</Typography>
+                                </Box>
+                              </TableCell>
+                              <TableCell>
+                                <Typography variant="body2">
+                                  {format(new Date(attempt.completedAt), 'MMM dd, yyyy')}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography variant="body2" fontWeight="bold">
+                                  {attempt.score}/{quiz.maxScore}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography variant="body2" fontWeight="bold" color={passed ? 'success.main' : 'error.main'}>
+                                  {attempt.percentage}%
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Chip
+                                  label={passed ? 'Passed' : 'Failed'}
+                                  color={passed ? 'success' : 'error'}
+                                  size="small"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <IconButton
+                                  size="small"
+                                  color="primary"
+                                  onClick={() => setSelectedQuiz(quiz)}
+                                >
+                                  <VisibilityIcon />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Paper>
+                );
+              })}
+              {quizzes.every(q => (q.attempts || []).length === 0) && (
+                <Paper sx={{ p: 8, textAlign: 'center' }}>
+                  <QuizIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary">
+                    No quiz attempts yet
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Attempts will appear here once students take quizzes
+                  </Typography>
+                </Paper>
+              )}
+            </Box>
+          )}
+        </Box>
       )}
 
       <CreateQuizDialog
@@ -274,6 +406,12 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
         courseId={courseId}
         course={course}
         onSaved={handleSaveQuiz}
+      />
+
+      <QuizResultsModal
+        open={!!selectedQuiz}
+        onClose={() => setSelectedQuiz(null)}
+        quiz={selectedQuiz}
       />
     </Box>
   );

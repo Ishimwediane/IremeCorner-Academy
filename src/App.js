@@ -40,8 +40,10 @@ import TermsAndConditions from './pages/TermsAndConditions';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import TrainerCourseContent from './pages/trainer/TrainerCourseContent';
+import StudentDetailPage from './pages/trainer/StudentDetailPage';
 import QuizPage from './pages/learnerdashboard/QuizPage';
 import AssignmentPage from './pages/learnerdashboard/AssignmentPage';
+import Messages from './pages/learnerdashboard/Messages';
 
 
 import AllUsers from './pages/admin/AllUsers';
@@ -89,6 +91,7 @@ function AppContent() {
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="courses" element={<BrowseCourses />} />
                     <Route path="notifications" element={<Notifications />} />
+                    <Route path="messages" element={<Messages />} />
                     <Route path="course/:courseId" element={<CourseContent />} />
                     <Route path="course/:courseId/lessons/:lessonId" element={<CourseContent />} />
                     <Route path="my-learning" element={<MyLearning />} />
@@ -246,6 +249,14 @@ function AppContent() {
             element={
               <PrivateRoute requiredRole={['trainer', 'admin']}>
                 <TrainerCourseContent />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trainer/course-content/:courseId/student/:studentId"
+            element={
+              <PrivateRoute requiredRole={['trainer', 'admin']}>
+                <StudentDetailPage />
               </PrivateRoute>
             }
           />

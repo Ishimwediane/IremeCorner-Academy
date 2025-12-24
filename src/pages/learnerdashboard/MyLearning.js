@@ -79,7 +79,7 @@ const MyLearning = () => {
   });
 
   const enrollments = (enrollmentsData?.data || []).filter(e => e.course);
-  const inProgress = enrollments.filter(e => e.status === 'in-progress');
+  const inProgress = enrollments.filter(e => e.status === 'in-progress' || e.status === 'enrolled');
   const completed = enrollments.filter(e => e.status === 'completed');
 
   const coursesToShow = tab === 0 ? inProgress : completed;

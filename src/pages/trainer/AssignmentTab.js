@@ -18,6 +18,13 @@ import {
   Tab,
   Select,
   ButtonGroup,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Avatar,
+  IconButton,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -26,6 +33,7 @@ import {
 } from '@mui/icons-material';
 import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import api from '../../utils/api';
+import AssignmentGradingModal from './AssignmentGradingModal';
 
 const PlannerHeader = ({ startDate, setStartDate, viewMode, setViewMode, days }) => (
   <Paper sx={{ p: 2, borderRadius: '16px', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -112,6 +120,7 @@ const AssignmentTab = ({ courseId, assignments, course, fetchData }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [viewMode, setViewMode] = useState('week');
   const [openCreateAssignment, setOpenCreateAssignment] = useState(false);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
 
   const handleSaveAssignment = async (form) => {
     if (!form.title || !courseId) {
@@ -183,11 +192,20 @@ const AssignmentTab = ({ courseId, assignments, course, fetchData }) => {
                   <Card>
                     <CardContent>
                       <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32', mb: 1 }}>{a.title}</Typography>
-                      <Box>
+                      <Box sx={{ mb: 2 }}>
                         <Chip size="small" label={a.status || 'DUE'} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766', mr: 1 }} />
+                        <Chip size="small" label={`${a.submissions?.length || 0} Submissions`} color="primary" sx={{ mr: 1 }} />
                         {a.dueDate && <Chip size="small" label={`Due ${format(new Date(a.dueDate), 'MMM dd')}`} sx={{ mr: 1 }} />}
                         {a.lesson && <Chip size="small" label={`Lesson: ${a.lesson.title}`} variant="outlined" />}
                       </Box>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        onClick={() => setSelectedAssignment(a)}
+                      >
+                        View Submissions
+                      </Button>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -197,7 +215,119 @@ const AssignmentTab = ({ courseId, assignments, course, fetchData }) => {
         </Box>
       )}
 
+      {assignmentTab === 2 && (
+        <Box>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 3 }}>All Submissions</Typography>
+          {assignments.length === 0 ? (
+            <Typography variant="body2" sx={{ color: '#666' }}>No assignments found for this course.</Typography>
+          ) : (
+            <Box>
+              {assignments.map((assignment) => {
+                const submissions = assignment.submissions || [];
+                if (submissions.length === 0) return null;
+
+                return (
+                  <Paper key={assignment._id} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Box>
+                        <Typography variant="h6" sx={{ fontWeight: 600 }}>{assignment.title}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {submissions.length} submission{submissions.length !== 1 ? 's' : ''}
+                        </Typography>
+                      </Box>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => setSelectedAssignment(assignment)}
+                      >
+                        Grade All
+                      </Button>
+                    </Box>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow sx={{ bgcolor: 'grey.50' }}>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Student</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Submitted</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Score</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold' }}>Action</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {submissions.map((submission) => {
+                          const isGraded = submission.score !== undefined && submission.score !== null;
+                          return (
+                            <TableRow key={submission._id} hover>
+                              <TableCell>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                  <Avatar sx={{ width: 28, height: 28, bgcolor: 'primary.main', fontSize: '0.875rem' }}>
+                                    {submission.student?.name?.charAt(0).toUpperCase() || 'S'}
+                                  </Avatar>
+                                  <Typography variant="body2">{submission.student?.name || 'Unknown'}</Typography>
+                                </Box>
+                              </TableCell>
+                              <TableCell>
+                                <Typography variant="body2">
+                                  {format(new Date(submission.submittedAt), 'MMM dd, yyyy')}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                {isGraded ? (
+                                  <Typography variant="body2" fontWeight="bold">
+                                    {submission.score}/{assignment.maxScore}
+                                  </Typography>
+                                ) : (
+                                  <Typography variant="body2" color="text.secondary">-</Typography>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                <Chip
+                                  label={isGraded ? 'Graded' : 'Pending'}
+                                  color={isGraded ? 'success' : 'warning'}
+                                  size="small"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <IconButton
+                                  size="small"
+                                  color="primary"
+                                  onClick={() => setSelectedAssignment(assignment)}
+                                >
+                                  <FilterIcon />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Paper>
+                );
+              })}
+              {assignments.every(a => (a.submissions || []).length === 0) && (
+                <Paper sx={{ p: 8, textAlign: 'center' }}>
+                  <AssignmentIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary">
+                    No submissions yet
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Submissions will appear here once students submit their assignments
+                  </Typography>
+                </Paper>
+              )}
+            </Box>
+          )}
+        </Box>
+      )}
+
+
       <CreateAssignmentDialog open={openCreateAssignment} onClose={() => setOpenCreateAssignment(false)} onSaved={handleSaveAssignment} lessons={course?.lessons} />
+
+      <AssignmentGradingModal
+        open={!!selectedAssignment}
+        onClose={() => setSelectedAssignment(null)}
+        assignment={selectedAssignment}
+      />
     </Box>
   );
 };
