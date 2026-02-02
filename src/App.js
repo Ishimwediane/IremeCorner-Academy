@@ -21,6 +21,7 @@ import Profile from './pages/Profile';
 import LearnerLayout from './pages/learnerdashboard/LearnerLayout';
 import MyLearning from './pages/learnerdashboard/MyLearning';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminCourses from './pages/admin/AdminCourses';
 import CreateCourse from './pages/CreateCourse';
 import TrainerDashboard from './pages/TrainerDashboard';
 import AdminLayout from './pages/admin/AdminLayout'; // Corrected Path
@@ -165,7 +166,7 @@ function AppContent() {
             element={
               <PrivateRoute requiredRole="admin">
                 <AdminLayout title="Course Management">
-                  <AllCourses />
+                  <AdminCourses />
                 </AdminLayout>
               </PrivateRoute>
             }

@@ -17,9 +17,11 @@ import {
 } from '@mui/material';
 import { PlayArrow, CheckCircle } from '@mui/icons-material';
 import { useQuery } from 'react-query';
+import { useTranslation } from 'react-i18next';
 import api from '../../utils/api';
 
 const CourseListCard = ({ enrollment }) => {
+  const { t } = useTranslation();
   const course = enrollment.course;
   if (!course) return null; // Don't render if course data is missing
 
@@ -46,7 +48,7 @@ const CourseListCard = ({ enrollment }) => {
           />
           <Box sx={{ mt: 'auto' }}>
             <Typography variant="body2" color="text.secondary" gutterBottom>
-              Progress: {enrollment.progress}%
+              {t('myLearning.progressLabel', { percent: enrollment.progress })}
             </Typography>
             <LinearProgress
               variant="determinate"
@@ -63,7 +65,7 @@ const CourseListCard = ({ enrollment }) => {
             to={`/learner/course/${course._id}`}
             startIcon={enrollment.status === 'completed' ? <CheckCircle /> : <PlayArrow />}
           >
-            {enrollment.status === 'completed' ? 'Review Course' : 'Continue Learning'}
+            {enrollment.status === 'completed' ? t('myLearning.reviewCourse') : t('myLearning.continueLearning')}
           </Button>
         </CardActions>
       </Card>
@@ -72,6 +74,7 @@ const CourseListCard = ({ enrollment }) => {
 };
 
 const MyLearning = () => {
+  const { t } = useTranslation();
   const [tab, setTab] = React.useState(0);
   const { data: enrollmentsData, isLoading } = useQuery('my-enrollments', async () => {
     const response = await api.get('/enrollments');
@@ -90,19 +93,19 @@ const MyLearning = () => {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>My Learning</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>{t('myLearning.title')}</Typography>
       <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)} sx={{ mb: 3 }}>
-        <Tab label={`In Progress (${inProgress.length})`} />
-        <Tab label={`Completed (${completed.length})`} />
+        <Tab label={t('myLearning.inProgressTab', { count: inProgress.length })} />
+        <Tab label={t('myLearning.completedTab', { count: completed.length })} />
       </Tabs>
 
       {coursesToShow.length === 0 ? (
         <Box textAlign="center" sx={{ py: 8 }}>
           <Typography variant="h6" color="text.secondary">
-            {tab === 0 ? "You have no courses in progress." : "You haven't completed any courses yet."}
+            {tab === 0 ? t('myLearning.noCoursesInProgress') : t('myLearning.noCoursesCompleted')}
           </Typography>
           <Button variant="contained" component={Link} to="/learner/courses" sx={{ mt: 2 }}>
-            Browse Courses
+            {t('common.browseCourses')}
           </Button>
         </Box>
       ) : (

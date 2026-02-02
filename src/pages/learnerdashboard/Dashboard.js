@@ -21,6 +21,7 @@ import {
   TrendingUp,
   Quiz,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
@@ -30,6 +31,7 @@ import CourseProgressCard from './CourseProgressCard';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const { data: enrollmentsData, isLoading } = useQuery(
     'my-enrollments',
     async () => {
@@ -129,7 +131,7 @@ const Dashboard = () => {
             <Grid item xs={12}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
-                  Course Progress
+                  {t('dashboard.progress')}
                 </Typography>
                 <Button
                   component={Link}
@@ -146,7 +148,7 @@ const Dashboard = () => {
                     },
                   }}
                 >
-                  See All Courses
+                  {t('dashboard.viewAll')}
                 </Button>
               </Box>
               <Box
@@ -172,14 +174,14 @@ const Dashboard = () => {
                     }}
                   >
                     <School sx={{ fontSize: 48, mb: 2, opacity: 0.3 }} />
-                    <Typography>No courses in progress</Typography>
+                    <Typography>{t('dashboard.noCourses')}</Typography>
                     <Button
                       component={Link}
                       to="/learner/courses"
                       variant="contained"
                       sx={{ mt: 2, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}
                     >
-                      Browse Courses
+                      {t('dashboard.exploreCourses')}
                     </Button>
                   </Box>
                 )}
@@ -198,7 +200,7 @@ const Dashboard = () => {
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
-                      Learning Progress</Typography>
+                      {t('dashboard.overview')}</Typography>
                   </Box>
 
                   <Box sx={{ mb: 3 }}>
@@ -214,7 +216,7 @@ const Dashboard = () => {
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                         <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
-                          In Progress
+                          {t('dashboard.inProgress')}
                         </Typography>
                         <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
                           {inProgressCourses.length}
@@ -242,7 +244,7 @@ const Dashboard = () => {
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                         <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
-                          Completed
+                          {t('dashboard.completed')}
                         </Typography>
                         <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
                           {completedCourses.length}
@@ -270,7 +272,7 @@ const Dashboard = () => {
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                         <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
-                          Certificates
+                          {t('dashboard.certificates')}
                         </Typography>
                         <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
                           {certificatesCount}
@@ -316,7 +318,7 @@ const Dashboard = () => {
                         {enrollments.length}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                        My Courses
+                        {t('common.myLearning')}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -335,7 +337,7 @@ const Dashboard = () => {
                         {completedCourses.length}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                        Completed
+                        {t('dashboard.completed')}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -354,7 +356,7 @@ const Dashboard = () => {
                         {inProgressCourses.length}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                        In Progress
+                        {t('dashboard.inProgress')}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -373,7 +375,7 @@ const Dashboard = () => {
                         {certificatesCount}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                        Certificates
+                        {t('dashboard.certificates')}
                       </Typography>
                     </CardContent>
                   </Card>

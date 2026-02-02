@@ -23,8 +23,10 @@ import {
 import FilterGroup from './FilterGroup';
 import CourseCard from './CourseCard';
 import { useCourseFilters } from './useCourseFilters';
+import { useTranslation } from 'react-i18next';
 
 const BrowseCourses = () => {
+  const { t } = useTranslation();
   const {
     isLoading,
     courses,
@@ -54,14 +56,16 @@ const BrowseCourses = () => {
       {/* Header Section */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32' }}>
-          {courses.length} {courses.length === 1 ? 'Course' : 'Courses'} Available
+          {courses.length === 1
+            ? t('courses.available', { count: courses.length })
+            : t('courses.available_plural', { count: courses.length })}
           {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 ||
             filters.prices.length > 0 || filters.durations.length > 0 || filters.ratings.length > 0 ||
             filters.formats.length > 0 || filters.certifications.length > 0) && (
-            <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', fontWeight: 400, ml: 1 }}>
-              (of {totalCourses})
-            </Box>
-          )}
+              <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', fontWeight: 400, ml: 1 }}>
+                {t('courses.ofTotal', { total: totalCourses })}
+              </Box>
+            )}
         </Typography>
       </Box>
 
@@ -89,7 +93,7 @@ const BrowseCourses = () => {
                 mb: 4,
               }}
             >
-              Filter by
+              {t('courses.filterBy')}
             </Typography>
 
             <Stack spacing={4}>
@@ -97,7 +101,7 @@ const BrowseCourses = () => {
               <Box>
                 <TextField
                   fullWidth
-                  placeholder="Search courses..."
+                  placeholder={t('courses.searchPlaceholder')}
                   variant="outlined"
                   size="small"
                   value={filters.search}
@@ -113,7 +117,7 @@ const BrowseCourses = () => {
 
               {/* Category Filter */}
               <FilterGroup
-                title="Subject"
+                title={t('courses.filters.subject')}
                 items={CATEGORIES}
                 selectedItems={filters.categories}
                 counts={counts.categories}
@@ -122,7 +126,7 @@ const BrowseCourses = () => {
 
               {/* Level Filter */}
               <FilterGroup
-                title="Level"
+                title={t('courses.filters.level')}
                 items={LEVELS}
                 selectedItems={filters.levels}
                 counts={counts.levels}
@@ -133,7 +137,7 @@ const BrowseCourses = () => {
 
               {/* Language Filter */}
               <FilterGroup
-                title="Language"
+                title={t('courses.filters.language')}
                 items={LANGUAGES}
                 selectedItems={filters.languages}
                 counts={counts.languages}
@@ -143,7 +147,7 @@ const BrowseCourses = () => {
 
               {/* Price Filter */}
               <FilterGroup
-                title="Price"
+                title={t('courses.filters.price')}
                 items={PRICES}
                 selectedItems={filters.prices}
                 counts={counts.prices}
@@ -153,7 +157,7 @@ const BrowseCourses = () => {
 
               {/* Duration Filter */}
               <FilterGroup
-                title="Duration"
+                title={t('courses.filters.duration')}
                 items={DURATIONS}
                 selectedItems={filters.durations}
                 counts={counts.durations}
@@ -163,7 +167,7 @@ const BrowseCourses = () => {
 
               {/* Rating Filter */}
               <FilterGroup
-                title="Rating"
+                title={t('courses.filters.rating')}
                 items={RATINGS}
                 selectedItems={filters.ratings}
                 counts={counts.ratings}
@@ -173,7 +177,7 @@ const BrowseCourses = () => {
 
               {/* Format Filter */}
               <FilterGroup
-                title="Format"
+                title={t('courses.filters.format')}
                 items={FORMATS}
                 selectedItems={filters.formats}
                 counts={counts.formats}
@@ -182,7 +186,7 @@ const BrowseCourses = () => {
 
               {/* Certification Filter */}
               <FilterGroup
-                title="Certification"
+                title={t('courses.filters.certification')}
                 items={CERTIFICATIONS}
                 selectedItems={filters.certifications}
                 counts={counts.certifications}
@@ -191,26 +195,26 @@ const BrowseCourses = () => {
               />
 
               {/* Clear Button */}
-              {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 || 
-                filters.prices.length > 0 || filters.durations.length > 0 || filters.ratings.length > 0 || 
+              {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 ||
+                filters.prices.length > 0 || filters.durations.length > 0 || filters.ratings.length > 0 ||
                 filters.formats.length > 0 || filters.certifications.length > 0 || filters.search) && (
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={clearFilters}
-                  sx={{
-                    borderColor: '#202F32',
-                    color: '#202F32',
-                    mt: 2,
-                    '&:hover': {
-                      borderColor: '#C39766',
-                      bgcolor: 'rgba(195,151,102,0.05)',
-                    },
-                  }}
-                >
-                  Clear Filters
-                </Button>
-              )}
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={clearFilters}
+                    sx={{
+                      borderColor: '#202F32',
+                      color: '#202F32',
+                      mt: 2,
+                      '&:hover': {
+                        borderColor: '#C39766',
+                        bgcolor: 'rgba(195,151,102,0.05)',
+                      },
+                    }}
+                  >
+                    {t('courses.clearFilters')}
+                  </Button>
+                )}
             </Stack>
           </Paper>
         </Grid>
@@ -219,16 +223,16 @@ const BrowseCourses = () => {
         <Grid item xs={12} md={9}>
           {isLoading ? (
             <Box sx={{ textAlign: 'center', py: 8 }}>
-              <Typography sx={{ color: '#202F32', opacity: 0.7 }}>Loading courses...</Typography>
+              <Typography sx={{ color: '#202F32', opacity: 0.7 }}>{t('courses.loading')}</Typography>
             </Box>
           ) : courses.length === 0 ? (
             <Box sx={{ textAlign: 'center', py: 8 }}>
               <School sx={{ fontSize: 64, color: 'rgba(32,47,50,0.3)', mb: 2 }} />
               <Typography variant="h6" sx={{ color: '#202F32', mb: 2 }}>
-                No courses found
+                {t('courses.noCoursesFound')}
               </Typography>
               <Typography sx={{ color: '#202F32', opacity: 0.7, mb: 3 }}>
-                Try adjusting your filters or check back later for new courses.
+                {t('courses.noCoursesFoundDesc')}
               </Typography>
             </Box>
           ) : (

@@ -1,0 +1,68 @@
+{
+    "common": {
+        "dashboard": "Incamake",
+        "myLearning": "Amasomo Yanjye",
+        "browseCourses": "Reba Amasomo",
+        "profile": "Umwirondoro",
+        "logout": "Sohoka",
+        "language": "Ururimi",
+        "english": "Icyongereza",
+        "kinyarwanda": "Ikinyarwanda"
+    },
+    "dashboard": {
+        "welcome": "Murakaza neza, {{name}}!",
+        "overview": "Incamake",
+        "inProgress": "Arakorwa",
+        "completed": "Yarangiye",
+        "certificates": "Impamyabumenyi",
+        "hoursSpent": "Amasaha amaze gukoreshwa",
+        "continueLearning": "Komeza Kwiga",
+        "viewAll": "Reba Byose",
+        "noCourses": "Nta masomo uratangira.",
+        "exploreCourses": "Kureba Amasomo",
+        "recentActivity": "Ibikorwa biheruka",
+        "progress": "Iterambere"
+    },
+    "myLearning": {
+        "title": "Amasomo Yanjye",
+        "inProgressTab": "Arakorwa ({{count}})",
+        "completedTab": "Yarangiye ({{count}})",
+        "noCoursesInProgress": "Nta masomo urimo gukora.",
+        "noCoursesCompleted": "Nta masomo urarangiza.",
+        "reviewCourse": "Reba Isomo",
+        "continueLearning": "Komeza Kwiga",
+        "progressLabel": "Iterambere: {{percent}}%"
+    },
+    "courses": {
+        "available": "Isomo {{count}} Rirahari",
+        "available_plural": "Amasomo {{count}} Arahari",
+        "ofTotal": "(mu masomo {{total}})",
+        "filterBy": "Yungurura ukurikije",
+        "searchPlaceholder": "Shakisha amasomo...",
+        "clearFilters": "Siba Akayunguruzo",
+        "loading": "Amasomo arimo gufunguka...",
+        "noCoursesFound": "Nta masomo yabonetse",
+        "noCoursesFoundDesc": "Gerageza guhindura akayunguruzo cyangwa uzagaruke myuma kureba amasomo mashya.",
+        "filters": {
+            "subject": "Isomo",
+            "level": "Urwego",
+            "language": "Ururimi",
+            "price": "Igiciro",
+            "duration": "Igihe",
+            "rating": "Amanota",
+            "format": "Ubwoko",
+            "certification": "Impamyabumenyi"
+        }
+    },
+    "profile": {
+        "title": "Umwirondoro",
+        "name": "Izina",
+        "email": "Imeyili",
+        "phone": "Telefoni",
+        "role": "Inshingano",
+        "updateButton": "Ivugurure Umwirondoro",
+        "updatingButton": "Birimo kuvugururwa...",
+        "successMessage": "Umwirondoro wavuguruwe neza!",
+        "errorMessage": "Kuvugurura byanze"
+    }
+}

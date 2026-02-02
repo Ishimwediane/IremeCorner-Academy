@@ -1,0 +1,68 @@
+{
+    "common": {
+        "dashboard": "Dashboard",
+        "myLearning": "My Learning",
+        "browseCourses": "Browse Courses",
+        "profile": "Profile",
+        "logout": "Logout",
+        "language": "Language",
+        "english": "English",
+        "kinyarwanda": "Kinyarwanda"
+    },
+    "dashboard": {
+        "welcome": "Welcome back, {{name}}!",
+        "overview": "Overview",
+        "inProgress": "In Progress",
+        "completed": "Completed",
+        "certificates": "Certificates",
+        "hoursSpent": "Hours Spent",
+        "continueLearning": "Continue Learning",
+        "viewAll": "View All",
+        "noCourses": "You haven't started any courses yet.",
+        "exploreCourses": "Explore Courses",
+        "recentActivity": "Recent Activity",
+        "progress": "Progress"
+    },
+    "myLearning": {
+        "title": "My Learning",
+        "inProgressTab": "In Progress ({{count}})",
+        "completedTab": "Completed ({{count}})",
+        "noCoursesInProgress": "You have no courses in progress.",
+        "noCoursesCompleted": "You haven't completed any courses yet.",
+        "reviewCourse": "Review Course",
+        "continueLearning": "Continue Learning",
+        "progressLabel": "Progress: {{percent}}%"
+    },
+    "courses": {
+        "available": "{{count}} Course Available",
+        "available_plural": "{{count}} Courses Available",
+        "ofTotal": "(of {{total}})",
+        "filterBy": "Filter by",
+        "searchPlaceholder": "Search courses...",
+        "clearFilters": "Clear Filters",
+        "loading": "Loading courses...",
+        "noCoursesFound": "No courses found",
+        "noCoursesFoundDesc": "Try adjusting your filters or check back later for new courses.",
+        "filters": {
+            "subject": "Subject",
+            "level": "Level",
+            "language": "Language",
+            "price": "Price",
+            "duration": "Duration",
+            "rating": "Rating",
+            "format": "Format",
+            "certification": "Certification"
+        }
+    },
+    "profile": {
+        "title": "My Profile",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "role": "Role",
+        "updateButton": "Update Profile",
+        "updatingButton": "Updating...",
+        "successMessage": "Profile updated successfully!",
+        "errorMessage": "Update failed"
+    }
+}

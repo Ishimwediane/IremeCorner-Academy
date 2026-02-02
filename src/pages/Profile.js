@@ -13,8 +13,10 @@ import {
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
+  const { t } = useTranslation();
   const { user, updateUser } = useAuth();
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -40,10 +42,10 @@ const Profile = () => {
     try {
       const response = await api.put(`/users/${user.id}`, formData);
       updateUser(response.data.data);
-      toast.success('Profile updated successfully!');
+      toast.success(t('profile.successMessage'));
     } catch (err) {
-      setError(err.response?.data?.message || 'Update failed');
-      toast.error('Update failed');
+      setError(err.response?.data?.message || t('profile.errorMessage'));
+      toast.error(t('profile.errorMessage'));
     }
 
     setLoading(false);
@@ -52,7 +54,7 @@ const Profile = () => {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom>
-        My Profile
+        {t('profile.title')}
       </Typography>
 
       <Paper elevation={3} sx={{ p: 4 }}>
@@ -73,7 +75,7 @@ const Profile = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Name"
+                label={t('profile.name')}
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
@@ -83,7 +85,7 @@ const Profile = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Email"
+                label={t('profile.email')}
                 name="email"
                 type="email"
                 value={formData.email}
@@ -94,7 +96,7 @@ const Profile = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Phone"
+                label={t('profile.phone')}
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
@@ -103,7 +105,7 @@ const Profile = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Role"
+                label={t('profile.role')}
                 value={user?.role || ''}
                 disabled
               />
@@ -115,7 +117,7 @@ const Profile = () => {
                 fullWidth
                 disabled={loading}
               >
-                {loading ? 'Updating...' : 'Update Profile'}
+                {loading ? t('profile.updatingButton') : t('profile.updateButton')}
               </Button>
             </Grid>
           </Grid>

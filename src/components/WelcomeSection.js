@@ -1,69 +1,103 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Stack, Button, Paper } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Box, Container, Typography, Button } from '@mui/material';
 
 const WelcomeSection = () => {
   return (
-    <Box sx={{ bgcolor: '#202F32', py: { xs: 8, md: 10 } }}>
-      <Container>
-        <Grid container spacing={6} alignItems="center" justifyContent="center">
-          {/* Left visuals: main image + small overlay image */}
-          <Grid item xs={12} md={6}>
-            <Box sx={{ position: 'relative', width: '100%', maxWidth: 520 }}>
-              {/* decorative blob */}
-              <Box sx={{ position: 'absolute', left: -30, top: -30, width: 160, height: 160, bgcolor: 'rgba(255,255,255,0.08)', borderRadius: '36% 64% 60% 40% / 38% 29% 71% 62%', filter: 'blur(1px)' }} />
+    <Box
+      sx={{
+        position: 'relative',
+        height: { xs: 'auto', md: '500px' },
+        display: 'flex',
+        alignItems: 'center',
+        overflow: 'hidden',
+        bgcolor: '#202F32',
+        py: { xs: 10, md: 0 },
+      }}
+    >
+      {/* Background Image with Parallax-like effect */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: 'url(/learn.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          zIndex: 0,
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bgcolor: 'rgba(32, 47, 50, 0.75)', // Dark overlay
+          },
+        }}
+      />
 
-              {/* main image */}
-              <Paper elevation={0} sx={{ overflow: 'hidden', borderRadius: '16px' }}>
-                <Box component="img" src="/learn.jpg" alt="Learning" sx={{ width: '100%', height: 340, objectFit: 'cover' }} />
-              </Paper>
-
-              {/* secondary image card overlay (replacing previous video) */}
-              <Paper elevation={3} sx={{ position: 'absolute', right: -20, top: 30, borderRadius: '14px', p: 1.5, bgcolor: 'white' }}>
-                <Box sx={{ width: 180, height: 100, borderRadius: '10px', overflow: 'hidden' }}>
-                  <Box component="img" src="/testimonies.png" alt="Students" sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </Box>
-              </Paper>
-
-              {/* awards badge */}
-              <Paper elevation={2} sx={{ position: 'absolute', left: 24, bottom: -16, px: 2.5, py: 1.25, borderRadius: '12px', display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Box sx={{ width: 28, height: 28, bgcolor: 'rgba(46,125,50,0.15)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Box sx={{ width: 14, height: 14, bgcolor: '#2E7D32', borderRadius: '50%' }} />
-                </Box>
-                <Typography sx={{ color: '#202F32', fontWeight: 700 }}>29+ Awards</Typography>
-              </Paper>
-            </Box>
-          </Grid>
-
-          {/* Right content */}
-          <Grid item xs={12} md={6} lg={6}>
-            <Typography sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 700, letterSpacing: 1, mb: 1 }}>ABOUT US</Typography>
-            <Typography variant="h3" sx={{ color: '#ffffff', fontWeight: 800, mb: 2 }}>
-              Learn & Grow Your Skills
-              <br />
-              From <Box component="span" sx={{ color: '#C39766' }}>Anywhere</Box>
-            </Typography>
-            <Box sx={{ width: 90, height: 6, bgcolor: '#2E7D32', borderRadius: 3, mb: 2 }} />
-            <Typography sx={{ color: 'rgba(255,255,255,0.9)', mb: 3, lineHeight: 1.8 }}>
-              Welcome! Build practical skills with industry-ready courses designed for impact. Join thousands of learners advancing their careers with flexible, engaging lessons.
-            </Typography>
-            <Stack spacing={1.5}>
-              {[ 'Expert Trainers', 'Online Remote Learning', 'Lifetime Access' ].map((item) => (
-                <Box key={item} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <CheckCircleIcon sx={{ color: '#2E7D32' }} />
-                  <Typography sx={{ color: '#ffffff', fontWeight: 600 }}>{item}</Typography>
-                </Box>
-              ))}
-            </Stack>
-            <Button
-              variant="contained"
-              sx={{ mt: 3, px: 3.5, py: 1.25, borderRadius: '10px', fontWeight: 700, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}
-              href="/register"
-            >
-              Join Now
-            </Button>
-          </Grid>
-        </Grid>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        <Box sx={{ maxWidth: '600px' }}>
+          <Typography
+            variant="overline"
+            sx={{
+              color: '#C39766',
+              fontWeight: 800,
+              fontSize: '1rem',
+              letterSpacing: '2px',
+              mb: 1,
+              display: 'block',
+            }}
+          >
+            START YOUR JOURNEY
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{
+              color: 'white',
+              fontWeight: 800,
+              fontSize: { xs: '2.5rem', md: '3.5rem' },
+              lineHeight: 1.2,
+              mb: 3,
+            }}
+          >
+            Empower Your Future Through <Box component="span" sx={{ color: '#C39766' }}>Learning</Box>
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'rgba(255, 255, 255, 0.8)',
+              fontSize: '1.1rem',
+              lineHeight: 1.8,
+              mb: 5,
+            }}
+          >
+            Join IremeCorner to access premium courses, connects with expert trainers, and build the skills that matter. Your growth starts here, today.
+          </Typography>
+          <Button
+            variant="contained"
+            href="/register"
+            sx={{
+              bgcolor: '#C39766',
+              color: 'white',
+              px: 5,
+              py: 2,
+              borderRadius: '8px',
+              fontWeight: 800,
+              fontSize: '1rem',
+              textTransform: 'none',
+              boxShadow: '0 4px 20px rgba(195, 151, 102, 0.4)',
+              '&:hover': {
+                bgcolor: '#A67D52',
+              },
+            }}
+          >
+            Join our Community
+          </Button>
+        </Box>
       </Container>
     </Box>
   );

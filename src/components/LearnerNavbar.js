@@ -19,12 +19,16 @@ import {
   ExitToApp,
   AccountCircle,
   Dashboard,
+  Language,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const LearnerNavbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [langAnchorEl, setLangAnchorEl] = React.useState(null);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,6 +41,19 @@ const LearnerNavbar = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleLangMenu = (event) => {
+    setLangAnchorEl(event.currentTarget);
+  };
+
+  const handleLangClose = () => {
+    setLangAnchorEl(null);
+  };
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    handleLangClose();
   };
 
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : '';
@@ -84,7 +101,7 @@ const LearnerNavbar = () => {
               },
             }}
           >
-            Dashboard
+            {t('common.dashboard')}
           </Button>
           <Button
             component={Link}
@@ -98,7 +115,7 @@ const LearnerNavbar = () => {
               },
             }}
           >
-            My Learning
+            {t('common.myLearning')}
           </Button>
           <Button
             component={Link}
@@ -112,7 +129,7 @@ const LearnerNavbar = () => {
               },
             }}
           >
-            Browse Courses
+            {t('common.browseCourses')}
           </Button>
           <IconButton
             component={Link}
@@ -121,6 +138,26 @@ const LearnerNavbar = () => {
           >
             <Notifications />
           </IconButton>
+
+          <IconButton
+            color="inherit"
+            onClick={handleLangMenu}
+            sx={{ ml: 1 }}
+          >
+            <Language />
+          </IconButton>
+          <Menu
+            anchorEl={langAnchorEl}
+            open={Boolean(langAnchorEl)}
+            onClose={handleLangClose}
+          >
+            <MenuItem onClick={() => changeLanguage('en')}>
+              {t('common.english')}
+            </MenuItem>
+            <MenuItem onClick={() => changeLanguage('rw')}>
+              {t('common.kinyarwanda')}
+            </MenuItem>
+          </Menu>
 
           <Box sx={{ ml: 2 }}>
             <IconButton
@@ -148,19 +185,19 @@ const LearnerNavbar = () => {
                 <ListItemIcon>
                   <AccountCircle fontSize="small" />
                 </ListItemIcon>
-                Profile
+                {t('common.profile')}
               </MenuItem>
               <MenuItem onClick={handleClose} component={Link} to="/learner/dashboard">
                 <ListItemIcon>
                   <Dashboard fontSize="small" />
                 </ListItemIcon>
-                Dashboard
+                {t('common.dashboard')}
               </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
                   <ExitToApp fontSize="small" />
                 </ListItemIcon>
-                Logout
+                {t('common.logout')}
               </MenuItem>
             </Menu>
           </Box>

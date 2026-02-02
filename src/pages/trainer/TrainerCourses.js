@@ -51,6 +51,7 @@ const TrainerCourses = () => {
     level: 'Beginner',
     duration: '',
     price: '',
+    language: 'English',
   });
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
@@ -91,6 +92,7 @@ const TrainerCourses = () => {
       level: 'Beginner',
       duration: '',
       price: '',
+      language: 'English',
     });
     setError('');
     setOpen(true);
@@ -160,10 +162,10 @@ const TrainerCourses = () => {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-          (Array.isArray(err.response?.data?.errors)
-            ? err.response.data.errors.map((e) => e.msg).join('; ')
-            : '') ||
-          'Failed to create course'
+        (Array.isArray(err.response?.data?.errors)
+          ? err.response.data.errors.map((e) => e.msg).join('; ')
+          : '') ||
+        'Failed to create course'
       );
     } finally {
       setCreating(false);
@@ -274,6 +276,19 @@ const TrainerCourses = () => {
             <MenuItem value="Beginner">Beginner</MenuItem>
             <MenuItem value="Intermediate">Intermediate</MenuItem>
             <MenuItem value="Advanced">Advanced</MenuItem>
+          </TextField>
+          <TextField
+            margin="normal"
+            label="Language"
+            name="language"
+            fullWidth
+            select
+            value={form.language}
+            onChange={handleChange}
+            required
+          >
+            <MenuItem value="English">English</MenuItem>
+            <MenuItem value="Kinyarwanda">Kinyarwanda</MenuItem>
           </TextField>
           <TextField
             margin="normal"
@@ -411,7 +426,7 @@ const TrainerCourses = () => {
                     hover
                     style={{ cursor: 'pointer' }}
                     onClick={() => navigate(`/trainer/course-content/${course._id}`)} // This makes the entire row clickable
-                    
+
                   >
                     <TableCell>
                       <Typography variant="body1" sx={{ fontWeight: 500, color: '#202F32' }}>
@@ -427,8 +442,8 @@ const TrainerCourses = () => {
                         size="small"
                         color={
                           course.status === 'approved' ? 'success' :
-                          course.status === 'pending' ? 'warning' :
-                          course.status === 'rejected' ? 'error' : 'default'
+                            course.status === 'pending' ? 'warning' :
+                              course.status === 'rejected' ? 'error' : 'default'
                         }
                       />
                     </TableCell>
@@ -455,7 +470,7 @@ const TrainerCourses = () => {
                           size="small"
                           onClick={e => { e.stopPropagation(); navigate(`/create-course?edit=${course._id}`); }}
                           sx={{ color: '#C39766' }}
-                         
+
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>

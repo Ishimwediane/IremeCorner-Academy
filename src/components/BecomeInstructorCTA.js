@@ -1,93 +1,167 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Button } from '@mui/material';
+import { Box, Container, Typography, Button, Grid, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 const BecomeInstructorCTA = () => {
+  const benefits = [
+    'Reach a Global Audience',
+    'Expand Your Professional Network',
+    'Flexible Teaching',
+    'Gain Recognition',
+    'Earn Competitive Compensation',
+    'Ongoing Professional Development',
+    'Supportive Platform',
+    'Flexible Course Creation',
+  ];
+
   return (
-    <Box sx={{ bgcolor: '#f0f7f3', py: 6, mt: 6 }}>
-      <Container>
-        <Box
-          sx={{
-            bgcolor: 'rgba(32,47,50,0.05)',
-            borderRadius: '16px',
-            px: { xs: 3, md: 6 },
-            py: { xs: 4, md: 6 },
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          {/* Left text */}
-          <Box sx={{ zIndex: 2 }}>
-            <Typography sx={{ color: '#202F32', fontWeight: 700, mb: 1 }}>
-              Become an Instructor
-            </Typography>
-            <Typography
-              variant="h4"
+    <Box sx={{ bgcolor: '#F0F4F5', py: { xs: 8, md: 12 }, mt: 6 }}>
+      <Container maxWidth="lg">
+        <Grid container spacing={6} alignItems="center">
+          {/* Left Content */}
+          <Grid item xs={12} md={7}>
+            <Box>
+              <Typography
+                variant="h3"
+                sx={{
+                  color: '#202F32',
+                  fontWeight: 800,
+                  fontSize: { xs: '2rem', md: '3rem' },
+                  mb: 2,
+                  lineHeight: 1.2,
+                }}
+              >
+                Become a Teacher at <br />
+                <Box component="span" sx={{ color: '#C39766' }}>
+                  IremeCorner
+                </Box>
+              </Typography>
+
+              <Typography
+                sx={{
+                  color: 'rgba(32, 47, 50, 0.8)',
+                  fontSize: '1rem',
+                  mb: 4,
+                  maxWidth: '550px',
+                  lineHeight: 1.6,
+                }}
+              >
+                At IremeCorner, we believe in empowering learners with expert knowledge, and that starts with exceptional
+                teachers. If you're an industry professional, educator, or thought leader with a passion for teaching,
+                you can make a global impact by sharing your skills and insights with students worldwide.
+              </Typography>
+
+              <Typography
+                variant="h5"
+                sx={{
+                  color: '#202F32',
+                  fontWeight: 700,
+                  mb: 3,
+                }}
+              >
+                Why Teach at IremeCorner?
+              </Typography>
+
+              <Grid container spacing={1}>
+                {benefits.map((benefit, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                      <AddIcon sx={{ color: '#C39766', mr: 1, fontSize: '1.2rem' }} />
+                      <Typography
+                        sx={{
+                          color: '#202F32',
+                          fontWeight: 600,
+                          fontSize: '0.95rem',
+                        }}
+                      >
+                        {benefit}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
+
+              <Button
+                variant="contained"
+                component={Link}
+                to="/drop-information"
+                sx={{
+                  mt: 5,
+                  bgcolor: '#C39766',
+                  color: 'white',
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  textTransform: 'none',
+                  boxShadow: '0 4px 14px 0 rgba(195, 151, 102, 0.39)',
+                  '&:hover': {
+                    bgcolor: '#A67D52',
+                    boxShadow: '0 6px 20px rgba(195, 151, 102, 0.23)',
+                  },
+                }}
+              >
+                Become An Instructor
+              </Button>
+            </Box>
+          </Grid>
+
+          {/* Right Content - Image with Frame */}
+          <Grid item xs={12} md={5}>
+            <Box
               sx={{
-                color: '#202F32',
-                fontWeight: 800,
-                lineHeight: 1.2,
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
-              You can join with IremeCorner
-              <br />
-              as <Box component="span" sx={{ color: '#2E7D32' }}>an instructor?</Box>
-            </Typography>
-          </Box>
+              {/* Dashed Frame */}
+              <Box
+                sx={{
+                  width: { xs: '280px', sm: '350px' },
+                  height: { xs: '320px', sm: '400px' },
+                  border: '2px dashed #202F32',
+                  position: 'absolute',
+                  top: -20,
+                  right: { xs: 'auto', md: 0 },
+                  borderRadius: '20px 20px 20px 20px',
+                  zIndex: 0,
+                  opacity: 0.2,
+                }}
+              />
 
-          {/* CTA Button */}
-          <Box sx={{ zIndex: 2 }}>
-            <Button
-              variant="contained"
-              component={Link}
-              to="/drop-information"
-              sx={{
-                bgcolor: '#2E7D32',
-                '&:hover': { bgcolor: '#256b2a' },
-                px: 3.5,
-                py: 1.25,
-                borderRadius: '10px',
-                fontWeight: 700,
-              }}
-            >
-              Drop Information
-            </Button>
-          </Box>
-
-          {/* Decorative arrow */}
-          <Box
-            sx={{
-              position: 'absolute',
-              right: { xs: '28%', md: '23%' },
-              top: { xs: '34%', md: '28%' },
-              width: 140,
-              height: 140,
-              borderRight: '4px solid #2E7D32',
-              borderTop: '4px solid transparent',
-              borderBottom: '4px solid #2E7D32',
-              borderLeft: '4px solid transparent',
-              borderRadius: '0 0 140px 0',
-              transform: 'rotate(25deg)',
-              opacity: 0.6,
-              zIndex: 1,
-            }}
-          />
-
-          {/* Sprinkles */}
-          <Box sx={{ position: 'absolute', left: 20, bottom: 16, display: 'flex', gap: 1 }}>
-            {[...Array(3)].map((_, i) => (
-              <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.4, transform: `rotate(${20 + i * 10}deg)` }} />
-            ))}
-          </Box>
-          <Box sx={{ position: 'absolute', right: 20, top: 16, display: 'flex', gap: 1 }}>
-            {[...Array(3)].map((_, i) => (
-              <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.4, transform: `rotate(${20 + i * 10}deg)` }} />
-            ))}
-          </Box>
-        </Box>
+              {/* Image Container with Styled Background/Shape */}
+              <Box
+                sx={{
+                  width: { xs: '280px', sm: '350px' },
+                  height: { xs: '320px', sm: '400px' },
+                  bgcolor: '#C39766',
+                  borderRadius: '0 0 175px 175px', // Semicircle bottom
+                  overflow: 'hidden',
+                  position: 'relative',
+                  zIndex: 1,
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
+                }}
+              >
+                <Box
+                  component="img"
+                  src="/learn.jpg"
+                  alt="Instructor"
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
       </Container>
     </Box>
   );

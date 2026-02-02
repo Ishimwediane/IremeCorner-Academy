@@ -1,73 +1,192 @@
 import React from 'react';
-import { Box, Container, Grid, Paper, Typography } from '@mui/material';
+import { Box, Container, Grid, Paper, Typography, Avatar, Button, Stack } from '@mui/material';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+
+const TESTIMONIALS = [
+  {
+    category: 'Great quality!',
+    content: "I wanted to place a review since their support helped me within a day or so, which is nice! Thanks and 5 stars!",
+    author: 'Oliver Beddows',
+    role: 'Designer, Manchester',
+    avatar: 'https://i.pravatar.cc/150?u=oliver',
+  },
+  {
+    category: 'Code Quality',
+    content: "ThemeMove deserves 5 star for theme's features, design quality, flexibility, and support service!",
+    author: 'Madley Pondor',
+    role: 'Reporter, San Diego',
+    avatar: 'https://i.pravatar.cc/150?u=madley',
+  },
+  {
+    category: 'Customer Support',
+    content: "Very good and fast support during the week. They know what you need, exactly when you need it.",
+    author: 'Mina Hollace',
+    role: 'Reporter, London',
+    avatar: 'https://i.pravatar.cc/150?u=mina',
+  },
+];
 
 const TestimonialsSection = () => {
   return (
-    <Box sx={{ bgcolor: '#f4f7f9', py: 10 }}>
-      <Container>
-        <Grid container spacing={4} alignItems="center">
-          {/* Left: Card with text and small dots (pager) */}
-          <Grid item xs={12} md={6}>
-            <Paper
-              elevation={0}
-              sx={{
-                bgcolor: 'white',
-                borderRadius: '16px',
-                p: { xs: 3, md: 4 },
-                boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
-                position: 'relative',
-              }}
-            >
-              <Typography variant="h6" sx={{ color: '#202F32', fontWeight: 800, mb: 1 }}>
-                Success Stories
+    <Box sx={{ bgcolor: '#F9FAFB', py: 12 }}>
+      <Container maxWidth="lg">
+        <Grid container spacing={6} alignItems="center">
+          {/* Left: Heading and CTA */}
+          <Grid item xs={12} md={4}>
+            <Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  color: '#202F32',
+                  fontWeight: 700,
+                  mb: 3,
+                  position: 'relative',
+                  display: 'inline-block',
+                }}
+              >
+                People Say <br />
+                About <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>IremeCorner</Box>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: 4,
+                    right: 0,
+                    width: '100px',
+                    height: '8px',
+                    bgcolor: '#C39766',
+                    opacity: 0.3,
+                    borderRadius: '4px',
+                    zIndex: 0,
+                  }}
+                />
               </Typography>
-              <Typography sx={{ color: '#202F32', opacity: 0.8, mb: 2, lineHeight: 1.8 }}>
-                Accelerate innovation with world-class tech teams. Beyond more static than
-                along goodness. It has survived not only centuries but also the leap into
-                electronic.
+
+              <Typography
+                sx={{
+                  color: 'rgba(32, 47, 50, 0.7)',
+                  fontSize: '1rem',
+                  lineHeight: 1.8,
+                  mb: 4,
+                }}
+              >
+                One-stop solution for any eLearning center, online courses. People love IremeCorner because they can create
+                their sites with ease here.
               </Typography>
-              <Typography sx={{ color: '#202F32', fontWeight: 700, mb: 3 }}>James Smith</Typography>
-              {/* Pager dots */}
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Box sx={{ width: 10, height: 10, bgcolor: '#2E7D32', borderRadius: '50%' }} />
-                <Box sx={{ width: 10, height: 10, bgcolor: 'rgba(32,47,50,0.3)', borderRadius: '50%' }} />
-                <Box sx={{ width: 10, height: 10, bgcolor: 'rgba(32,47,50,0.3)', borderRadius: '50%' }} />
-              </Box>
 
-              {/* Decorative sprinkles */}
-              <Box sx={{ position: 'absolute', left: 16, top: 16, display: 'flex', gap: 1 }}>
-                {[...Array(3)].map((_, i) => (
-                  <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
-                ))}
-              </Box>
-              <Box sx={{ position: 'absolute', right: 16, bottom: 16, display: 'flex', gap: 1 }}>
-                {[...Array(3)].map((_, i) => (
-                  <Box key={i} sx={{ width: 8, height: 18, bgcolor: '#C39766', borderRadius: '6px', opacity: 0.35, transform: `rotate(${20 + i * 10}deg)` }} />
-                ))}
-              </Box>
-            </Paper>
-          </Grid>
-
-          {/* Right: Circular image with subtle rings and shapes */}
-          <Grid item xs={12} md={6}>
-            <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {/* Rings */}
-              <Box sx={{ position: 'absolute', width: 360, height: 360, borderRadius: '50%', border: '3px solid rgba(46,125,50,0.35)' }} />
-              <Box sx={{ position: 'absolute', width: 420, height: 420, borderRadius: '50%', border: '3px solid rgba(195,151,102,0.25)' }} />
-
-              {/* Image */}
-              <Box
-                component="img"
-                src="/testimonies.png"
-                alt="Testimonial"
-                sx={{ width: 300, height: 300, objectFit: 'cover', borderRadius: '50%', zIndex: 2 }}
-              />
-
-              {/* Small triangle accent */}
-              <Box sx={{ position: 'absolute', left: '20%', top: '48%', width: 0, height: 0, borderLeft: '14px solid transparent', borderRight: '14px solid transparent', borderBottom: '24px solid #C39766', transform: 'rotate(90deg)' }} />
+              <Button
+                variant="outlined"
+                sx={{
+                  color: '#202F32',
+                  borderColor: 'rgba(32, 47, 50, 0.12)',
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  textTransform: 'none',
+                  '&:hover': {
+                    bgcolor: 'rgba(32, 47, 50, 0.04)',
+                    borderColor: '#202F32',
+                  },
+                }}
+              >
+                View all
+              </Button>
             </Box>
           </Grid>
+
+          {/* Right: Testimonial Cards */}
+          <Grid item xs={12} md={8}>
+            <Grid container spacing={3}>
+              {TESTIMONIALS.map((t, index) => (
+                <Grid item xs={12} sm={4} key={index}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 4,
+                      borderRadius: '16px',
+                      bgcolor: 'white',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      position: 'relative',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
+                      transition: 'transform 0.3s ease',
+                      '&:hover': {
+                        transform: 'translateY(-5px)',
+                      },
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          color: '#3498DB',
+                          fontWeight: 700,
+                        }}
+                      >
+                        {t.category}
+                      </Typography>
+                      <FormatQuoteIcon
+                        sx={{
+                          color: '#F3F4F6',
+                          fontSize: '3rem',
+                          position: 'absolute',
+                          top: 20,
+                          right: 20,
+                        }}
+                      />
+                    </Box>
+
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: 'rgba(32, 47, 50, 0.8)',
+                        lineHeight: 1.7,
+                        fontSize: '0.95rem',
+                        mb: 4,
+                        flexGrow: 1,
+                      }}
+                    >
+                      {t.content}
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Avatar
+                        src={t.avatar}
+                        sx={{ width: 44, height: 44, mr: 2 }}
+                      />
+                      <Box>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ color: '#202F32', fontWeight: 700 }}
+                        >
+                          {t.author}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'rgba(32, 47, 50, 0.5)', fontWeight: 500 }}
+                        >
+                          / {t.role}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
         </Grid>
+
+        {/* Pager Dots */}
+        <Stack
+          direction="row"
+          justifyContent="center"
+          spacing={1}
+          sx={{ mt: 6 }}
+        >
+          <Box sx={{ width: 8, height: 8, bgcolor: '#202F32', borderRadius: '50%' }} />
+          <Box sx={{ width: 8, height: 8, bgcolor: 'rgba(32, 47, 50, 0.2)', borderRadius: '50%' }} />
+        </Stack>
       </Container>
     </Box>
   );
