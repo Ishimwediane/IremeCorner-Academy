@@ -8,8 +8,10 @@ import {
   Button,
   CircularProgress,
   InputAdornment,
+  IconButton,
+  Divider,
 } from '@mui/material';
-import { Save as SaveIcon, Publish as PublishIcon } from '@mui/icons-material';
+import { Save as SaveIcon, Publish as PublishIcon, Add, Remove } from '@mui/icons-material';
 import api from '../../utils/api';
 
 const CourseSettingsTab = ({ course, fetchData }) => {
@@ -18,9 +20,49 @@ const CourseSettingsTab = ({ course, fetchData }) => {
 
   useEffect(() => {
     if (course) {
-      setCourseForm(course);
+      setCourseForm({
+        ...course,
+        whatYouWillLearn: course.whatYouWillLearn || [''],
+        learningObjectives: course.learningObjectives || ['']
+      });
     }
   }, [course]);
+
+  const handleAddLearningOutcome = () => {
+    setCourseForm({
+      ...courseForm,
+      whatYouWillLearn: [...(courseForm.whatYouWillLearn || ['']), '']
+    });
+  };
+
+  const handleRemoveLearningOutcome = (index) => {
+    const updated = (courseForm.whatYouWillLearn || ['']).filter((_, i) => i !== index);
+    setCourseForm({ ...courseForm, whatYouWillLearn: updated });
+  };
+
+  const handleLearningOutcomeChange = (index, value) => {
+    const updated = [...(courseForm.whatYouWillLearn || [''])];
+    updated[index] = value;
+    setCourseForm({ ...courseForm, whatYouWillLearn: updated });
+  };
+
+  const handleAddObjective = () => {
+    setCourseForm({
+      ...courseForm,
+      learningObjectives: [...(courseForm.learningObjectives || ['']), '']
+    });
+  };
+
+  const handleRemoveObjective = (index) => {
+    const updated = (courseForm.learningObjectives || ['']).filter((_, i) => i !== index);
+    setCourseForm({ ...courseForm, learningObjectives: updated });
+  };
+
+  const handleObjectiveChange = (index, value) => {
+    const updated = [...(courseForm.learningObjectives || [''])];
+    updated[index] = value;
+    setCourseForm({ ...courseForm, learningObjectives: updated });
+  };
 
   const handleUpdateCourse = async (e) => {
     e.preventDefault();
@@ -116,6 +158,119 @@ const CourseSettingsTab = ({ course, fetchData }) => {
               value={courseForm.description || ''}
               onChange={e => setCourseForm({ ...courseForm, description: e.target.value })}
             />
+          </Grid>
+
+          {/* Short Description */}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Short Description"
+              multiline
+              rows={2}
+              value={courseForm.shortDescription || ''}
+              onChange={e => setCourseForm({ ...courseForm, shortDescription: e.target.value })}
+              helperText="A brief summary of the course (optional)"
+            />
+          </Grid>
+
+          {/* Course Outcome */}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Course Outcome"
+              multiline
+              rows={3}
+              value={courseForm.courseOutcome || ''}
+              onChange={e => setCourseForm({ ...courseForm, courseOutcome: e.target.value })}
+              helperText="What will students achieve after completing this course? (optional)"
+            />
+          </Grid>
+
+          {/* Instructor Bio */}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Instructor Bio"
+              multiline
+              rows={3}
+              value={courseForm.instructorBio || ''}
+              onChange={e => setCourseForm({ ...courseForm, instructorBio: e.target.value })}
+              helperText="Tell students about yourself and your expertise (optional)"
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider sx={{ my: 2 }} />
+          </Grid>
+
+          {/* What You'll Learn */}
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom>What You'll Learn</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Add key learning outcomes that students will gain from this course
+            </Typography>
+            {(courseForm.whatYouWillLearn || ['']).map((outcome, index) => (
+              <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                <TextField
+                  fullWidth
+                  label={`Learning Outcome ${index + 1}`}
+                  value={outcome}
+                  onChange={(e) => handleLearningOutcomeChange(index, e.target.value)}
+                  placeholder="e.g., Master email marketing fundamentals"
+                />
+                {(courseForm.whatYouWillLearn || ['']).length > 1 && (
+                  <IconButton
+                    onClick={() => handleRemoveLearningOutcome(index)}
+                    color="error"
+                  >
+                    <Remove />
+                  </IconButton>
+                )}
+              </Box>
+            ))}
+            <Button
+              startIcon={<Add />}
+              onClick={handleAddLearningOutcome}
+              variant="outlined"
+              size="small"
+            >
+              Add Learning Outcome
+            </Button>
+          </Grid>
+
+          {/* Learning Objectives */}
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom>Learning Objectives</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Define specific objectives students should accomplish (optional)
+            </Typography>
+            {(courseForm.learningObjectives || ['']).map((objective, index) => (
+              <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                <TextField
+                  fullWidth
+                  label={`Objective ${index + 1}`}
+                  value={objective}
+                  onChange={(e) => handleObjectiveChange(index, e.target.value)}
+                  placeholder="e.g., Create effective email campaigns"
+                />
+                {(courseForm.learningObjectives || ['']).length > 1 && (
+                  <IconButton
+                    onClick={() => handleRemoveObjective(index)}
+                    color="error"
+                  >
+                    <Remove />
+                  </IconButton>
+                )}
+              </Box>
+            ))}
+            <Button
+              startIcon={<Add />}
+              onClick={handleAddObjective}
+              variant="outlined"
+              size="small"
+            >
+              Add Objective
+            </Button>
           </Grid>
         </Grid>
 

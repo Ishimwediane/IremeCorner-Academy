@@ -11,9 +11,10 @@ import {
   Alert,
   CircularProgress,
   Box,
-  IconButton
+  IconButton,
+  Divider
 } from '@mui/material';
-import { PhotoCamera } from '@mui/icons-material';
+import { PhotoCamera, Add, Remove } from '@mui/icons-material';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 
@@ -22,12 +23,17 @@ const CreateCourse = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    shortDescription: '',
     category: '',
     level: 'Beginner',
     duration: 0,
     isFree: true,
     price: 0,
+    courseOutcome: '',
+    instructorBio: '',
   });
+  const [whatYouWillLearn, setWhatYouWillLearn] = useState(['']);
+  const [learningObjectives, setLearningObjectives] = useState(['']);
   const [thumbnail, setThumbnail] = useState(null);
   const [preview, setPreview] = useState('');
   const [loading, setLoading] = useState(false);
@@ -62,6 +68,34 @@ const CreateCourse = () => {
     }
   };
 
+  const handleAddLearningOutcome = () => {
+    setWhatYouWillLearn([...whatYouWillLearn, '']);
+  };
+
+  const handleRemoveLearningOutcome = (index) => {
+    setWhatYouWillLearn(whatYouWillLearn.filter((_, i) => i !== index));
+  };
+
+  const handleLearningOutcomeChange = (index, value) => {
+    const updated = [...whatYouWillLearn];
+    updated[index] = value;
+    setWhatYouWillLearn(updated);
+  };
+
+  const handleAddObjective = () => {
+    setLearningObjectives([...learningObjectives, '']);
+  };
+
+  const handleRemoveObjective = (index) => {
+    setLearningObjectives(learningObjectives.filter((_, i) => i !== index));
+  };
+
+  const handleObjectiveChange = (index, value) => {
+    const updated = [...learningObjectives];
+    updated[index] = value;
+    setLearningObjectives(updated);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -75,6 +109,18 @@ const CreateCourse = () => {
         }
       });
       formDataToSend.append('type', formData.isFree ? 'free' : 'paid');
+
+      // Add array fields - filter out empty strings
+      const filteredLearningOutcomes = whatYouWillLearn.filter(item => item.trim() !== '');
+      const filteredObjectives = learningObjectives.filter(item => item.trim() !== '');
+
+      if (filteredLearningOutcomes.length > 0) {
+        formDataToSend.append('whatYouWillLearn', JSON.stringify(filteredLearningOutcomes));
+      }
+      if (filteredObjectives.length > 0) {
+        formDataToSend.append('learningObjectives', JSON.stringify(filteredObjectives));
+      }
+
       if (thumbnail) {
         formDataToSend.append('thumbnail', thumbnail);
       }
@@ -153,6 +199,122 @@ const CreateCourse = () => {
                 onChange={handleChange}
                 required
               />
+            </Grid>
+
+            {/* Short Description */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Short Description"
+                name="shortDescription"
+                value={formData.shortDescription}
+                onChange={handleChange}
+                multiline
+                rows={2}
+                helperText="A brief summary of the course (optional)"
+              />
+            </Grid>
+
+            {/* Course Outcome */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Course Outcome"
+                name="courseOutcome"
+                value={formData.courseOutcome}
+                onChange={handleChange}
+                multiline
+                rows={3}
+                helperText="What will students achieve after completing this course? (optional)"
+              />
+            </Grid>
+
+            {/* Instructor Bio */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Instructor Bio"
+                name="instructorBio"
+                value={formData.instructorBio}
+                onChange={handleChange}
+                multiline
+                rows={3}
+                helperText="Tell students about yourself and your expertise (optional)"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider sx={{ my: 2 }} />
+            </Grid>
+
+            {/* What You'll Learn */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>What You'll Learn</Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Add key learning outcomes that students will gain from this course
+              </Typography>
+              {whatYouWillLearn.map((outcome, index) => (
+                <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                  <TextField
+                    fullWidth
+                    label={`Learning Outcome ${index + 1}`}
+                    value={outcome}
+                    onChange={(e) => handleLearningOutcomeChange(index, e.target.value)}
+                    placeholder="e.g., Master email marketing fundamentals"
+                  />
+                  {whatYouWillLearn.length > 1 && (
+                    <IconButton
+                      onClick={() => handleRemoveLearningOutcome(index)}
+                      color="error"
+                    >
+                      <Remove />
+                    </IconButton>
+                  )}
+                </Box>
+              ))}
+              <Button
+                startIcon={<Add />}
+                onClick={handleAddLearningOutcome}
+                variant="outlined"
+                size="small"
+              >
+                Add Learning Outcome
+              </Button>
+            </Grid>
+
+            {/* Learning Objectives */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>Learning Objectives</Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Define specific objectives students should accomplish (optional)
+              </Typography>
+              {learningObjectives.map((objective, index) => (
+                <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                  <TextField
+                    fullWidth
+                    label={`Objective ${index + 1}`}
+                    value={objective}
+                    onChange={(e) => handleObjectiveChange(index, e.target.value)}
+                    placeholder="e.g., Create effective email campaigns"
+                  />
+                  {learningObjectives.length > 1 && (
+                    <IconButton
+                      onClick={() => handleRemoveObjective(index)}
+                      color="error"
+                    >
+                      <Remove />
+                    </IconButton>
+                  )}
+                </Box>
+              ))}
+              <Button
+                startIcon={<Add />}
+                onClick={handleAddObjective}
+                variant="outlined"
+                size="small"
+              >
+                Add Objective
+              </Button>
             </Grid>
             <Grid item xs={12}>
               <TextField

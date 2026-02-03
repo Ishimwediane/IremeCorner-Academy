@@ -23,6 +23,7 @@ import ReactPlayer from 'react-player';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 const LessonView = () => {
   const { courseId, lessonId } = useParams();
@@ -132,12 +133,141 @@ const LessonView = () => {
       </Box>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
+        {/* Chapter Sidebar - LEFT SIDE */}
+        <Grid item xs={12} md={3}>
+          <Paper sx={{
+            p: 2,
+            position: 'sticky',
+            top: 20,
+            bgcolor: 'rgba(32,47,50,0.03)',
+            borderRadius: 2,
+            maxHeight: 'calc(100vh - 100px)',
+            overflowY: 'auto'
+          }}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, color: '#202F32', mb: 3 }}>
+              Course Chapters
+            </Typography>
+            <List sx={{ p: 0 }}>
+              {lessons.map((l, index) => {
+                const isCompleted = completedLessons.some(
+                  (p) => p.lesson === l._id && p.isCompleted
+                );
+                const isCurrent = l._id === lessonId;
+
+                return (
+                  <ListItem
+                    key={l._id}
+                    button
+                    component={Link}
+                    to={`/courses/${courseId}/lessons/${l._id}`}
+                    selected={isCurrent}
+                    sx={{
+                      mb: 1,
+                      borderRadius: 1,
+                      backgroundColor: isCurrent ? '#C39766' : 'transparent',
+                      color: isCurrent ? 'white' : 'inherit',
+                      '&:hover': {
+                        backgroundColor: isCurrent ? '#A67A52' : 'rgba(195,151,102,0.1)',
+                      },
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                      {isCompleted ? (
+                        <CheckCircle
+                          sx={{
+                            mr: 1.5,
+                            fontSize: 20,
+                            color: isCurrent ? 'white' : '#2E7D32'
+                          }}
+                        />
+                      ) : (
+                        <Box
+                          sx={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: '50%',
+                            border: '2px solid',
+                            borderColor: isCurrent ? 'white' : 'rgba(32,47,50,0.3)',
+                            mr: 1.5,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              fontSize: '0.65rem',
+                              color: isCurrent ? 'white' : 'text.secondary',
+                              fontWeight: 600
+                            }}
+                          >
+                            {index + 1}
+                          </Typography>
+                        </Box>
+                      )}
+                      <ListItemText
+                        primary={
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: isCurrent ? 700 : 500,
+                              color: isCurrent ? 'white' : '#202F32',
+                              fontSize: '0.9rem'
+                            }}
+                          >
+                            {l.title}
+                          </Typography>
+                        }
+                        secondary={
+                          l.duration ? (
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: isCurrent ? 'rgba(255,255,255,0.8)' : 'text.secondary',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              {l.duration} min
+                            </Typography>
+                          ) : null
+                        }
+                      />
+                    </Box>
+                  </ListItem>
+                );
+              })}
+            </List>
+            {progressData && (
+              <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(195,151,102,0.1)', borderRadius: 1 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32', mb: 0.5 }}>
+                  Your Progress
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: '#C39766', mb: 0.5 }}>
+                  {Math.round((completedLessons.filter(p => p.isCompleted).length / lessons.length) * 100)}%
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {completedLessons.filter(p => p.isCompleted).length} of {lessons.length} chapters completed
+                </Typography>
+              </Box>
+            )}
+          </Paper>
+        </Grid>
+
+        {/* Main Content - RIGHT SIDE */}
+        <Grid item xs={12} md={9}>
           <Paper sx={{ p: 3 }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, color: '#202F32' }}>
               {lesson.title}
             </Typography>
             <Divider sx={{ my: 2 }} />
+
+            {/* Debug logging */}
+            {console.log('=== LESSON OBJECT ===', lesson)}
+            {console.log('Has description?', !!lesson.description)}
+            {console.log('Has content?', !!lesson.content)}
+            {console.log('Description preview:', lesson.description?.substring(0, 100))}
 
             {lesson.videoUrl || lesson.videoFile ? (
               <Box sx={{ mb: 3 }}>
@@ -158,6 +288,12 @@ const LessonView = () => {
                 }}
                 dangerouslySetInnerHTML={{ __html: lesson.content }}
               />
+            )}
+
+            {lesson.description && (
+              <Box sx={{ mb: 3 }}>
+                <MarkdownRenderer content={lesson.description} />
+              </Box>
             )}
 
             {lesson.materials && lesson.materials.length > 0 && (
@@ -194,13 +330,19 @@ const LessonView = () => {
                 onClick={handleComplete}
                 disabled={progressMutation.isLoading}
                 startIcon={<CheckCircle />}
-                sx={{ flexGrow: 1 }}
+                sx={{
+                  flexGrow: 1,
+                  bgcolor: isLessonCompleted ? 'transparent' : '#2E7D32',
+                  '&:hover': {
+                    bgcolor: isLessonCompleted ? 'transparent' : '#1B5E20'
+                  }
+                }}
               >
                 {progressMutation.isLoading
                   ? 'Updating...'
                   : isLessonCompleted
-                  ? `Mark as Incomplete`
-                  : `Mark Chapter ${currentIndex + 1} as Complete`}
+                    ? `Mark as Incomplete`
+                    : `Mark Chapter ${currentIndex + 1} as Complete`}
               </Button>
             </Box>
           </Paper>
@@ -213,6 +355,15 @@ const LessonView = () => {
                 navigate(`/courses/${courseId}/lessons/${prevLesson._id}`)
               }
               disabled={!prevLesson}
+              variant="outlined"
+              sx={{
+                borderColor: '#C39766',
+                color: '#C39766',
+                '&:hover': {
+                  borderColor: '#A67A52',
+                  bgcolor: 'rgba(195,151,102,0.05)'
+                }
+              }}
             >
               Previous Lesson
             </Button>
@@ -223,82 +374,17 @@ const LessonView = () => {
                 navigate(`/courses/${courseId}/lessons/${nextLesson._id}`)
               }
               disabled={!nextLesson}
+              variant="contained"
+              sx={{
+                bgcolor: '#C39766',
+                '&:hover': {
+                  bgcolor: '#A67A52'
+                }
+              }}
             >
               Next Lesson
             </Button>
           </Box>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 2, position: 'sticky', top: 20 }}>
-            <Typography variant="h6" gutterBottom>
-              Course Lessons
-            </Typography>
-            <List>
-              {lessons.map((l, index) => {
-                const isCompleted = completedLessons.some(
-                  (p) => p.lesson === l._id && p.isCompleted
-                );
-                const isCurrent = l._id === lessonId;
-                
-                return (
-                  <ListItem
-                    key={l._id}
-                    button
-                    component={Link}
-                    to={`/courses/${courseId}/lessons/${l._id}`}
-                    selected={isCurrent}
-                    sx={{
-                      backgroundColor: isCurrent ? 'action.selected' : 'transparent',
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                      {isCompleted ? (
-                        <CheckCircle
-                          color="secondary"
-                          sx={{ mr: 1, fontSize: 20 }}
-                        />
-                      ) : (
-                        <Box
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            borderRadius: '50%',
-                            border: '2px solid',
-                            borderColor: 'text.secondary',
-                            mr: 1,
-                          }}
-                        />
-                      )}
-                      <ListItemText
-                        primary={
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Typography
-                              variant="body1"
-                              sx={{ fontWeight: isCurrent ? 'bold' : 'normal' }}
-                            >
-                              Chapter {index + 1}: {l.title}
-                            </Typography>
-                          </Box>
-                        }
-                        secondary={l.duration ? `${l.duration} min` : ''}
-                      />
-                    </Box>
-                  </ListItem>
-                );
-              })}
-            </List>
-            {progressData && (
-              <Box sx={{ mt: 2, p: 2, bgcolor: 'primary.light', borderRadius: 1 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Progress: {Math.round((completedLessons.filter(p => p.isCompleted).length / lessons.length) * 100)}%
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {completedLessons.filter(p => p.isCompleted).length} of {lessons.length} chapters completed
-                </Typography>
-              </Box>
-            )}
-          </Paper>
         </Grid>
       </Grid>
     </Container>

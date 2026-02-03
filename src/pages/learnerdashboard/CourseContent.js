@@ -37,6 +37,7 @@ import {
 import ReactPlayer from 'react-player';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import api from '../../utils/api';
+import MarkdownRenderer from '../../components/MarkdownRenderer';
 
 const CourseContent = () => {
   const { courseId, lessonId } = useParams();
@@ -329,9 +330,17 @@ const CourseContent = () => {
                     <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1, color: colors.black }}>
                       {selectedLesson.title}
                     </Typography>
-                    <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
-                      {selectedLesson.description || selectedLesson.content || 'No description for this lesson.'}
-                    </Typography>
+                    {selectedLesson.description ? (
+                      <MarkdownRenderer content={selectedLesson.description} />
+                    ) : selectedLesson.content ? (
+                      <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                        {selectedLesson.content}
+                      </Typography>
+                    ) : (
+                      <Typography variant="body1" color="text.secondary">
+                        No description for this lesson.
+                      </Typography>
+                    )}
                   </Box>
                   <Button
                     variant={isSelectedLessonCompleted ? "outlined" : "contained"}
