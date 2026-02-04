@@ -14,12 +14,16 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
+  KeyboardArrowDown,
   School,
   Notifications,
   ExitToApp,
   AccountCircle,
   Dashboard,
   Language,
+  CardMembership,
+  Quiz,
+  Assignment,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
@@ -29,6 +33,7 @@ const LearnerNavbar = () => {
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [langAnchorEl, setLangAnchorEl] = React.useState(null);
+  const [myLearningAnchor, setMyLearningAnchor] = React.useState(null);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -36,6 +41,14 @@ const LearnerNavbar = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleMyLearningMenu = (event) => {
+    setMyLearningAnchor(event.currentTarget);
+  };
+
+  const handleMyLearningClose = () => {
+    setMyLearningAnchor(null);
   };
 
   const handleLogout = () => {
@@ -103,9 +116,11 @@ const LearnerNavbar = () => {
           >
             {t('common.dashboard')}
           </Button>
+
+          {/* My Learning Dropdown */}
           <Button
-            component={Link}
-            to="/learner/my-learning"
+            onClick={handleMyLearningMenu} // defined below (need to ensure it's defined in the component body)
+            endIcon={<KeyboardArrowDown />} // Need to import this
             sx={{
               color: 'text.secondary',
               fontWeight: 600,
@@ -117,6 +132,29 @@ const LearnerNavbar = () => {
           >
             {t('common.myLearning')}
           </Button>
+          <Menu
+            anchorEl={myLearningAnchor}
+            open={Boolean(myLearningAnchor)}
+            onClose={handleMyLearningClose}
+          >
+            <MenuItem onClick={handleMyLearningClose} component={Link} to="/learner/my-learning">
+              <ListItemIcon><School fontSize="small" /></ListItemIcon>
+              {t('common.courses') || 'Courses'}
+            </MenuItem>
+            <MenuItem onClick={handleMyLearningClose} component={Link} to="/learner/my-certificates">
+              <ListItemIcon><CardMembership fontSize="small" /></ListItemIcon>
+              Certificates
+            </MenuItem>
+            <MenuItem onClick={handleMyLearningClose} component={Link} to="/learner/my-quizzes">
+              <ListItemIcon><Quiz fontSize="small" /></ListItemIcon>
+              Quizzes
+            </MenuItem>
+            <MenuItem onClick={handleMyLearningClose} component={Link} to="/learner/my-assignments">
+              <ListItemIcon><Assignment fontSize="small" /></ListItemIcon>
+              Assignments
+            </MenuItem>
+          </Menu>
+
           <Button
             component={Link}
             to="/learner/courses"

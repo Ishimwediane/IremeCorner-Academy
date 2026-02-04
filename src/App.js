@@ -45,6 +45,10 @@ import StudentDetailPage from './pages/trainer/StudentDetailPage';
 import QuizPage from './pages/learnerdashboard/QuizPage';
 import AssignmentPage from './pages/learnerdashboard/AssignmentPage';
 import Messages from './pages/learnerdashboard/Messages';
+import CertificateView from './pages/learnerdashboard/CertificateView';
+import MyCertificates from './pages/learnerdashboard/MyCertificates';
+import MyQuizzes from './pages/learnerdashboard/MyQuizzes';
+import MyAssignments from './pages/learnerdashboard/MyAssignments';
 
 
 import AllUsers from './pages/admin/AllUsers';
@@ -96,8 +100,12 @@ function AppContent() {
                     <Route path="course/:courseId" element={<CourseContent />} />
                     <Route path="course/:courseId/lessons/:lessonId" element={<CourseContent />} />
                     <Route path="my-learning" element={<MyLearning />} />
+                    <Route path="my-certificates" element={<MyCertificates />} />
+                    <Route path="my-quizzes" element={<MyQuizzes />} />
+                    <Route path="my-assignments" element={<MyAssignments />} />
                     <Route path="quiz/:quizId" element={<QuizPage />} />
                     <Route path="assignment/:assignmentId" element={<AssignmentPage />} />
+                    <Route path="certificates/:id" element={<CertificateView />} />
                   </Routes>
                 </LearnerLayout>
               </PrivateRoute>

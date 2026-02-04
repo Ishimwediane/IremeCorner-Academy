@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Grid,
@@ -23,6 +23,14 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  InputLabel,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -34,9 +42,9 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Mail as MailIcon,
+  CardMembership as CertificateIcon,
 } from '@mui/icons-material';
-import { useQuery } from 'react-query';
-import { useMemo, useState } from 'react';
+import { useQuery, useMutation } from 'react-query';
 import api from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
 import TrainerLayout from '../../components/TrainerLayout';
@@ -50,6 +58,11 @@ const TrainerStudents = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [classFilter, setClassFilter] = useState('all');
+
+  // Certificate Issuance State
+  const [certDialogOpen, setCertDialogOpen] = useState(false);
+  const [selectedCourseForCert, setSelectedCourseForCert] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState({ open: false, message: '', severity: 'success' });
 
   const { data: coursesData, isLoading } = useQuery(
     ['trainer-courses', user?._id || user?.id],
@@ -75,11 +88,13 @@ const TrainerStudents = () => {
               ...(typeof student === 'object' ? student : {}),
               _id: studentId,
               courses: [course.title],
+              courseIds: [course._id] // Track course IDs
             });
           } else if (studentMap.has(studentId)) {
             const existing = studentMap.get(studentId);
             if (!existing.courses.includes(course.title)) {
               existing.courses.push(course.title);
+              existing.courseIds.push(course._id);
             }
           }
         });
@@ -160,6 +175,52 @@ const TrainerStudents = () => {
 
   const handleClassFilterChange = (e) => {
     setClassFilter(e.target.value);
+  };
+
+  // Certificate Issuance Logic
+  const issueCertificateMutation = useMutation(
+    async (data) => {
+      const response = await api.post('/certificates/issue', data);
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        setFeedbackMessage({ open: true, message: 'Certificate issued successfully!', severity: 'success' });
+        setCertDialogOpen(false);
+        handleActionClose();
+      },
+      onError: (error) => {
+        setFeedbackMessage({
+          open: true,
+          message: error.response?.data?.message || 'Failed to issue certificate',
+          severity: 'error'
+        });
+      }
+    }
+  );
+
+  const handleIssueCertificateClick = () => {
+    if (!selectedStudent) return;
+
+    // If student is in only one course, auto-select it
+    if (selectedStudent.courseIds && selectedStudent.courseIds.length === 1) {
+      setSelectedCourseForCert(selectedStudent.courseIds[0]);
+    } else {
+      setSelectedCourseForCert(''); // Reset selection for manual pick
+    }
+    setCertDialogOpen(true);
+    setAnchorEl(null); // Close menu, keep selected student
+  };
+
+  const handleConfirmIssueCertificate = () => {
+    if (!selectedCourseForCert) {
+      setFeedbackMessage({ open: true, message: 'Please select a course', severity: 'warning' });
+      return;
+    }
+    issueCertificateMutation.mutate({
+      studentId: selectedStudent._id,
+      courseId: selectedCourseForCert
+    });
   };
 
   const filteredAndSortedStudents = useMemo(() => {
@@ -350,7 +411,7 @@ const TrainerStudents = () => {
         </TableContainer>
       </Paper>
 
-      {/* Add Actions Menu */}
+      {/* Actions Menu */}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -363,6 +424,12 @@ const TrainerStudents = () => {
             <EditIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleIssueCertificateClick}>
+          <ListItemIcon>
+            <CertificateIcon fontSize="small" color="primary" />
+          </ListItemIcon>
+          <ListItemText>Issue Certificate</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleActionClose}>
           <ListItemIcon>
@@ -378,6 +445,56 @@ const TrainerStudents = () => {
           <ListItemText>Delete</ListItemText>
         </MenuItem>
       </Menu>
+
+      {/* Issue Certificate Dialog */}
+      <Dialog open={certDialogOpen} onClose={() => setCertDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Issue Certificate</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 3 }}>
+            Issue a certificate for <b>{selectedStudent?.name}</b>. The student must have 100% progress in the course.
+          </Typography>
+
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Select Course</InputLabel>
+            <Select
+              value={selectedCourseForCert}
+              onChange={(e) => setSelectedCourseForCert(e.target.value)}
+              label="Select Course"
+            >
+              {selectedStudent && selectedStudent.courseIds?.map((courseId, idx) => {
+                const courseName = selectedStudent.courses[idx];
+                return (
+                  <MenuItem key={courseId} value={courseId}>
+                    {courseName}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCertDialogOpen(false)}>Cancel</Button>
+          <Button
+            onClick={handleConfirmIssueCertificate}
+            variant="contained"
+            sx={{ bgcolor: '#6366F1' }}
+            disabled={issueCertificateMutation.isLoading}
+          >
+            {issueCertificateMutation.isLoading ? 'Issuing...' : 'Issue Certificate'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Feedback Snackbar */}
+      <Snackbar
+        open={feedbackMessage.open}
+        autoHideDuration={6000}
+        onClose={() => setFeedbackMessage({ ...feedbackMessage, open: false })}
+      >
+        <Alert onClose={() => setFeedbackMessage({ ...feedbackMessage, open: false })} severity={feedbackMessage.severity} sx={{ width: '100%' }}>
+          {feedbackMessage.message}
+        </Alert>
+      </Snackbar>
     </TrainerLayout>
   );
 };

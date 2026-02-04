@@ -73,7 +73,27 @@ const CourseContent = () => {
     { enabled: !!lessonId }
   );
 
-  // Fetch quizzes for the lesson
+  // Fetch all quizzes for the course (to show counts in sidebar)
+  const { data: allQuizzes } = useQuery(
+    ['allQuizzes', courseId],
+    async () => {
+      const response = await api.get(`/quizzes/course/${courseId}`);
+      return response.data.data;
+    },
+    { enabled: !!courseId }
+  );
+
+  // Fetch all assignments for the course (to show counts in sidebar)
+  const { data: allAssignments } = useQuery(
+    ['allAssignments', courseId],
+    async () => {
+      const response = await api.get(`/assignments/course/${courseId}`);
+      return response.data.data;
+    },
+    { enabled: !!courseId }
+  );
+
+  // Fetch quizzes for the selected lesson
   const { data: quizzes, isLoading: quizzesLoading } = useQuery(
     ['quizzes', lessonId],
     async () => {
@@ -111,6 +131,19 @@ const CourseContent = () => {
         queryClient.invalidateQueries(['progress', courseId]);
       },
     }
+  );
+
+  // Fetch user certificates
+  const { data: certificates } = useQuery(
+    ['my-certificates'],
+    async () => {
+      const response = await api.get('/certificates');
+      return response.data;
+    }
+  );
+
+  const courseCertificate = certificates?.data?.find(c =>
+    (c.course._id || c.course) === courseId
   );
 
   useEffect(() => {
@@ -160,6 +193,18 @@ const CourseContent = () => {
   const isSelectedLessonCompleted = selectedLesson && completedLessonIds.has(selectedLesson._id);
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
+  // Helper function to get quiz count for a lesson
+  const getQuizCountForLesson = (lessonId) => {
+    if (!allQuizzes) return 0;
+    return allQuizzes.filter(quiz => quiz.lesson === lessonId || quiz.lesson?._id === lessonId).length;
+  };
+
+  // Helper function to get assignment count for a lesson
+  const getAssignmentCountForLesson = (lessonId) => {
+    if (!allAssignments) return 0;
+    return allAssignments.filter(assignment => assignment.lesson === lessonId || assignment.lesson?._id === lessonId).length;
+  };
+
   const sidebarContent = (
     <Box sx={{ width: { xs: 280, md: 320 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* Course Header */}
@@ -205,6 +250,8 @@ const CourseContent = () => {
           {lessons.map((lesson, index) => {
             const isCompleted = completedLessonIds.has(lesson._id);
             const isActive = selectedLesson?._id === lesson._id;
+            const quizCount = getQuizCountForLesson(lesson._id);
+            const assignmentCount = getAssignmentCountForLesson(lesson._id);
 
             return (
               <ListItem key={lesson._id} disablePadding>
@@ -230,15 +277,50 @@ const CourseContent = () => {
                   </ListItemIcon>
                   <ListItemText
                     primary={
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: isActive ? 'bold' : 'medium',
-                          color: isActive ? colors.black : 'text.primary',
-                        }}
-                      >
-                        {index + 1}. {lesson.title}
-                      </Typography>
+                      <Box>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontWeight: isActive ? 'bold' : 'medium',
+                            color: isActive ? colors.black : 'text.primary',
+                          }}
+                        >
+                          {index + 1}. {lesson.title}
+                        </Typography>
+                        {/* Quiz and Assignment Indicators */}
+                        {(quizCount > 0 || assignmentCount > 0) && (
+                          <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5 }}>
+                            {quizCount > 0 && (
+                              <Chip
+                                icon={<Quiz sx={{ fontSize: 14 }} />}
+                                label={quizCount}
+                                size="small"
+                                sx={{
+                                  height: 20,
+                                  fontSize: '0.7rem',
+                                  bgcolor: colors.black,
+                                  color: 'white',
+                                  '& .MuiChip-icon': { color: 'white', marginLeft: '4px' }
+                                }}
+                              />
+                            )}
+                            {assignmentCount > 0 && (
+                              <Chip
+                                icon={<Assignment sx={{ fontSize: 14 }} />}
+                                label={assignmentCount}
+                                size="small"
+                                sx={{
+                                  height: 20,
+                                  fontSize: '0.7rem',
+                                  bgcolor: colors.chocolate,
+                                  color: 'white',
+                                  '& .MuiChip-icon': { color: 'white', marginLeft: '4px' }
+                                }}
+                              />
+                            )}
+                          </Box>
+                        )}
+                      </Box>
                     }
                     secondary={
                       <Typography variant="caption" color="text.secondary">
@@ -288,22 +370,58 @@ const CourseContent = () => {
       <Box sx={{ flex: 1, overflow: 'auto' }}>
         <Container maxWidth="lg" sx={{ py: 3 }}>
           {/* Top Bar */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-            <IconButton
-              onClick={() => setSidebarOpen(true)}
-              sx={{ display: { xs: 'flex', md: 'none' }, color: colors.black }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Button
-              component={Link}
-              to="/learner/my-learning"
-              startIcon={<ArrowBack />}
-              size="small"
-              sx={{ color: colors.black }}
-            >
-              Back
-            </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <IconButton
+                onClick={() => setSidebarOpen(true)}
+                sx={{ display: { xs: 'flex', md: 'none' }, color: colors.black }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Button
+                component={Link}
+                to="/learner/my-learning"
+                startIcon={<ArrowBack />}
+                size="small"
+                sx={{ color: colors.black }}
+              >
+                Back
+              </Button>
+            </Box>
+
+            {courseCertificate && (
+              <Button
+                variant="outlined"
+                startIcon={<Download />}
+                color="success"
+                onClick={() => {
+                  // Logic to download or view certificate
+                  // Usually open PDF or view page. 
+                  // For now, let's assume we navigate to a certificate view or proper download link if pdfUrl exists
+                  if (courseCertificate.pdfUrl) {
+                    window.open(courseCertificate.pdfUrl, '_blank');
+                  } else {
+                    // Fallback: View certificate details page (we might need to create this page)
+                    // Or just show a toast "Certificate is being generated"
+                    // Since we are creating it, let's navigate to a verify/view page if possible
+                    // The backend returns a certificate object.
+                    // Let's assume we can print it from TrainerCertifications VIEW logic, but that is for trainer.
+                    // Learner needs a view. 
+                    navigate(`/learner/certificates/${courseCertificate._id}`);
+                  }
+                }}
+                sx={{
+                  borderColor: '#2e7d32',
+                  color: '#2e7d32',
+                  '&:hover': {
+                    bgcolor: 'rgba(46,125,50,0.05)',
+                    borderColor: '#1b5e20'
+                  }
+                }}
+              >
+                Certificate
+              </Button>
+            )}
           </Box>
 
           {selectedLesson ? (
