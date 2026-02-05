@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -9,10 +9,13 @@ import {
   Typography,
   Alert,
   MenuItem,
-  Tabs,
-  Tab,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  InputAdornment,
 } from '@mui/material';
-import { School, Phone, Email } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
@@ -27,6 +30,7 @@ const Auth = () => {
     confirmPassword: '',
     role: 'student',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -42,6 +46,12 @@ const Auth = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError('');
+  };
+
+  const handleToggleTab = (newTab) => {
+    setTab(newTab);
+    navigate(newTab === 1 ? '/login' : '/register');
     setError('');
   };
 
@@ -97,89 +107,169 @@ const Auth = () => {
     setLoading(false);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const textFieldStyle = {
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '30px',
+      backgroundColor: 'white',
+      '& fieldset': {
+        borderColor: '#E0E0E0',
+      },
+      '&:hover fieldset': {
+        borderColor: '#4FD1C5',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#4FD1C5',
+      },
+    },
+    '& .MuiInputLabel-root': {
+      color: '#9E9E9E',
+    },
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: '#4FD1C5',
+    },
+    mb: 2,
+  };
+
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#202F32', display: 'flex', alignItems: 'center', py: 4 }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        bgcolor: '#f8f9fa',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 2,
+      }}
+    >
       <Container maxWidth="lg">
         <Paper
-          elevation={0}
+          elevation={5}
           sx={{
-            borderRadius: '24px',
+            borderRadius: '40px',
             overflow: 'hidden',
             display: 'flex',
-            minHeight: 600,
+            minHeight: '650px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
           }}
         >
-          {/* Left Panel - Visual */}
+          {/* Left Side - Image */}
           <Box
             sx={{
               flex: 1,
-              background: 'linear-gradient(180deg, rgba(195,151,102,0.3) 0%, rgba(32,47,50,0.5) 100%)',
               position: 'relative',
-              display: { xs: 'none', md: 'flex' },
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              p: 4,
-              overflow: 'hidden',
+              display: { xs: 'none', md: 'block' },
             }}
           >
-            {/* Logo */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, zIndex: 2 }}>
-              <School sx={{ color: 'white', fontSize: 32 }} />
-              <Typography variant="h5" sx={{ color: 'white', fontWeight: 700 }}>
+            <Box
+              component="img"
+              src="https://images.unsplash.com/photo-1577896336936-43a97577916a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+              alt="Student raising hand"
+              sx={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
+            {/* Overlay Text */}
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '100%',
+                p: 6,
+                background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)',
+              }}
+            >
+              <Typography variant="h3" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
                 IremeCorner Academy
               </Typography>
+              <Typography variant="h6" sx={{ color: 'white', opacity: 0.9 }}>
+                Empower your future through learning.
+              </Typography>
             </Box>
-
-            {/* Central Image */}
-            <Box sx={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
-              <Box
-                component="img"
-                src="/hero.gif"
-                alt="Learning"
-                sx={{
-                  width: '80%',
-                  maxWidth: 400,
-                  height: 'auto',
-                  borderRadius: '16px',
-                  objectFit: 'cover',
-                }}
-              />
-            </Box>
-
-            {/* Abstract Shapes */}
-            <Box sx={{ position: 'absolute', top: 60, right: 40, width: 80, height: 80, bgcolor: '#C39766', borderRadius: '50%', opacity: 0.3 }} />
-            <Box sx={{ position: 'absolute', top: 120, left: 20, width: 120, height: 40, bgcolor: '#2E7D32', borderRadius: '20px', opacity: 0.25, transform: 'rotate(-15deg)' }} />
-            <Box sx={{ position: 'absolute', bottom: 100, right: 60, width: 100, height: 100, bgcolor: '#C39766', borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%', opacity: 0.2 }} />
-
-            {/* Copyright */}
-            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', zIndex: 2 }}>
-              Copyright © {new Date().getFullYear()}, IremeCorner Academy. All rights reserved.
-            </Typography>
           </Box>
 
-          {/* Right Panel - Form */}
+          {/* Right Side - Form */}
           <Box
             sx={{
               flex: 1,
-              bgcolor: 'white',
-              p: { xs: 3, md: 5 },
+              p: { xs: 4, md: 8 },
               display: 'flex',
               flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            {/* Tabs */}
-            <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)} sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}>
-              <Tab label="Sign Up" sx={{ flex: 1, fontWeight: tab === 0 ? 700 : 400, color: tab === 0 ? '#202F32' : 'rgba(32,47,50,0.5)' }} />
-              <Tab label="Sign In" sx={{ flex: 1, fontWeight: tab === 1 ? 700 : 400, color: tab === 1 ? '#202F32' : 'rgba(32,47,50,0.5)' }} />
-            </Tabs>
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 4, color: '#333' }}>
+              Welcome to IremeCorner!
+            </Typography>
+
+            {/* Toggle Switch */}
+            <Box
+              sx={{
+                bgcolor: '#80CBC4',
+                borderRadius: '30px',
+                p: 0.5,
+                display: 'flex',
+                mb: 4,
+                width: 'fit-content',
+                position: 'relative',
+              }}
+            >
+              <Box
+                onClick={() => handleToggleTab(1)}
+                sx={{
+                  px: 4,
+                  py: 1,
+                  borderRadius: '25px',
+                  cursor: 'pointer',
+                  bgcolor: tab === 1 ? 'white' : 'transparent',
+                  color: tab === 1 ? '#4FD1C5' : 'white',
+                  fontWeight: 600,
+                  transition: 'all 0.3s ease',
+                  boxShadow: tab === 1 ? '0 2px 5px rgba(0,0,0,0.1)' : 'none',
+                }}
+              >
+                Login
+              </Box>
+              <Box
+                onClick={() => handleToggleTab(0)}
+                sx={{
+                  px: 4,
+                  py: 1,
+                  borderRadius: '25px',
+                  cursor: 'pointer',
+                  bgcolor: tab === 0 ? 'white' : 'transparent',
+                  color: tab === 0 ? '#4FD1C5' : 'white',
+                  fontWeight: 600,
+                  transition: 'all 0.3s ease',
+                  boxShadow: tab === 0 ? '0 2px 5px rgba(0,0,0,0.1)' : 'none',
+                }}
+              >
+                Register
+              </Box>
+            </Box>
+
+            <Typography
+              variant="body2"
+              align="center"
+              sx={{ color: '#666', mb: 4, maxWidth: '400px' }}
+            >
+              Join our community to access premium courses, quizzes, and connect with expert trainers.
+            </Typography>
 
             {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
+              <Alert severity="error" sx={{ mb: 3, width: '100%', borderRadius: '12px' }}>
                 {error}
               </Alert>
             )}
 
-            <form onSubmit={handleSubmit} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
               {tab === 0 && (
                 <>
                   <TextField
@@ -188,128 +278,132 @@ const Auth = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    margin="normal"
+                    sx={textFieldStyle}
                     required
-                    sx={{ '& .MuiInput-underline:before': { borderBottomColor: '#e0e0e0' } }}
                   />
                   <TextField
                     fullWidth
-                    label="Email"
+                    label="Email Address"
                     name="email"
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    margin="normal"
+                    sx={textFieldStyle}
                     required
                   />
                   <TextField
                     fullWidth
                     select
-                    label="Role"
+                    label="User Role"
                     name="role"
                     value={formData.role}
                     onChange={handleChange}
-                    margin="normal"
+                    sx={textFieldStyle}
                   >
                     <MenuItem value="student">Student</MenuItem>
                     <MenuItem value="trainer">Trainer</MenuItem>
                   </TextField>
                   <TextField
                     fullWidth
-                    label="Phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    margin="normal"
-                  />
-                  <TextField
-                    fullWidth
                     label="Password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleChange}
-                    margin="normal"
+                    sx={textFieldStyle}
                     required
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={togglePasswordVisibility} edge="end">
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                   <TextField
                     fullWidth
                     label="Confirm Password"
                     name="confirmPassword"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    margin="normal"
+                    sx={textFieldStyle}
                     required
                   />
                 </>
               )}
+
               {tab === 1 && (
                 <>
                   <TextField
                     fullWidth
-                    label="Email"
+                    label="Email Address"
                     name="email"
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    margin="normal"
+                    sx={textFieldStyle}
                     required
                   />
                   <TextField
                     fullWidth
                     label="Password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleChange}
-                    margin="normal"
+                    sx={textFieldStyle}
                     required
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={togglePasswordVisibility} edge="end">
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
+
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <FormControlLabel
+                      control={<Checkbox sx={{ color: '#4FD1C5', '&.Mui-checked': { color: '#4FD1C5' } }} />}
+                      label={<Typography variant="body2" sx={{ color: '#666' }}>Remember me</Typography>}
+                    />
+                    <Typography
+                      component="span"
+                      sx={{ color: '#666', fontSize: '0.875rem', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      Forgot Password?
+                    </Typography>
+                  </Box>
                 </>
               )}
 
               <Button
                 type="submit"
                 fullWidth
-                variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  py: 1.5,
-                  borderRadius: '8px',
-                  bgcolor: '#C39766',
-                  '&:hover': { bgcolor: '#A67A52' },
-                  fontWeight: 700,
-                }}
                 disabled={loading}
+                sx={{
+                  bgcolor: '#4FD1C5',
+                  color: 'white',
+                  py: 1.5,
+                  borderRadius: '30px',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  textTransform: 'none',
+                  boxShadow: '0 4px 15px rgba(79, 209, 197, 0.4)',
+                  '&:hover': {
+                    bgcolor: '#38B2AC',
+                    boxShadow: '0 6px 20px rgba(79, 209, 197, 0.6)',
+                  },
+                  mb: 2,
+                }}
               >
-                {loading ? (tab === 0 ? 'Registering...' : 'Logging in...') : tab === 0 ? 'Sign Up' : 'Sign In'}
+                {loading ? 'Processing...' : tab === 1 ? 'Login' : 'Register'}
               </Button>
-
-              {tab === 1 && (
-                <Box textAlign="center" sx={{ mb: 3 }}>
-                  <Typography variant="body2" component={Link} to="/register" onClick={() => setTab(0)} sx={{ color: '#C39766', textDecoration: 'none' }}>
-                    I have an Account?
-                  </Typography>
-                </Box>
-              )}
-            </form>
-
-            {/* Contact Info */}
-            <Box sx={{ mt: 'auto', pt: 3, borderTop: 1, borderColor: 'divider' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <Phone sx={{ fontSize: 18, color: 'rgba(32,47,50,0.6)' }} />
-                <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                  Contact us for support
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Email sx={{ fontSize: 18, color: 'rgba(32,47,50,0.6)' }} />
-                <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-                  info@iremecorner.com
-                </Typography>
-              </Box>
             </Box>
           </Box>
         </Paper>

@@ -6,11 +6,23 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #FAF1E6; /* Cream background from Hero */
+  color: #1A1A1A; /* Dark Grey text */
+}
+
+/* Global accented elements */
+a {
+  color: #FD7E14; /* Orange accent */
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
 }
 
 code {

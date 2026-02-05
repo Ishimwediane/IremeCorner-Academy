@@ -10,7 +10,7 @@ const WelcomeSection = () => {
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
-        bgcolor: '#202F32',
+        bgcolor: '#1A1A1A',
         py: { xs: 10, md: 0 },
       }}
     >
@@ -34,19 +34,19 @@ const WelcomeSection = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            bgcolor: 'rgba(32, 47, 50, 0.75)', // Dark overlay
+            bgcolor: 'rgba(26, 26, 26, 0.75)', // Dark overlay using Theme Grey
           },
         }}
       />
 
-      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, px: { xs: 4, md: 12, lg: 16 } }}> {/* Maximized Padding */}
         <Box sx={{ maxWidth: '600px' }}>
           <Typography
             variant="overline"
             sx={{
-              color: '#C39766',
+              color: '#FD7E14',
               fontWeight: 800,
-              fontSize: '1rem',
+              fontSize: '0.9rem',
               letterSpacing: '2px',
               mb: 1,
               display: 'block',
@@ -59,12 +59,12 @@ const WelcomeSection = () => {
             sx={{
               color: 'white',
               fontWeight: 800,
-              fontSize: { xs: '2.5rem', md: '3.5rem' },
+              fontSize: { xs: '1.75rem', md: '2.75rem' }, // Aggressively reduced
               lineHeight: 1.2,
               mb: 3,
             }}
           >
-            Empower Your Future Through <Box component="span" sx={{ color: '#C39766' }}>Learning</Box>
+            Empower Your Future Through <Box component="span" sx={{ color: '#FD7E14' }}>Learning</Box>
           </Typography>
           <Typography
             variant="body1"
@@ -81,25 +81,25 @@ const WelcomeSection = () => {
             variant="contained"
             href="/register"
             sx={{
-              bgcolor: '#C39766',
+              background: '#FD7E14 !important',
               color: 'white',
               px: 5,
               py: 2,
-              borderRadius: '8px',
+              borderRadius: '50px',
               fontWeight: 800,
               fontSize: '1rem',
               textTransform: 'none',
-              boxShadow: '0 4px 20px rgba(195, 151, 102, 0.4)',
+              boxShadow: '0 10px 25px rgba(253, 126, 20, 0.4)',
               '&:hover': {
-                bgcolor: '#A67D52',
+                background: '#FD7E14 !important',
               },
             }}
           >
             Join our Community
           </Button>
         </Box>
-      </Container>
-    </Box>
+      </Container >
+    </Box >
   );
 };
 

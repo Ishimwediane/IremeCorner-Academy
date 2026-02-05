@@ -13,37 +13,42 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        bgcolor: '#202F32',
-        borderTop: '4px solid #C39766',
-        borderBottom: '4px solid #C39766',
-        py: 5,
-        mt: 8,
+        bgcolor: '#FAF1E6', // Cream Background (Our Color)
+        borderTop: '4px solid #FD7E14',
+        pt: 8,
+        pb: 4,
+        mt: 0, // Removed margin as it usually follows a dark section or should sit flush
       }}
     >
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           {/* Brand Section */}
           <Grid item xs={12} md={3}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              {/* Optional Logo Icon if needed, or just text */}
+              <Typography
+                variant="h5"
+                sx={{
+                  color: '#1A1A1A', // Dark Grey
+                  fontWeight: 800,
+                  letterSpacing: 1,
+                }}
+              >
+                IREMECORNER
+              </Typography>
+            </Box>
+
             <Typography
-              variant="h5"
               sx={{
-                color: 'white',
-                fontWeight: 800,
-                mb: 1,
-                letterSpacing: 1,
-              }}
-            >
-              IREMECORNER
-            </Typography>
-            <Typography
-              sx={{
-                color: '#C39766',
-                fontWeight: 600,
+                color: '#FD7E14',
+                fontWeight: 700,
                 fontSize: '0.9rem',
                 mb: 3,
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
               }}
             >
-              ONLINE ACADEMY
+              Online Academy
             </Typography>
 
             {/* Social Media Icons */}
@@ -58,12 +63,13 @@ const Footer = () => {
                 <IconButton
                   key={name}
                   sx={{
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                    color: 'white',
+                    bgcolor: 'rgba(253, 126, 20, 0.1)', // Light Orange bg
+                    color: '#FD7E14', // Orange Icon
                     width: 40,
                     height: 40,
                     '&:hover': {
-                      bgcolor: '#C39766',
+                      bgcolor: '#FD7E14',
+                      color: 'white',
                     },
                   }}
                 >
@@ -73,67 +79,42 @@ const Footer = () => {
             </Box>
           </Grid>
 
-          {/* Navigation Links - Horizontal (matching navbar) */}
+          {/* Navigation Links */}
           <Grid item xs={12} md={4}>
-            <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', alignItems: 'center' }}>
-              <Typography
-                component={Link}
-                to="/"
-                sx={{
-                  color: '#C39766',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  '&:hover': { color: '#b86d5a' },
-                }}
-              >
-                Home
-              </Typography>
-              <Typography
-                component={Link}
-                to="/courses"
-                sx={{
-                  color: 'rgba(255,255,255,0.8)',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  '&:hover': { color: 'white' },
-                }}
-              >
-                Courses
-              </Typography>
-              <Typography
-                component={Link}
-                to="/about"
-                sx={{
-                  color: 'rgba(255,255,255,0.8)',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  '&:hover': { color: 'white' },
-                }}
-              >
-                About Us
-              </Typography>
-              <Typography
-                component={Link}
-                to="/contact"
-                sx={{
-                  color: 'rgba(255,255,255,0.8)',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  '&:hover': { color: 'white' },
-                }}
-              >
-                Contact Us
-              </Typography>
+            <Typography variant="h6" sx={{ color: '#1A1A1A', fontWeight: 700, mb: 3 }}>
+              Quick Links
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              {/* Reorganized to vertical for better footer layout, or keep horizontal if preferred. Vertical is more standard for light footers. */}
+              {['Home', 'Courses', 'About Us', 'Contact Us'].map((text) => (
+                <Typography
+                  key={text}
+                  component={Link}
+                  to={text === 'Home' ? '/' : `/${text.toLowerCase().replace(' ', '-')}`}
+                  sx={{
+                    color: '#666',
+                    textDecoration: 'none',
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
+                    width: 'fit-content',
+                    '&:hover': { color: '#FD7E14' },
+                  }}
+                >
+                  {text}
+                </Typography>
+              ))}
             </Box>
           </Grid>
 
           {/* Contact Information */}
           <Grid item xs={12} md={5}>
+            <Typography variant="h6" sx={{ color: '#1A1A1A', fontWeight: 700, mb: 3 }}>
+              Contact
+            </Typography>
             <Typography
               sx={{
-                color: 'rgba(255,255,255,0.8)',
-                fontSize: '0.9rem',
+                color: '#666',
+                fontSize: '0.95rem',
                 lineHeight: 1.8,
                 mb: 2,
               }}
@@ -141,20 +122,24 @@ const Footer = () => {
               IremeCorner Academy, 123 Education Street
               <br />
               Learning City, LC 12345
-              <br />
-              Email: info@iremecorner.com
-              <br />
-              Call Us: +1 (234) 567-8900
             </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Typography sx={{ color: '#666', fontSize: '0.95rem' }}>
+                <Box component="span" sx={{ color: '#1A1A1A', fontWeight: 600 }}>Email:</Box> info@iremecorner.com
+              </Typography>
+              <Typography sx={{ color: '#666', fontSize: '0.95rem' }}>
+                <Box component="span" sx={{ color: '#1A1A1A', fontWeight: 600 }}>Phone:</Box> +1 (234) 567-8900
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
 
         {/* Bottom Section */}
         <Box
           sx={{
-            mt: 4,
+            mt: 6,
             pt: 3,
-            borderTop: '1px solid rgba(255,255,255,0.1)',
+            borderTop: '1px solid rgba(0,0,0,0.05)',
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
             justifyContent: 'space-between',
@@ -165,7 +150,7 @@ const Footer = () => {
           {/* Copyright */}
           <Typography
             sx={{
-              color: 'rgba(255,255,255,0.7)',
+              color: '#888',
               fontSize: '0.85rem',
               textAlign: { xs: 'center', md: 'left' },
             }}
@@ -173,11 +158,11 @@ const Footer = () => {
             Powered by IremeCorner Academy © {new Date().getFullYear()} All Rights Reserved.
           </Typography>
 
-          {/* Payment Methods (Placeholder icons) */}
+          {/* Payment Methods */}
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Typography
               sx={{
-                color: 'rgba(255,255,255,0.7)',
+                color: '#888',
                 fontSize: '0.85rem',
                 mr: 1,
               }}
@@ -188,13 +173,14 @@ const Footer = () => {
               <Box
                 key={method}
                 sx={{
-                  bgcolor: 'rgba(255,255,255,0.1)',
+                  bgcolor: 'white',
                   px: 1.5,
                   py: 0.5,
                   borderRadius: '4px',
-                  color: 'rgba(255,255,255,0.8)',
+                  color: '#666',
                   fontSize: '0.75rem',
                   fontWeight: 600,
+                  border: '1px solid #eee',
                 }}
               >
                 {method}

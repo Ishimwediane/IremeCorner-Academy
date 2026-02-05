@@ -42,191 +42,125 @@ const Navbar = () => {
   return (
     <Box
       sx={{
-        position: 'fixed',
-        top: 0,
+        position: 'fixed', // Changed from absolute to fixed
+        top: 30,
         left: 0,
         right: 0,
-        zIndex: 1000,
-        height: 70,
+        zIndex: 1100,
         display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden',
+        justifyContent: 'center',
+        px: 2,
+        pointerEvents: 'none', // Allow clicking through the wrapper
       }}
     >
-      {/* White background (left ~65%) */}
       <Box
         sx={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: '65%',
-          height: '100%',
-          bgcolor: 'white',
-          zIndex: 0,
-        }}
-      />
-
-      {/* Chocolate background (right ~35%) with oblique left edge */}
-      <Box
-        sx={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          width: '35%',
-          height: '100%',
-          bgcolor: '#C39766',
-          zIndex: 0,
-          clipPath: 'polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)',
-        }}
-      />
-
-      {/* Content */}
-      <Box
-        sx={{
-          position: 'relative',
-          zIndex: 1,
-          width: '100%',
+          pointerEvents: 'auto', // Re-enable clicks on the navbar itself
+          bgcolor: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '50px',
+          px: 4,
+          py: 1.5,
           display: 'flex',
           alignItems: 'center',
-          px: { xs: 2, md: 4 },
+          justifyContent: 'space-between',
+          width: '100%',
+          maxWidth: '1200px',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+          border: '1px solid rgba(255,255,255,0.3)',
         }}
       >
-        {/* Logo (Left) */}
+        {/* Logo */}
         <Box
           component={Link}
           to="/"
           sx={{
+            textDecoration: 'none',
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
-            textDecoration: 'none',
-            mr: 4,
+            gap: 1.5
           }}
         >
-          <School sx={{ color: '#202F32', fontSize: 32 }} />
+          <Box
+            sx={{
+              bgcolor: '#1A1A1A',
+              color: '#FD7E14',
+              borderRadius: '50%',
+              p: 0.5,
+            }}
+          >
+            <School sx={{ fontSize: 24 }} />
+          </Box>
           <Typography
             variant="h6"
             sx={{
-              color: '#202F32',
               fontWeight: 800,
-              fontSize: { xs: '0.9rem', md: '1.1rem' },
+              color: '#1A1A1A',
+              letterSpacing: '-0.5px',
+              fontSize: '1.25rem'
             }}
           >
             IremeCorner
-            <br />
-            Academy
           </Typography>
         </Box>
 
-        {/* Navigation Links (Center - White section) */}
+        {/* Center Links (Desktop) */}
         <Box
           sx={{
-            flex: 1,
             display: { xs: 'none', md: 'flex' },
-            gap: 3,
+            gap: 1,
             alignItems: 'center',
+            bgcolor: 'rgba(0,0,0,0.03)',
+            p: 0.75,
+            borderRadius: '50px',
           }}
         >
-          <Button
-            component={Link}
-            to="/"
-            sx={{
-              color: '#202F32',
-              fontWeight: 500,
-              textTransform: 'none',
-              '&:hover': { color: '#C39766' },
-            }}
-          >
-            Home
-          </Button>
-          <Button
-            component={Link}
-            to="/courses"
-            sx={{
-              color: '#202F32',
-              fontWeight: 500,
-              textTransform: 'none',
-              '&:hover': { color: '#C39766' },
-            }}
-          >
-            Courses
-          </Button>
-          <Button
-            component={Link}
-            to="/about"
-            sx={{
-              color: '#202F32',
-              fontWeight: 500,
-              textTransform: 'none',
-              '&:hover': { color: '#C39766' },
-            }}
-          >
-            About Us
-          </Button>
-          <Button
-            component={Link}
-            to="/contact"
-            sx={{
-              color: '#202F32',
-              fontWeight: 500,
-              textTransform: 'none',
-              '&:hover': { color: '#C39766' },
-            }}
-          >
-            Contact Us
-          </Button>
+          {['Home', 'Courses', 'Instructors', 'Schedules', 'Contact Us'].map((item) => (
+            <Button
+              key={item}
+              component={Link}
+              to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
+              sx={{
+                color: '#666',
+                textTransform: 'none',
+                fontSize: '0.95rem',
+                fontWeight: 600,
+                px: 3,
+                py: 1,
+                borderRadius: '25px',
+                transition: 'all 0.2s',
+                '&:hover': {
+                  color: '#1A1A1A',
+                  bgcolor: 'white',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                },
+                ...(item === 'Home' && {
+                  bgcolor: 'white',
+                  color: '#FD7E14',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                })
+              }}
+            >
+              {item}
+            </Button>
+          ))}
         </Box>
 
-        {/* Right Section (Gradient area) */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            ml: 'auto',
-          }}
-        >
+        {/* Right Actions */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           {user ? (
             <>
-              {user.role === 'admin' && (
-                <Button
-                  component={Link}
-                  to="/admin"
-                  startIcon={<AdminPanelSettings />}
-                  sx={{
-                    color: 'white',
-                    textTransform: 'none',
-                    '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
-                  }}
-                >
-                  Admin
-                </Button>
-              )}
-              {(user.role === 'trainer' || user.role === 'admin') && (
-                <Button
-                  component={Link}
-                  to="/create-course"
-                  startIcon={<School />}
-                  sx={{
-                    color: 'white',
-                    textTransform: 'none',
-                    '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
-                  }}
-                >
-                  Create Course
-                </Button>
-              )}
               <IconButton
                 component={Link}
                 to="/dashboard"
-                sx={{ color: 'white' }}
+                sx={{ color: '#1A1A1A' }}
               >
                 <Badge badgeContent={unreadCount} color="error">
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
-              <IconButton onClick={handleMenu} sx={{ color: 'white' }}>
-                <Avatar sx={{ width: 32, height: 32, bgcolor: 'rgba(255,255,255,0.2)' }}>
+              <IconButton onClick={handleMenu}>
+                <Avatar sx={{ width: 40, height: 40, bgcolor: '#FD7E14' }}>
                   {user.name?.charAt(0)?.toUpperCase()}
                 </Avatar>
               </IconButton>
@@ -235,35 +169,51 @@ const Navbar = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem component={Link} to="/profile" onClick={handleClose}>
-                  Profile
-                </MenuItem>
-                <MenuItem component={Link} to="/dashboard" onClick={handleClose}>
-                  <DashboardIcon sx={{ mr: 1 }} />
-                  Dashboard
-                </MenuItem>
+                <MenuItem component={Link} to="/profile" onClick={handleClose}>Profile</MenuItem>
+                <MenuItem component={Link} to="/dashboard" onClick={handleClose}>Dashboard</MenuItem>
+                {user.role === 'admin' && <MenuItem component={Link} to="/admin" onClick={handleClose}>Admin</MenuItem>}
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </>
           ) : (
-            <Button
-              component={Link}
-              to="/login"
-              sx={{
-                bgcolor: 'white',
-                color: '#202F32',
-                borderRadius: '25px',
-                px: 3,
-                py: 1,
-                fontWeight: 600,
-                textTransform: 'none',
-                '&:hover': {
-                  bgcolor: 'rgba(255,255,255,0.9)',
-                },
-              }}
-            >
-              Sign in
-            </Button>
+            <>
+              <Button
+                component={Link}
+                to="/login"
+                sx={{
+                  color: '#1A1A1A',
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  px: 2,
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                component={Link}
+                to="/register"
+                variant="contained"
+                sx={{
+                  background: '#FD7E14 !important', // Brand Orange enforced
+                  color: 'white',
+                  borderRadius: '30px',
+                  px: 3,
+                  py: 1,
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  boxShadow: '0 4px 14px rgba(253, 126, 20, 0.4)',
+                  '&:hover': {
+                    background: '#FD7E14 !important',
+                    transform: 'translateY(-1px)',
+                    boxShadow: '0 6px 20px rgba(253, 126, 20, 0.6)', // Enhanced shadow for hover
+                  },
+                }}
+              >
+                Register
+              </Button>
+            </>
           )}
         </Box>
       </Box>

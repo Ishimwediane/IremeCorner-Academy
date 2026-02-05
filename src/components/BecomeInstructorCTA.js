@@ -16,8 +16,8 @@ const BecomeInstructorCTA = () => {
   ];
 
   return (
-    <Box sx={{ bgcolor: '#F0F4F5', py: { xs: 8, md: 12 }, mt: 6 }}>
-      <Container maxWidth="lg">
+    <Box sx={{ bgcolor: '#FAF1E6', py: { xs: 8, md: 10 }, mt: 4 }}>
+      <Container maxWidth="lg" sx={{ px: { xs: 4, md: 12, lg: 16 } }}> {/* Maximized Padding */}
         <Grid container spacing={6} alignItems="center">
           {/* Left Content */}
           <Grid item xs={12} md={7}>
@@ -25,22 +25,22 @@ const BecomeInstructorCTA = () => {
               <Typography
                 variant="h3"
                 sx={{
-                  color: '#202F32',
+                  color: '#1A1A1A',
                   fontWeight: 800,
-                  fontSize: { xs: '2rem', md: '3rem' },
+                  fontSize: { xs: '1.5rem', md: '2.25rem' }, // Aggressively reduced
                   mb: 2,
                   lineHeight: 1.2,
                 }}
               >
                 Become a Teacher at <br />
-                <Box component="span" sx={{ color: '#C39766' }}>
+                <Box component="span" sx={{ color: '#FD7E14' }}>
                   IremeCorner
                 </Box>
               </Typography>
 
               <Typography
                 sx={{
-                  color: 'rgba(32, 47, 50, 0.8)',
+                  color: '#666',
                   fontSize: '1rem',
                   mb: 4,
                   maxWidth: '550px',
@@ -55,9 +55,10 @@ const BecomeInstructorCTA = () => {
               <Typography
                 variant="h5"
                 sx={{
-                  color: '#202F32',
+                  color: '#1A1A1A',
                   fontWeight: 700,
                   mb: 3,
+                  fontSize: '1.25rem', // Added usage of reduced size via manual override if needed or just relying on h5 default
                 }}
               >
                 Why Teach at IremeCorner?
@@ -67,10 +68,10 @@ const BecomeInstructorCTA = () => {
                 {benefits.map((benefit, index) => (
                   <Grid item xs={12} sm={6} key={index}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                      <AddIcon sx={{ color: '#C39766', mr: 1, fontSize: '1.2rem' }} />
+                      <AddIcon sx={{ color: '#FD7E14', mr: 1, fontSize: '1.2rem' }} />
                       <Typography
                         sx={{
-                          color: '#202F32',
+                          color: '#1A1A1A',
                           fontWeight: 600,
                           fontSize: '0.95rem',
                         }}
@@ -88,18 +89,18 @@ const BecomeInstructorCTA = () => {
                 to="/drop-information"
                 sx={{
                   mt: 5,
-                  bgcolor: '#C39766',
+                  background: '#FD7E14 !important',
                   color: 'white',
                   px: 4,
                   py: 1.5,
-                  borderRadius: '8px',
+                  borderRadius: '50px',
                   fontWeight: 700,
                   fontSize: '1rem',
                   textTransform: 'none',
-                  boxShadow: '0 4px 14px 0 rgba(195, 151, 102, 0.39)',
+                  boxShadow: '0 10px 20px rgba(253, 126, 20, 0.3)',
                   '&:hover': {
-                    bgcolor: '#A67D52',
-                    boxShadow: '0 6px 20px rgba(195, 151, 102, 0.23)',
+                    background: '#FD7E14 !important',
+                    boxShadow: '0 15px 30px rgba(253, 126, 20, 0.4)',
                   },
                 }}
               >
@@ -123,13 +124,13 @@ const BecomeInstructorCTA = () => {
                 sx={{
                   width: { xs: '280px', sm: '350px' },
                   height: { xs: '320px', sm: '400px' },
-                  border: '2px dashed #202F32',
+                  border: '2px dashed #FD7E14',
                   position: 'absolute',
                   top: -20,
                   right: { xs: 'auto', md: 0 },
                   borderRadius: '20px 20px 20px 20px',
                   zIndex: 0,
-                  opacity: 0.2,
+                  opacity: 0.3,
                 }}
               />
 
@@ -138,7 +139,7 @@ const BecomeInstructorCTA = () => {
                 sx={{
                   width: { xs: '280px', sm: '350px' },
                   height: { xs: '320px', sm: '400px' },
-                  bgcolor: '#C39766',
+                  bgcolor: '#FD7E14',
                   borderRadius: '0 0 175px 175px', // Semicircle bottom
                   overflow: 'hidden',
                   position: 'relative',

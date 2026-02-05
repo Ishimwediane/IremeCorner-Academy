@@ -5,10 +5,10 @@ import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import Hero from '../components/Hero';
 import AllCoursesSection from '../components/AllCoursesSection';
-import BecomeInstructorCTA from '../components/BecomeInstructorCTA';
-import HowItWorks from '../components/HowItWorks';
-import TestimonialsSection from '../components/TestimonialsSection';
+
+
 import WelcomeSection from '../components/WelcomeSection';
+import FeaturesSection from '../components/FeaturesSection';
 
 const Home = () => {
   const { user } = useAuth();
@@ -32,12 +32,11 @@ const Home = () => {
   return (
     <Box>
       <Hero user={user} totalCourses={totalApprovedCourses} />
-      <WelcomeSection />
+      <FeaturesSection />
       {/* All Courses Section */}
       <AllCoursesSection />
-      <HowItWorks totalCourses={totalApprovedCourses} />
-      <TestimonialsSection />
-      <BecomeInstructorCTA />
+
+      <WelcomeSection />
     </Box>
   );
 };
