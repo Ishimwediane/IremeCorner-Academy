@@ -122,33 +122,103 @@ const Dashboard = () => {
   }
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Grid container spacing={3}>
+    <Container maxWidth="xl" sx={{ py: 3 }}>
+      <Grid container spacing={2.5}>
         {/* Left Column */}
         <Grid item xs={12} lg={8}>
-          <Grid container spacing={3}>
-            {/* Course Progress Cards - Top Left */}
+          <Grid container spacing={2.5}>
+            {/* Hero Banner */}
             <Grid item xs={12}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
-                  {t('dashboard.progress')}
+              <Box
+                sx={{
+                  background: 'linear-gradient(135deg, #FD7E14 0%, #E56D0F 100%)',
+                  borderRadius: '16px',
+                  p: { xs: 3, md: 4 },
+                  color: 'white',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  sx={{
+                    textTransform: 'uppercase',
+                    letterSpacing: 1,
+                    fontWeight: 600,
+                    mb: 1,
+                    display: 'block',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  ONLINE COURSE
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 800,
+                    mb: 2,
+                    fontSize: { xs: '1.5rem', md: '1.75rem' },
+                  }}
+                >
+                  Sharpen Your Skills With
+                  <br />
+                  Professional Online Courses
                 </Typography>
                 <Button
                   component={Link}
                   to="/learner/courses"
-                  variant="outlined"
+                  variant="contained"
                   size="small"
                   sx={{
-                    borderColor: '#C39766',
-                    color: '#C39766',
-                    textTransform: 'none',
+                    bgcolor: 'white',
+                    color: '#FD7E14',
+                    fontWeight: 700,
+                    fontSize: '0.875rem',
+                    px: 3,
+                    py: 0.75,
                     '&:hover': {
-                      borderColor: '#A67A52',
-                      bgcolor: 'rgba(195,151,102,0.05)',
+                      bgcolor: '#FAF1E6',
                     },
                   }}
                 >
-                  {t('dashboard.viewAll')}
+                  Join Now
+                </Button>
+                {/* Decorative elements */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: -20,
+                    right: -20,
+                    width: 100,
+                    height: 100,
+                    borderRadius: '50%',
+                    bgcolor: 'rgba(255,255,255,0.1)',
+                  }}
+                />
+              </Box>
+            </Grid>
+
+            {/* Course Progress Cards */}
+            <Grid item xs={12}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1A1A1A', fontSize: '1rem' }}>
+                  Continue Watching
+                </Typography>
+                <Button
+                  component={Link}
+                  to="/learner/courses"
+                  size="small"
+                  sx={{
+                    color: '#FD7E14',
+                    textTransform: 'none',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    '&:hover': {
+                      bgcolor: 'rgba(253, 126, 20, 0.05)',
+                    },
+                  }}
+                >
+                  See All
                 </Button>
               </Box>
               <Box
@@ -156,7 +226,7 @@ const Dashboard = () => {
                   display: 'grid',
                   gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
                   gap: 2,
-                  mb: 3,
+                  mb: 2,
                 }}
               >
                 {inProgressCourses.slice(0, 6).map((enrollment, index) => {
@@ -169,17 +239,18 @@ const Dashboard = () => {
                     sx={{
                       gridColumn: '1 / -1',
                       textAlign: 'center',
-                      py: 4,
-                      color: 'rgba(32,47,50,0.6)',
+                      py: 3,
+                      color: '#666',
                     }}
                   >
-                    <School sx={{ fontSize: 48, mb: 2, opacity: 0.3 }} />
-                    <Typography>{t('dashboard.noCourses')}</Typography>
+                    <School sx={{ fontSize: 40, mb: 1.5, opacity: 0.3, color: '#FD7E14' }} />
+                    <Typography variant="body2" sx={{ mb: 1.5 }}>{t('dashboard.noCourses')}</Typography>
                     <Button
                       component={Link}
                       to="/learner/courses"
                       variant="contained"
-                      sx={{ mt: 2, bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}
+                      size="small"
+                      sx={{ bgcolor: '#FD7E14', '&:hover': { bgcolor: '#E56D0F' } }}
                     >
                       {t('dashboard.exploreCourses')}
                     </Button>
@@ -188,45 +259,44 @@ const Dashboard = () => {
               </Box>
             </Grid>
 
-            {/* Statistics/Stage Funnel - Bottom Left */}
+            {/* Statistics Overview */}
             <Grid item xs={12} md={6}>
               <Card
                 sx={{
-                  borderRadius: '16px',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  borderRadius: '12px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                   height: '100%',
                 }}
               >
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
-                      {t('dashboard.overview')}</Typography>
-                  </Box>
+                <CardContent sx={{ p: 2 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1A1A1A', mb: 2, fontSize: '0.95rem' }}>
+                    {t('dashboard.overview')}
+                  </Typography>
 
-                  <Box sx={{ mb: 3 }}>
-                    <Typography variant="h4" sx={{ fontWeight: 700, color: '#C39766', mb: 1 }}>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#FD7E14', mb: 0.5 }}>
                       {totalProgress}%
                     </Typography>
-                    <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)', mb: 2 }}>
+                    <Typography variant="caption" sx={{ color: '#666', fontSize: '0.8rem' }}>
                       Overall Completion Rate
                     </Typography>
                   </Box>
 
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#1A1A1A', fontSize: '0.8rem' }}>
                           {t('dashboard.inProgress')}
                         </Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#1A1A1A', fontSize: '0.8rem' }}>
                           {inProgressCourses.length}
                         </Typography>
                       </Box>
                       <Box
                         sx={{
-                          height: 8,
-                          bgcolor: 'rgba(195,151,102,0.1)',
-                          borderRadius: '4px',
+                          height: 6,
+                          bgcolor: 'rgba(253, 126, 20, 0.1)',
+                          borderRadius: '3px',
                           overflow: 'hidden',
                         }}
                       >
@@ -234,8 +304,8 @@ const Dashboard = () => {
                           sx={{
                             height: '100%',
                             width: `${(inProgressCourses.length / Math.max(enrollments.length, 1)) * 100}%`,
-                            bgcolor: '#C39766',
-                            borderRadius: '4px',
+                            bgcolor: '#FD7E14',
+                            borderRadius: '3px',
                           }}
                         />
                       </Box>
@@ -243,18 +313,18 @@ const Dashboard = () => {
 
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#1A1A1A', fontSize: '0.8rem' }}>
                           {t('dashboard.completed')}
                         </Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#1A1A1A', fontSize: '0.8rem' }}>
                           {completedCourses.length}
                         </Typography>
                       </Box>
                       <Box
                         sx={{
-                          height: 8,
+                          height: 6,
                           bgcolor: 'rgba(46,125,50,0.1)',
-                          borderRadius: '4px',
+                          borderRadius: '3px',
                           overflow: 'hidden',
                         }}
                       >
@@ -263,7 +333,7 @@ const Dashboard = () => {
                             height: '100%',
                             width: `${(completedCourses.length / Math.max(enrollments.length, 1)) * 100}%`,
                             bgcolor: '#2E7D32',
-                            borderRadius: '4px',
+                            borderRadius: '3px',
                           }}
                         />
                       </Box>
@@ -271,18 +341,18 @@ const Dashboard = () => {
 
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#1A1A1A', fontSize: '0.8rem' }}>
                           {t('dashboard.certificates')}
                         </Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
+                        <Typography variant="caption" sx={{ fontWeight: 600, color: '#1A1A1A', fontSize: '0.8rem' }}>
                           {certificatesCount}
                         </Typography>
                       </Box>
                       <Box
                         sx={{
-                          height: 8,
-                          bgcolor: 'rgba(195,151,102,0.1)',
-                          borderRadius: '4px',
+                          height: 6,
+                          bgcolor: 'rgba(255,215,0,0.15)',
+                          borderRadius: '3px',
                           overflow: 'hidden',
                         }}
                       >
@@ -291,7 +361,7 @@ const Dashboard = () => {
                             height: '100%',
                             width: `${(certificatesCount / Math.max(completedCourses.length, 1)) * 100}%`,
                             bgcolor: '#FFD700',
-                            borderRadius: '4px',
+                            borderRadius: '3px',
                           }}
                         />
                       </Box>
@@ -301,23 +371,23 @@ const Dashboard = () => {
               </Card>
             </Grid>
 
-            {/* Quick Stats - Bottom Middle */}
+            {/* Quick Stats */}
             <Grid item xs={12} md={6}>
-              <Grid container spacing={2}>
+              <Grid container spacing={1.5}>
                 <Grid item xs={6}>
                   <Card
                     sx={{
-                      borderRadius: '12px',
-                      bgcolor: 'rgba(195,151,102,0.08)',
+                      borderRadius: '10px',
+                      bgcolor: 'rgba(253, 126, 20, 0.08)',
                       boxShadow: 'none',
                     }}
                   >
-                    <CardContent sx={{ p: 2, textAlign: 'center' }}>
-                      <School sx={{ fontSize: 32, color: '#C39766', mb: 1 }} />
-                      <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32' }}>
+                    <CardContent sx={{ p: 1.5, textAlign: 'center' }}>
+                      <School sx={{ fontSize: 28, color: '#FD7E14', mb: 0.5 }} />
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#1A1A1A', fontSize: '1.25rem' }}>
                         {enrollments.length}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
+                      <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
                         {t('common.myLearning')}
                       </Typography>
                     </CardContent>
@@ -326,17 +396,17 @@ const Dashboard = () => {
                 <Grid item xs={6}>
                   <Card
                     sx={{
-                      borderRadius: '12px',
+                      borderRadius: '10px',
                       bgcolor: 'rgba(46,125,50,0.08)',
                       boxShadow: 'none',
                     }}
                   >
-                    <CardContent sx={{ p: 2, textAlign: 'center' }}>
-                      <CheckCircle sx={{ fontSize: 32, color: '#2E7D32', mb: 1 }} />
-                      <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32' }}>
+                    <CardContent sx={{ p: 1.5, textAlign: 'center' }}>
+                      <CheckCircle sx={{ fontSize: 28, color: '#2E7D32', mb: 0.5 }} />
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#1A1A1A', fontSize: '1.25rem' }}>
                         {completedCourses.length}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
+                      <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
                         {t('dashboard.completed')}
                       </Typography>
                     </CardContent>
@@ -345,17 +415,17 @@ const Dashboard = () => {
                 <Grid item xs={6}>
                   <Card
                     sx={{
-                      borderRadius: '12px',
-                      bgcolor: 'rgba(195,151,102,0.08)',
+                      borderRadius: '10px',
+                      bgcolor: 'rgba(253, 126, 20, 0.08)',
                       boxShadow: 'none',
                     }}
                   >
-                    <CardContent sx={{ p: 2, textAlign: 'center' }}>
-                      <TrendingUp sx={{ fontSize: 32, color: '#C39766', mb: 1 }} />
-                      <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32' }}>
+                    <CardContent sx={{ p: 1.5, textAlign: 'center' }}>
+                      <TrendingUp sx={{ fontSize: 28, color: '#FD7E14', mb: 0.5 }} />
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#1A1A1A', fontSize: '1.25rem' }}>
                         {inProgressCourses.length}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
+                      <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
                         {t('dashboard.inProgress')}
                       </Typography>
                     </CardContent>
@@ -364,17 +434,17 @@ const Dashboard = () => {
                 <Grid item xs={6}>
                   <Card
                     sx={{
-                      borderRadius: '12px',
+                      borderRadius: '10px',
                       bgcolor: 'rgba(255,215,0,0.15)',
                       boxShadow: 'none',
                     }}
                   >
-                    <CardContent sx={{ p: 2, textAlign: 'center' }}>
-                      <Assignment sx={{ fontSize: 32, color: '#FFD700', mb: 1 }} />
-                      <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32' }}>
+                    <CardContent sx={{ p: 1.5, textAlign: 'center' }}>
+                      <Assignment sx={{ fontSize: 28, color: '#FFD700', mb: 0.5 }} />
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#1A1A1A', fontSize: '1.25rem' }}>
                         {certificatesCount}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
+                      <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
                         {t('dashboard.certificates')}
                       </Typography>
                     </CardContent>
@@ -383,36 +453,36 @@ const Dashboard = () => {
               </Grid>
             </Grid>
 
-            {/* My Tasks - Bottom Right */}
+            {/* My Tasks */}
             <Grid item xs={12}>
-              <Card sx={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', height: '100%' }}>
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>
+              <Card sx={{ borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', height: '100%' }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1A1A1A', fontSize: '0.95rem' }}>
                       My Tasks
                     </Typography>
-                    <Button size="small" sx={{ color: '#C39766' }}>View All</Button>
+                    <Button size="small" sx={{ color: '#FD7E14', fontSize: '0.875rem', textTransform: 'none' }}>View All</Button>
                   </Box>
                   {upcomingTasks.length > 0 ? (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                       {upcomingTasks.slice(0, 4).map((task) => (
                         <Paper
                           key={task.id}
                           variant="outlined"
-                          sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2, borderRadius: '12px' }}
+                          sx={{ p: 1.5, display: 'flex', alignItems: 'center', gap: 1.5, borderRadius: '10px', borderColor: 'rgba(0,0,0,0.08)' }}
                         >
-                          <Avatar sx={{ bgcolor: task.type === 'assignment' ? 'rgba(74, 144, 226, 0.1)' : 'rgba(80, 200, 120, 0.1)' }}>
+                          <Avatar sx={{ bgcolor: task.type === 'assignment' ? 'rgba(74, 144, 226, 0.1)' : 'rgba(80, 200, 120, 0.1)', width: 36, height: 36 }}>
                             {task.type === 'assignment' ? (
-                              <Assignment sx={{ color: '#4A90E2' }} />
+                              <Assignment sx={{ color: '#4A90E2', fontSize: 20 }} />
                             ) : (
-                              <Quiz sx={{ color: '#50C878' }} />
+                              <Quiz sx={{ color: '#50C878', fontSize: 20 }} />
                             )}
                           </Avatar>
                           <Box sx={{ flex: 1 }}>
-                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#202F32' }}>
+                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#1A1A1A', fontSize: '0.875rem' }}>
                               {task.title}
                             </Typography>
-                            <Typography variant="caption" sx={{ color: 'rgba(32,47,50,0.6)' }}>
+                            <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
                               {task.course}
                             </Typography>
                           </Box>
@@ -420,14 +490,15 @@ const Dashboard = () => {
                             label={task.dueDate ? `Due ${format(new Date(task.dueDate), 'MMM dd')}` : 'No Due Date'}
                             size="small"
                             variant="outlined"
+                            sx={{ fontSize: '0.7rem', height: '24px' }}
                           />
                         </Paper>
                       ))}
                     </Box>
                   ) : (
-                    <Box sx={{ textAlign: 'center', py: 3 }}>
-                      <Assignment sx={{ fontSize: 48, color: 'rgba(32,47,50,0.2)', mb: 1 }} />
-                      <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.7)' }}>
+                    <Box sx={{ textAlign: 'center', py: 2.5 }}>
+                      <Assignment sx={{ fontSize: 40, color: 'rgba(0,0,0,0.15)', mb: 1 }} />
+                      <Typography variant="caption" sx={{ color: '#666', fontSize: '0.875rem' }}>
                         No upcoming tasks.
                       </Typography>
                     </Box>
@@ -440,13 +511,13 @@ const Dashboard = () => {
 
         {/* Right Column */}
         <Grid item xs={12} lg={4}>
-          <Grid container spacing={3}>
-            {/* User Profile Card - Top Right */}
+          <Grid container spacing={2.5}>
+            {/* User Profile Card */}
             <Grid item xs={12}>
               <Card
                 sx={{
-                  borderRadius: '16px',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  borderRadius: '12px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                   overflow: 'hidden',
                 }}
               >
@@ -454,8 +525,8 @@ const Dashboard = () => {
                   {/* Profile Header */}
                   <Box
                     sx={{
-                      bgcolor: 'rgba(195,151,102,0.08)',
-                      p: 3,
+                      bgcolor: 'rgba(253, 126, 20, 0.08)',
+                      p: 2.5,
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -464,19 +535,19 @@ const Dashboard = () => {
                   >
                     <Avatar
                       sx={{
-                        width: 80,
-                        height: 80,
-                        bgcolor: '#C39766',
-                        fontSize: '2rem',
-                        mb: 2,
+                        width: 60,
+                        height: 60,
+                        bgcolor: '#FD7E14',
+                        fontSize: '1.5rem',
+                        mb: 1.5,
                       }}
                     >
                       {userName.charAt(0).toUpperCase()}
                     </Avatar>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#202F32', mb: 0.5 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#1A1A1A', mb: 0.5, fontSize: '1.1rem' }}>
                       {userName}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)', mb: 2 }}>
+                    <Typography variant="caption" sx={{ color: '#666', fontSize: '0.8rem' }}>
                       {user?.role === 'student' ? 'Learner' : user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1)}
                     </Typography>
                   </Box>

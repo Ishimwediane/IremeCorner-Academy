@@ -13,8 +13,8 @@ const HeroCourse = () => {
       {/* Hero Section */}
       <Box
         sx={{
-          bgcolor: 'rgba(195,151,102,0.08)',
-          background: 'linear-gradient(135deg, rgba(195,151,102,0.1) 0%, rgba(32,47,50,0.05) 100%)',
+          bgcolor: '#FAF1E6',
+          background: 'linear-gradient(135deg, #FAF1E6 0%, rgba(253,126,20,0.05) 100%)',
           py: 8,
           mb: 6,
         }}
@@ -55,8 +55,8 @@ const HeroCourse = () => {
                 size="large"
                 endIcon={<ArrowForward />}
                 sx={{
-                  bgcolor: '#C39766',
-                  '&:hover': { bgcolor: '#A67A52' },
+                  bgcolor: '#FD7E14',
+                  '&:hover': { bgcolor: '#E56D0F' },
                   px: 4,
                   py: 1.5,
                   borderRadius: '8px',
@@ -71,15 +71,15 @@ const HeroCourse = () => {
                 variant="outlined"
                 size="large"
                 sx={{
-                  borderColor: '#C39766',
-                  color: '#C39766',
+                  borderColor: '#FD7E14',
+                  color: '#FD7E14',
                   px: 4,
                   py: 1.5,
                   borderRadius: '8px',
                   fontWeight: 600,
                   '&:hover': {
-                    borderColor: '#A67A52',
-                    bgcolor: 'rgba(195,151,102,0.05)',
+                    borderColor: '#E56D0F',
+                    bgcolor: 'rgba(253,126,20,0.05)',
                   },
                 }}
               >

@@ -330,7 +330,7 @@ const Course = () => {
                           sx={{
                             color: '#202F32',
                             '&.Mui-checked': {
-                              color: '#C39766',
+                              color: '#FD7E14',
                             },
                           }}
                         />
@@ -349,14 +349,14 @@ const Course = () => {
                     component="button"
                     onClick={() => setShowMoreCategories(!showMoreCategories)}
                     sx={{
-                      color: '#C39766',
+                      color: '#FD7E14',
                       textDecoration: 'underline',
                       fontSize: '0.9rem',
                       mt: 1,
                       cursor: 'pointer',
                       border: 'none',
                       background: 'none',
-                      '&:hover': { color: '#A67A52' },
+                      '&:hover': { color: '#E56D0F' },
                     }}
                   >
                     {showMoreCategories ? 'Show less' : 'Show more'}
@@ -389,7 +389,7 @@ const Course = () => {
                           sx={{
                             color: '#202F32',
                             '&.Mui-checked': {
-                              color: '#C39766',
+                              color: '#FD7E14',
                             },
                           }}
                         />
@@ -408,14 +408,14 @@ const Course = () => {
                     component="button"
                     onClick={() => setShowMoreLevels(!showMoreLevels)}
                     sx={{
-                      color: '#C39766',
+                      color: '#FD7E14',
                       textDecoration: 'underline',
                       fontSize: '0.9rem',
                       mt: 1,
                       cursor: 'pointer',
                       border: 'none',
                       background: 'none',
-                      '&:hover': { color: '#A67A52' },
+                      '&:hover': { color: '#E56D0F' },
                     }}
                   >
                     {showMoreLevels ? 'Show less' : 'Show more'}
@@ -448,7 +448,7 @@ const Course = () => {
                           sx={{
                             color: '#202F32',
                             '&.Mui-checked': {
-                              color: '#C39766',
+                              color: '#FD7E14',
                             },
                           }}
                         />
@@ -467,14 +467,14 @@ const Course = () => {
                     component="button"
                     onClick={() => setShowMoreLanguages(!showMoreLanguages)}
                     sx={{
-                      color: '#C39766',
+                      color: '#FD7E14',
                       textDecoration: 'underline',
                       fontSize: '0.9rem',
                       mt: 1,
                       cursor: 'pointer',
                       border: 'none',
                       background: 'none',
-                      '&:hover': { color: '#A67A52' },
+                      '&:hover': { color: '#E56D0F' },
                     }}
                   >
                     {showMoreLanguages ? 'Show less' : 'Show more'}
@@ -505,7 +505,7 @@ const Course = () => {
                           sx={{
                             color: '#202F32',
                             '&.Mui-checked': {
-                              color: '#C39766',
+                              color: '#FD7E14',
                             },
                           }}
                         />
@@ -544,7 +544,7 @@ const Course = () => {
                           sx={{
                             color: '#202F32',
                             '&.Mui-checked': {
-                              color: '#C39766',
+                              color: '#FD7E14',
                             },
                           }}
                         />
@@ -583,7 +583,7 @@ const Course = () => {
                           sx={{
                             color: '#202F32',
                             '&.Mui-checked': {
-                              color: '#C39766',
+                              color: '#FD7E14',
                             },
                           }}
                         />
@@ -622,7 +622,7 @@ const Course = () => {
                           sx={{
                             color: '#202F32',
                             '&.Mui-checked': {
-                              color: '#C39766',
+                              color: '#FD7E14',
                             },
                           }}
                         />
@@ -660,7 +660,7 @@ const Course = () => {
                           sx={{
                             color: '#202F32',
                             '&.Mui-checked': {
-                              color: '#C39766',
+                              color: '#FD7E14',
                             },
                           }}
                         />
@@ -699,7 +699,7 @@ const Course = () => {
                     color: '#202F32',
                     mt: 2,
                     '&:hover': {
-                      borderColor: '#C39766',
+                      borderColor: '#FD7E14',
                       bgcolor: 'rgba(195,151,102,0.05)',
                     },
                   }}
@@ -772,7 +772,7 @@ const Course = () => {
                           size="small"
                           sx={{
                             bgcolor: 'rgba(195,151,102,0.1)',
-                            color: '#C39766',
+                            color: '#FD7E14',
                             fontWeight: 600,
                           }}
                         />
@@ -835,8 +835,8 @@ const Course = () => {
                         component={Link}
                         to={`/courses/${course._id}`}
                         sx={{
-                          bgcolor: '#C39766',
-                          '&:hover': { bgcolor: '#A67A52' },
+                          bgcolor: '#FD7E14',
+                          '&:hover': { bgcolor: '#E56D0F' },
                           fontWeight: 600,
                           borderRadius: '8px',
                         }}

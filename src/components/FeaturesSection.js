@@ -9,7 +9,7 @@ const features = [
             </>
         ),
         description: "Class has a dynamic set of teaching tools built to be deployed and used during class. Teachers can handout assignments in real-time for students to complete and submit.",
-        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        image: "/teacher-learner.jpg",
         reverse: false,
     },
     {
@@ -20,7 +20,7 @@ const features = [
             </>
         ),
         description: "Easily launch live assignments, quizzes, and tests. Student results are automatically entered in the online gradebook.",
-        image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        image: "/test.jpg",
         reverse: true,
     },
     {
@@ -42,7 +42,7 @@ const features = [
             </>
         ),
         description: "Teachers and teacher assistants can talk with students privately without leaving the Zoom environment.",
-        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        image: "/one-one.jpg",
         reverse: true,
     },
 ];
@@ -178,6 +178,8 @@ const FeaturesSection = () => {
                                     sx={{
                                         display: 'block',
                                         width: '100%',
+                                        maxHeight: '300px',
+                                        objectFit: 'cover',
                                         borderRadius: '20px',
                                         boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
                                         position: 'relative',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -22,6 +22,7 @@ import { useNotifications } from '../hooks/useNotifications';
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const { unreadCount } = useNotifications();
 
@@ -115,35 +116,37 @@ const Navbar = () => {
             borderRadius: '50px',
           }}
         >
-          {['Home', 'Courses', 'Instructors', 'Schedules', 'Contact Us'].map((item) => (
-            <Button
-              key={item}
-              component={Link}
-              to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
-              sx={{
-                color: '#666',
-                textTransform: 'none',
-                fontSize: '0.95rem',
-                fontWeight: 600,
-                px: 3,
-                py: 1,
-                borderRadius: '25px',
-                transition: 'all 0.2s',
-                '&:hover': {
-                  color: '#1A1A1A',
-                  bgcolor: 'white',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-                },
-                ...(item === 'Home' && {
-                  bgcolor: 'white',
-                  color: '#FD7E14',
-                  boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-                })
-              }}
-            >
-              {item}
-            </Button>
-          ))}
+          {['Home', 'Courses', 'About Us', 'Contact Us'].map((item) => {
+            const path = item === 'Home' ? '/' : `/${item.toLowerCase().replace(/ /g, '-')}`;
+            const isActive = location.pathname === path;
+
+            return (
+              <Button
+                key={item}
+                component={Link}
+                to={path}
+                sx={{
+                  color: isActive ? '#FD7E14' : '#666',
+                  textTransform: 'none',
+                  fontSize: '0.95rem',
+                  fontWeight: 600,
+                  px: 3,
+                  py: 1,
+                  borderRadius: '25px',
+                  transition: 'all 0.2s',
+                  bgcolor: isActive ? 'white' : 'transparent',
+                  boxShadow: isActive ? '0 2px 10px rgba(0,0,0,0.05)' : 'none',
+                  '&:hover': {
+                    color: '#1A1A1A',
+                    bgcolor: 'white',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+                  },
+                }}
+              >
+                {item}
+              </Button>
+            );
+          })}
         </Box>
 
         {/* Right Actions */}

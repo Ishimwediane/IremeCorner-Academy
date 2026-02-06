@@ -14,7 +14,6 @@ const Footer = () => {
     <Box
       sx={{
         bgcolor: '#FAF1E6', // Cream Background (Our Color)
-        borderTop: '4px solid #FD7E14',
         pt: 8,
         pb: 4,
         mt: 0, // Removed margin as it usually follows a dark section or should sit flush

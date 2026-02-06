@@ -24,25 +24,25 @@ const CourseProgressCard = ({ enrollment, colorScheme }) => {
       component={Link}
       to={courseLink}
       sx={{
-        borderRadius: '12px',
+        borderRadius: '10px',
         bgcolor: 'white',
         border: '1px solid',
         borderColor: 'rgba(0,0,0,0.08)',
         position: 'relative',
         overflow: 'hidden',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
         transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
         textDecoration: 'none',
         '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 8px 20px rgba(195,151,102,0.15)',
-          borderColor: '#C39766',
+          transform: 'translateY(-3px)',
+          boxShadow: '0 6px 16px rgba(253, 126, 20, 0.12)',
+          borderColor: '#FD7E14',
         },
       }}
     >
-      <CardContent sx={{ p: 2.5, position: 'relative', zIndex: 1 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
-          <Typography variant="caption" sx={{ color: '#C39766', fontSize: '0.75rem', fontWeight: 600 }}>
+      <CardContent sx={{ p: 1.5, position: 'relative', zIndex: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+          <Typography variant="caption" sx={{ color: '#FD7E14', fontSize: '0.7rem', fontWeight: 600 }}>
             {enrolledDate}
           </Typography>
           <IconButton
@@ -50,33 +50,34 @@ const CourseProgressCard = ({ enrollment, colorScheme }) => {
             sx={{
               color: '#666',
               opacity: 0.6,
-              '&:hover': { opacity: 1, bgcolor: 'rgba(195,151,102,0.1)' },
+              padding: '2px',
+              '&:hover': { opacity: 1, bgcolor: 'rgba(253, 126, 20, 0.08)' },
             }}
           >
-            <MoreVert fontSize="small" />
+            <MoreVert fontSize="small" sx={{ fontSize: 16 }} />
           </IconButton>
         </Box>
         <Typography
           variant="subtitle2"
           sx={{
             fontWeight: 600,
-            mb: 2,
-            fontSize: '0.95rem',
-            lineHeight: 1.4,
-            minHeight: 40,
-            color: '#202F32',
+            mb: 1.5,
+            fontSize: '0.875rem',
+            lineHeight: 1.3,
+            minHeight: 36,
+            color: '#1A1A1A',
           }}
         >
-          {courseTitle.length > 45 ? `${courseTitle.substring(0, 45)}...` : courseTitle}
+          {courseTitle.length > 40 ? `${courseTitle.substring(0, 40)}...` : courseTitle}
         </Typography>
 
         {/* Progress Bar */}
-        <Box sx={{ mb: 1 }}>
+        <Box sx={{ mb: 0 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-            <Typography variant="caption" sx={{ color: '#666', fontSize: '0.75rem' }}>
+            <Typography variant="caption" sx={{ color: '#666', fontSize: '0.7rem' }}>
               Progress
             </Typography>
-            <Typography variant="caption" sx={{ fontWeight: 700, color: '#C39766', fontSize: '0.85rem' }}>
+            <Typography variant="caption" sx={{ fontWeight: 700, color: '#FD7E14', fontSize: '0.75rem' }}>
               {progress}%
             </Typography>
           </Box>
@@ -84,12 +85,12 @@ const CourseProgressCard = ({ enrollment, colorScheme }) => {
             variant="determinate"
             value={progress}
             sx={{
-              height: 6,
-              borderRadius: 3,
-              bgcolor: 'rgba(195,151,102,0.1)',
+              height: 5,
+              borderRadius: 2.5,
+              bgcolor: 'rgba(253, 126, 20, 0.1)',
               '& .MuiLinearProgress-bar': {
-                bgcolor: '#C39766',
-                borderRadius: 3,
+                bgcolor: '#FD7E14',
+                borderRadius: 2.5,
               },
             }}
           />

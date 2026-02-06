@@ -113,47 +113,49 @@ const Auth = () => {
 
   const textFieldStyle = {
     '& .MuiOutlinedInput-root': {
-      borderRadius: '30px',
-      backgroundColor: 'white',
+      borderRadius: '12px',
+      backgroundColor: '#F8F9FA',
       '& fieldset': {
         borderColor: '#E0E0E0',
       },
       '&:hover fieldset': {
-        borderColor: '#4FD1C5',
+        borderColor: '#FD7E14',
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#4FD1C5',
+        borderColor: '#FD7E14',
       },
     },
     '& .MuiInputLabel-root': {
       color: '#9E9E9E',
+      fontSize: '0.9rem',
     },
     '& .MuiInputLabel-root.Mui-focused': {
-      color: '#4FD1C5',
+      color: '#FD7E14',
     },
-    mb: 2,
+    mb: 1.5,
   };
 
   return (
     <Box
       sx={{
         minHeight: '100vh',
-        bgcolor: '#f8f9fa',
+        bgcolor: '#F5F5F5',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         p: 2,
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Paper
-          elevation={5}
+          elevation={3}
           sx={{
-            borderRadius: '40px',
+            borderRadius: '24px',
             overflow: 'hidden',
             display: 'flex',
-            minHeight: '650px',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
+            maxWidth: '900px',
+            margin: '0 auto',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
           }}
         >
           {/* Left Side - Image */}
@@ -162,12 +164,13 @@ const Auth = () => {
               flex: 1,
               position: 'relative',
               display: { xs: 'none', md: 'block' },
+              minHeight: '600px',
             }}
           >
             <Box
               component="img"
-              src="https://images.unsplash.com/photo-1577896336936-43a97577916a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-              alt="Student raising hand"
+              src="/test.jpg"
+              alt="Student learning"
               sx={{
                 width: '100%',
                 height: '100%',
@@ -181,14 +184,14 @@ const Auth = () => {
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                p: 6,
-                background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)',
+                p: 4,
+                background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)',
               }}
             >
-              <Typography variant="h3" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
+              <Typography variant="h4" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
                 IremeCorner Academy
               </Typography>
-              <Typography variant="h6" sx={{ color: 'white', opacity: 0.9 }}>
+              <Typography variant="body1" sx={{ color: 'white', opacity: 0.9 }}>
                 Empower your future through learning.
               </Typography>
             </Box>
@@ -198,39 +201,40 @@ const Auth = () => {
           <Box
             sx={{
               flex: 1,
-              p: { xs: 4, md: 8 },
+              p: { xs: 4, md: 5 },
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              alignItems: 'center',
+              bgcolor: 'white',
             }}
           >
-            <Typography variant="h5" sx={{ fontWeight: 700, mb: 4, color: '#333' }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, color: '#1A1A1A', textAlign: 'center' }}>
               Welcome to IremeCorner!
             </Typography>
 
             {/* Toggle Switch */}
             <Box
               sx={{
-                bgcolor: '#80CBC4',
+                bgcolor: '#FD7E14',
                 borderRadius: '30px',
                 p: 0.5,
                 display: 'flex',
-                mb: 4,
+                mb: 3,
                 width: 'fit-content',
-                position: 'relative',
+                margin: '0 auto 24px auto',
               }}
             >
               <Box
                 onClick={() => handleToggleTab(1)}
                 sx={{
-                  px: 4,
-                  py: 1,
+                  px: 3,
+                  py: 0.75,
                   borderRadius: '25px',
                   cursor: 'pointer',
                   bgcolor: tab === 1 ? 'white' : 'transparent',
-                  color: tab === 1 ? '#4FD1C5' : 'white',
+                  color: tab === 1 ? '#FD7E14' : 'white',
                   fontWeight: 600,
+                  fontSize: '0.9rem',
                   transition: 'all 0.3s ease',
                   boxShadow: tab === 1 ? '0 2px 5px rgba(0,0,0,0.1)' : 'none',
                 }}
@@ -240,13 +244,14 @@ const Auth = () => {
               <Box
                 onClick={() => handleToggleTab(0)}
                 sx={{
-                  px: 4,
-                  py: 1,
+                  px: 3,
+                  py: 0.75,
                   borderRadius: '25px',
                   cursor: 'pointer',
                   bgcolor: tab === 0 ? 'white' : 'transparent',
-                  color: tab === 0 ? '#4FD1C5' : 'white',
+                  color: tab === 0 ? '#FD7E14' : 'white',
                   fontWeight: 600,
+                  fontSize: '0.9rem',
                   transition: 'all 0.3s ease',
                   boxShadow: tab === 0 ? '0 2px 5px rgba(0,0,0,0.1)' : 'none',
                 }}
@@ -258,18 +263,18 @@ const Auth = () => {
             <Typography
               variant="body2"
               align="center"
-              sx={{ color: '#666', mb: 4, maxWidth: '400px' }}
+              sx={{ color: '#666', mb: 3, fontSize: '0.875rem' }}
             >
               Join our community to access premium courses, quizzes, and connect with expert trainers.
             </Typography>
 
             {error && (
-              <Alert severity="error" sx={{ mb: 3, width: '100%', borderRadius: '12px' }}>
+              <Alert severity="error" sx={{ mb: 2, borderRadius: '12px', fontSize: '0.875rem' }}>
                 {error}
               </Alert>
             )}
 
-            <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
               {tab === 0 && (
                 <>
                   <TextField
@@ -280,6 +285,7 @@ const Auth = () => {
                     onChange={handleChange}
                     sx={textFieldStyle}
                     required
+                    size="small"
                   />
                   <TextField
                     fullWidth
@@ -290,6 +296,7 @@ const Auth = () => {
                     onChange={handleChange}
                     sx={textFieldStyle}
                     required
+                    size="small"
                   />
                   <TextField
                     fullWidth
@@ -299,6 +306,7 @@ const Auth = () => {
                     value={formData.role}
                     onChange={handleChange}
                     sx={textFieldStyle}
+                    size="small"
                   >
                     <MenuItem value="student">Student</MenuItem>
                     <MenuItem value="trainer">Trainer</MenuItem>
@@ -312,10 +320,11 @@ const Auth = () => {
                     onChange={handleChange}
                     sx={textFieldStyle}
                     required
+                    size="small"
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton onClick={togglePasswordVisibility} edge="end">
+                          <IconButton onClick={togglePasswordVisibility} edge="end" size="small">
                             {showPassword ? <VisibilityOff /> : <Visibility />}
                           </IconButton>
                         </InputAdornment>
@@ -331,6 +340,7 @@ const Auth = () => {
                     onChange={handleChange}
                     sx={textFieldStyle}
                     required
+                    size="small"
                   />
                 </>
               )}
@@ -346,6 +356,7 @@ const Auth = () => {
                     onChange={handleChange}
                     sx={textFieldStyle}
                     required
+                    size="small"
                   />
                   <TextField
                     fullWidth
@@ -356,10 +367,11 @@ const Auth = () => {
                     onChange={handleChange}
                     sx={textFieldStyle}
                     required
+                    size="small"
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton onClick={togglePasswordVisibility} edge="end">
+                          <IconButton onClick={togglePasswordVisibility} edge="end" size="small">
                             {showPassword ? <VisibilityOff /> : <Visibility />}
                           </IconButton>
                         </InputAdornment>
@@ -367,14 +379,14 @@ const Auth = () => {
                     }}
                   />
 
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                     <FormControlLabel
-                      control={<Checkbox sx={{ color: '#4FD1C5', '&.Mui-checked': { color: '#4FD1C5' } }} />}
-                      label={<Typography variant="body2" sx={{ color: '#666' }}>Remember me</Typography>}
+                      control={<Checkbox size="small" sx={{ color: '#FD7E14', '&.Mui-checked': { color: '#FD7E14' } }} />}
+                      label={<Typography variant="body2" sx={{ color: '#666', fontSize: '0.875rem' }}>Remember me</Typography>}
                     />
                     <Typography
                       component="span"
-                      sx={{ color: '#666', fontSize: '0.875rem', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+                      sx={{ color: '#666', fontSize: '0.875rem', cursor: 'pointer', '&:hover': { color: '#FD7E14' } }}
                     >
                       Forgot Password?
                     </Typography>
@@ -387,19 +399,19 @@ const Auth = () => {
                 fullWidth
                 disabled={loading}
                 sx={{
-                  bgcolor: '#4FD1C5',
+                  bgcolor: '#FD7E14',
                   color: 'white',
-                  py: 1.5,
+                  py: 1.25,
                   borderRadius: '30px',
                   fontWeight: 700,
                   fontSize: '1rem',
                   textTransform: 'none',
-                  boxShadow: '0 4px 15px rgba(79, 209, 197, 0.4)',
+                  boxShadow: '0 4px 15px rgba(253, 126, 20, 0.4)',
                   '&:hover': {
-                    bgcolor: '#38B2AC',
-                    boxShadow: '0 6px 20px rgba(79, 209, 197, 0.6)',
+                    bgcolor: '#E56D0F',
+                    boxShadow: '0 6px 20px rgba(253, 126, 20, 0.6)',
                   },
-                  mb: 2,
+                  mb: 0,
                 }}
               >
                 {loading ? 'Processing...' : tab === 1 ? 'Login' : 'Register'}

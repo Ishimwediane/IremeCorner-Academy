@@ -17,18 +17,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
       {/* Background Split */}
       <Box sx={{ position: 'absolute', inset: 0, zIndex: 0, display: 'flex' }}>
         {/* Left Side - Light Cream */}
-        <Box sx={{ width: '55%', height: '100%', bgcolor: '#FAF1E6' }} />
-        {/* Right Side - Peach/Orange */}
-        <Box
-          sx={{
-            width: '50%',
-            height: '100%',
-            bgcolor: '#FFDFC8',
-            borderBottomLeftRadius: { xs: '0', md: '50%' }, // Curve on desktop
-            position: 'absolute',
-            right: 0,
-          }}
-        />
+        <Box sx={{ width: '100%', height: '100%', bgcolor: '#FAF1E6' }} />
       </Box>
 
       <Container
@@ -39,7 +28,7 @@ const Hero = ({ user, totalCourses = 0 }) => {
           zIndex: 1,
           display: 'flex',
           alignItems: 'center',
-          pt: 12, // Account for absolute navbar
+          pt: 0, // No space after navbar
         }}
       >
         <Grid container alignItems="center" spacing={4}>
@@ -125,11 +114,11 @@ const Hero = ({ user, totalCourses = 0 }) => {
             <Box
               sx={{
                 position: 'relative',
-                height: { xs: '50vh', md: '85vh' },
+                height: { xs: '60vh', md: '100vh' },
                 display: 'flex',
-                alignItems: 'end',
+                alignItems: 'start',
                 justifyContent: 'center',
-                mt: { xs: 5, md: 0 }
+                mt: { xs: 0, md: 0 }
               }}
             >
 
@@ -137,13 +126,17 @@ const Hero = ({ user, totalCourses = 0 }) => {
               {/* Main Student Image */}
               <Box
                 component="img"
-                src="/learn.jpg"
+                src="/hero.png"
                 alt="Student with headphones"
                 sx={{
-                  height: '90%',
-                  maxHeight: '800px',
+                  height: '100%',
+                  maxHeight: '2000px',
+                  width: 'auto',
                   objectFit: 'contain',
-                  position: 'relative',
+                  position: 'absolute',
+                  top: 0,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                   zIndex: 1,
                   maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
                 }}
@@ -153,14 +146,14 @@ const Hero = ({ user, totalCourses = 0 }) => {
               <Box
                 sx={{
                   position: 'absolute',
-                  bottom: 0,
-                  centerX: true,
-                  width: '500px',
-                  height: '500px',
-                  bgcolor: 'rgba(255,255,255,0.2)',
+                  top: 20,
+
+                  width: '350px',
+                  height: '350px',
+                  bgcolor: '#FCDCC6',
                   borderRadius: '50%',
                   zIndex: 0,
-                  transform: 'scale(1.2) translateY(10%)',
+                  transform: 'scale(1) translateY(-10%)',
                 }}
               />
 

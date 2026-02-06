@@ -345,7 +345,9 @@ function AppContent() {
           <Route path="/drop-information" element={<DropInformation />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/contact-us" element={<Contact />} />
           <Route path="/about" element={<About />} />
+          <Route path="/about-us" element={<About />} />
           <Route
             path="/ai-assistant"
             element={

@@ -72,8 +72,8 @@ const Contact = () => {
               xs={12}
               md={5}
               sx={{
-                bgcolor: '#C39766',
-                color: 'white',
+                bgcolor: '#FAF1E6',
+                color: '#1A1A1A',
                 p: { xs: 4, md: 6 },
                 display: 'flex',
                 flexDirection: 'column',
@@ -85,7 +85,7 @@ const Contact = () => {
                 sx={{
                   fontWeight: 800,
                   mb: 4,
-                  color: 'white',
+                  color: '#1A1A1A',
                 }}
               >
                 Contact Us
@@ -180,10 +180,10 @@ const Contact = () => {
                           borderColor: 'rgba(32,47,50,0.2)',
                         },
                         '&:hover fieldset': {
-                          borderColor: '#C39766',
+                          borderColor: '#FD7E14',
                         },
                         '&.Mui-focused fieldset': {
-                          borderColor: '#C39766',
+                          borderColor: '#FD7E14',
                         },
                       },
                     }}
@@ -206,10 +206,10 @@ const Contact = () => {
                           borderColor: 'rgba(32,47,50,0.2)',
                         },
                         '&:hover fieldset': {
-                          borderColor: '#C39766',
+                          borderColor: '#FD7E14',
                         },
                         '&.Mui-focused fieldset': {
-                          borderColor: '#C39766',
+                          borderColor: '#FD7E14',
                         },
                       },
                     }}
@@ -233,10 +233,10 @@ const Contact = () => {
                           borderColor: 'rgba(32,47,50,0.2)',
                         },
                         '&:hover fieldset': {
-                          borderColor: '#C39766',
+                          borderColor: '#FD7E14',
                         },
                         '&.Mui-focused fieldset': {
-                          borderColor: '#C39766',
+                          borderColor: '#FD7E14',
                         },
                       },
                     }}
@@ -249,7 +249,7 @@ const Contact = () => {
                   variant="contained"
                   disabled={isSubmitting}
                   sx={{
-                    bgcolor: '#C39766',
+                    bgcolor: '#FD7E14',
                     color: 'white',
                     px: 5,
                     py: 1.5,
@@ -258,7 +258,7 @@ const Contact = () => {
                     fontSize: '1rem',
                     textTransform: 'uppercase',
                     '&:hover': {
-                      bgcolor: '#A67A52',
+                      bgcolor: '#E56D0F',
                     },
                     '&:disabled': {
                       bgcolor: 'rgba(195,151,102,0.5)',
