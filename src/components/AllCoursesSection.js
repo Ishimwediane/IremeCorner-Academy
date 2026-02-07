@@ -13,7 +13,7 @@ import {
   Avatar,
 } from '@mui/material';
 import { useQuery } from 'react-query';
-import { ArrowForward, Visibility, Star, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Star, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import api from '../utils/api';
 
 const CATEGORIES = [
@@ -23,24 +23,7 @@ const CATEGORIES = [
   'Cyber Security',
 ];
 
-// Gradient presets using only Hero Theme Colors (Orange/Cream/Grey)
-const CARD_STYLES = [
-  {
-    gradient: 'linear-gradient(135deg, #FD7E14 0%, #FFAB91 100%)', // Primary Orange gradient
-    iconColor: '#FD7E14',
-    shadow: '0 15px 30px rgba(253, 126, 20, 0.3)',
-  },
-  {
-    gradient: 'linear-gradient(135deg, #FF9800 0%, #FFC107 100%)', // Deep Orange/Gold
-    iconColor: '#FF9800',
-    shadow: '0 15px 30px rgba(255, 152, 0, 0.3)',
-  },
-  {
-    gradient: 'linear-gradient(135deg, #FD7E14 0%, #FFAB91 100%)', // Replaced Darker Orange with Brand Orange
-    iconColor: '#FD7E14',
-    shadow: '0 15px 30px rgba(253, 126, 20, 0.3)',
-  },
-];
+
 
 const AllCoursesSection = () => {
   const [activeCategory, setActiveCategory] = useState('All Courses');

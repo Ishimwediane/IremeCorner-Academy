@@ -58,7 +58,6 @@ import LearnerGroups from './pages/learnerdashboard/LearnerGroups';
 import AllUsers from './pages/admin/AllUsers';
 import AllTrainers from './pages/admin/AllTrainers';
 import AllStudents from './pages/admin/AllStudents';
-import AllCourses from './pages/admin/AllCourses';
 import AdminUserDetail from './pages/admin/AdminUserDetail';
 import AdminCourseDetail from './pages/admin/AdminCourseDetail';
 import AdminLessonView from './pages/admin/AdminLessonView';

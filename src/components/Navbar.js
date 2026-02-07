@@ -12,9 +12,7 @@ import {
 } from '@mui/material';
 import {
   Notifications as NotificationsIcon,
-  Dashboard as DashboardIcon,
   School,
-  AdminPanelSettings,
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../hooks/useNotifications';

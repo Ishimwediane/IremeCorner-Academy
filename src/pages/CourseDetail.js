@@ -27,7 +27,6 @@ import {
   CheckCircle,
   Star,
   Language,
-  Description,
   Assignment,
   VerifiedUser
 } from '@mui/icons-material';
@@ -124,8 +123,6 @@ const CourseDetail = () => {
   const isEnrolled = isAdmin || enrollmentData || (user && course?.enrolledStudents?.some(
     (student) => student._id === user.id || student?._id?.toString() === user.id || student?.toString() === user.id
   ));
-  // Get completed lessons for enrolled users
-  const completedLessons = enrollmentData?.completedLessons || [];
 
   if (isLoading) {
     return (

@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
-  Avatar,
   List,
   ListItem,
   ListItemButton,
@@ -40,7 +39,7 @@ const collapsedDrawerWidth = 80;
 const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
