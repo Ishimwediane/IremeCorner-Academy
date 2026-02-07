@@ -15,24 +15,22 @@ import {
   useTheme,
   Collapse,
   Tooltip,
-  ListSubheader,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
-  School as SchoolIcon, // For trainers
-  Person as PersonIcon, // For students
-  Group as GroupIcon, // For all users
-  Book as BookIcon, // For course management
-  MenuBook as MenuBookIcon, // For all courses
-  PendingActions as PendingActionsIcon, // For pending courses
-  Assessment as AssessmentIcon, // For reports
-  Assignment as AssignmentIcon,
-  Quiz as QuizIcon,
-  Duo as DuoIcon,
+  School as SchoolIcon,
+  Person as PersonIcon,
+  Group as GroupIcon,
+  Book as BookIcon,
+  MenuBook as MenuBookIcon,
+  PendingActions as PendingActionsIcon,
+  Assessment as AssessmentIcon,
   Settings as SettingsIcon,
   Logout as LogoutIcon,
   ExpandMore as ExpandMoreIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
 
@@ -50,13 +48,17 @@ const AdminSidebar = ({ mobileOpen, onMobileClose }) => {
       return false;
     }
   });
+
+  // Track if we're hovering over the collapsed sidebar to temporarily expand it
   const [hoverExpanded, setHoverExpanded] = useState(false);
+
+  // The effective expanded state (true if not collapsed OR if hovering while collapsed)
   const isExpanded = !collapsed || hoverExpanded;
 
   useEffect(() => {
     try {
       localStorage.setItem('adminSidebarCollapsed', collapsed ? 'true' : 'false');
-    } catch {}
+    } catch { }
     // Notify layout about change
     window.dispatchEvent(new CustomEvent('admin-sidebar-toggle', { detail: { collapsed } }));
   }, [collapsed]);
@@ -116,189 +118,228 @@ const AdminSidebar = ({ mobileOpen, onMobileClose }) => {
       sx={{
         width: isExpanded ? 280 : 80,
         height: '100%',
-        bgcolor: '#202F32',
-        color: 'white',
+        bgcolor: 'white',
+        color: '#666',
         display: 'flex',
         flexDirection: 'column',
-        position: 'relative',
+        borderRight: '1px solid rgba(0,0,0,0.08)',
+        transition: 'width 0.3s ease',
         overflow: 'hidden',
+        position: 'relative',
+        zIndex: 1200,
       }}
-      onMouseEnter={() => setHoverExpanded(true)}
-      onMouseLeave={() => setHoverExpanded(false)}
+      onMouseEnter={() => collapsed && setHoverExpanded(true)}
+      onMouseLeave={() => collapsed && setHoverExpanded(false)}
     >
-      {/* Profile Section */}
+      {/* Brand Section */}
       <Box
         sx={{
-          p: 3,
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          height: 70,
+          minHeight: 70,
+          display: 'flex',
+          alignItems: 'center',
+          px: isExpanded ? 3 : 2,
+          borderBottom: '1px solid rgba(0,0,0,0.06)',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          transition: 'all 0.3s ease',
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-          <Avatar
-            sx={{
-              width: 56,
-              height: 56,
-              bgcolor: '#C39766',
-              fontSize: '1.5rem',
-            }}
-          >
-            {user?.name?.charAt(0)?.toUpperCase() || 'A'}
-          </Avatar>
-          {isExpanded && (
-          <Box>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: 'white' }}>
-              {user?.name || 'Admin'}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.875rem' }}
-            >
-              Administrator
-            </Typography>
-          </Box>
-          )}
-          <Button
-            onClick={() => setCollapsed(!collapsed)}
-            sx={{
-              ml: 'auto',
-              minWidth: 0,
-              color: 'white',
-              display: { xs: 'none', md: 'inline-flex' },
-              bgcolor: 'rgba(255,255,255,0.1)',
-              px: 1,
-              borderRadius: '8px',
-              '&:hover': { bgcolor: 'rgba(255,255,255,0.15)' },
-            }}
-          >
-            {collapsed ? '>' : '<'}
-          </Button>
+        <Avatar
+          sx={{
+            width: 32,
+            height: 32,
+            bgcolor: '#FD7E14',
+            fontWeight: 700,
+            fontSize: '1rem',
+            mr: isExpanded ? 2 : 0,
+            transition: 'margin 0.3s ease',
+          }}
+        >
+          I
+        </Avatar>
+        <Box
+          sx={{
+            opacity: isExpanded ? 1 : 0,
+            width: isExpanded ? 'auto' : 0,
+            transform: isExpanded ? 'translateX(0)' : 'translateX(10px)',
+            transition: 'all 0.3s ease',
+            visibility: isExpanded ? 'visible' : 'hidden',
+          }}
+        >
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32', lineHeight: 1 }}>
+            IremeCorner
+          </Typography>
+          <Typography variant="caption" sx={{ color: '#999', display: 'block', mt: 0 }}>
+            Admin Portal
+          </Typography>
         </Box>
       </Box>
 
       {/* Navigation Menu */}
-      <Box 
-        sx={{ 
-          flex: 1, 
-          pt: 2, 
-          position: 'relative',
+      <Box
+        sx={{
+          flex: 1,
+          py: 2,
           overflowY: 'auto',
           overflowX: 'hidden',
-          '&::-webkit-scrollbar': {
-            width: '6px',
-          },
-          '&::-webkit-scrollbar-track': {
-            background: 'transparent',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: 'rgba(255,255,255,0.2)',
-            borderRadius: '3px',
-          },
+          '&::-webkit-scrollbar': { width: '4px' },
+          '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(0,0,0,0.1)', borderRadius: '4px' },
         }}
       >
-        <List sx={{ pl: isExpanded ? 2 : 1, pr: 0, position: 'relative' }}>
-          {groups.map((group) => {
-            const groupActive = group.children.some(c => location.pathname.startsWith(c.path)) || (group.header.path ? location.pathname.startsWith(group.header.path) : false);
-            const showChildren = isExpanded && openGroups[group.key] && group.children.length > 0;
-            const tintedHeader = groupActive; // All admin group headers can be tinted if active
-            const isLinkHeader = group.children.length === 0 && !!group.header.path;
+        <Typography
+          variant="caption"
+          sx={{
+            px: 3,
+            mb: 1,
+            display: isExpanded ? 'block' : 'none',
+            fontWeight: 700,
+            color: '#999',
+            letterSpacing: '0.5px'
+          }}
+        >
+          MENU
+        </Typography>
 
-            return (
-              <Box key={group.key} sx={{ mb: 0.5 }}>
-                <ListItem
-                  disablePadding
-                  sx={{
-                    mb: 0.5,
-                  }}
-                >
-                  <ListItemButton
-                    onClick={() => group.children.length > 0 ? toggleGroup(group.key) : (group.header.path && navigate(group.header.path))}
-                    sx={{
-                      borderRadius: '999px',
-                      bgcolor: isLinkHeader ? (groupActive ? 'white' : 'transparent') : (tintedHeader ? 'rgba(195,151,102,0.15)' : 'transparent'),
-                      color: isLinkHeader ? (groupActive ? '#202F32' : 'rgba(255,255,255,0.95)') : 'rgba(255,255,255,0.95)',
-                      '&:hover': isLinkHeader
-                        ? { bgcolor: 'white', color: '#202F32', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }
-                        : { bgcolor: tintedHeader ? 'rgba(195,151,102,0.22)' : 'rgba(255,255,255,0.08)' },
-                      py: 1.25,
-                      px: isExpanded ? 2 : 1.25,
-                      width: '100%',
-                      position: 'relative',
-                      mr: isLinkHeader && (groupActive) ? '-16px' : 0,
-                      '&::after': isLinkHeader && (groupActive) ? {
-                        content: '""',
-                        position: 'absolute',
-                        right: '-16px',
-                        top: 0,
-                        bottom: 0,
-                        width: '16px',
-                        background: 'white',
-                        borderTopRightRadius: '999px',
-                        borderBottomRightRadius: '999px',
-                      } : {},
-                    }}
-                  >
-                    <ListItemIcon sx={{ color: isLinkHeader && groupActive ? '#202F32' : 'rgba(255,255,255,0.9)', minWidth: 36 }}>
-                      {group.header.icon}
-                    </ListItemIcon>
-                    {isExpanded && (
+        <List sx={{ px: 2 }}>
+          {groups.map((group) => {
+            const hasChildren = group.children.length > 0;
+            // Check if active: either exact match on header path, or match on any child path
+            const isGroupActive = group.header.path
+              ? location.pathname === group.header.path
+              : group.children.some(child => location.pathname.startsWith(child.path));
+
+            const isOpen = openGroups[group.key];
+
+            if (!hasChildren) {
+              // Single item
+              return (
+                <ListItem key={group.key} disablePadding sx={{ mb: 0.5, display: 'block' }}>
+                  <Tooltip title={!isExpanded ? group.header.text : ''} placement="right">
+                    <ListItemButton
+                      component={Link}
+                      to={group.header.path}
+                      onClick={() => isMobile && onMobileClose()}
+                      sx={{
+                        minHeight: 44,
+                        justifyContent: isExpanded ? 'initial' : 'center',
+                        px: 2.5,
+                        borderRadius: '8px',
+                        bgcolor: isGroupActive ? 'rgba(253, 126, 20, 0.08)' : 'transparent',
+                        color: isGroupActive ? '#FD7E14' : '#666',
+                        '&:hover': {
+                          bgcolor: isGroupActive ? 'rgba(253, 126, 20, 0.12)' : 'rgba(0,0,0,0.04)',
+                          color: isGroupActive ? '#FD7E14' : '#202F32',
+                        },
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: isExpanded ? 2 : 0,
+                          justifyContent: 'center',
+                          color: 'inherit',
+                        }}
+                      >
+                        {group.header.icon}
+                      </ListItemIcon>
                       <ListItemText
                         primary={group.header.text}
-                        primaryTypographyProps={{
-                          fontSize: '0.9rem',
-                          fontWeight: groupActive ? 700 : 600,
-                          noWrap: true,
+                        sx={{
+                          opacity: isExpanded ? 1 : 0,
+                          display: isExpanded ? 'block' : 'none',
+                          m: 0,
+                          '& .MuiTypography-root': { fontWeight: isGroupActive ? 600 : 500, fontSize: '0.9rem' }
+                        }}
+                      />
+                    </ListItemButton>
+                  </Tooltip>
+                </ListItem>
+              );
+            }
+
+            // Has children - Collapsible Group
+            return (
+              <Box key={group.key} sx={{ mb: 0.5 }}>
+                <Tooltip title={!isExpanded ? group.header.text : ''} placement="right">
+                  <ListItemButton
+                    onClick={() => toggleGroup(group.key)}
+                    sx={{
+                      minHeight: 44,
+                      justifyContent: isExpanded ? 'initial' : 'center',
+                      px: 2.5,
+                      borderRadius: '8px',
+                      color: isGroupActive ? '#FD7E14' : '#666',
+                      '&:hover': {
+                        bgcolor: 'rgba(0,0,0,0.04)',
+                        color: '#202F32',
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: isExpanded ? 2 : 0,
+                        justifyContent: 'center',
+                        color: 'inherit',
+                      }}
+                    >
+                      {group.header.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={group.header.text}
+                      sx={{
+                        opacity: isExpanded ? 1 : 0,
+                        display: isExpanded ? 'block' : 'none',
+                        m: 0,
+                        '& .MuiTypography-root': { fontWeight: 600, fontSize: '0.9rem' }
+                      }}
+                    />
+                    {isExpanded && (
+                      <ExpandMoreIcon
+                        sx={{
+                          fontSize: '1.2rem',
+                          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.2s',
+                          opacity: 0.5,
+                          ml: 'auto'
                         }}
                       />
                     )}
-                    {isExpanded && group.children.length > 0 && (
-                      <ExpandMoreIcon sx={{ ml: 'auto', transform: openGroups[group.key] ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
-                    )}
                   </ListItemButton>
-                </ListItem>
+                </Tooltip>
 
-                {/* Children */}
-                <Collapse in={showChildren} timeout="auto" unmountOnExit>
-                  <List sx={{ pl: isExpanded ? 4 : 2 }}>
-                    {(group.key === 'dashboard'
-                      ? [{ text: 'Dashboard', icon: <DashboardIcon />, path: '/admin' }]
-                      : group.children
-                    ).map((child) => {
-                      const isActive = location.pathname === child.path || location.pathname.startsWith(child.path + '/');
+                <Collapse in={isOpen && isExpanded} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {group.children.map((child) => {
+                      const isChildActive = location.pathname.startsWith(child.path);
                       return (
-                        <ListItem key={child.path} disablePadding>
-                          <ListItemButton component={Link} to={child.path} onClick={() => isMobile && onMobileClose()} sx={{
-                            borderRadius: '999px',
-                            bgcolor: isActive ? 'white' : 'transparent',
-                            color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)',
-                            '&:hover': { bgcolor: 'white', color: '#202F32', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' },
+                        <ListItemButton
+                          key={child.path}
+                          component={Link}
+                          to={child.path}
+                          onClick={() => isMobile && onMobileClose()}
+                          sx={{
+                            pl: 6,
                             py: 1,
-                            px: isExpanded ? 2 : 1.25,
-                            width: '100%',
-                            position: 'relative',
-                            mr: isActive ? '-16px' : 0,
-                            '&::after': isActive ? {
-                              content: '""',
-                              position: 'absolute',
-                              right: '-16px',
-                              top: 0,
-                              bottom: 0,
-                              width: '16px',
-                              background: 'white',
-                              borderTopRightRadius: '999px',
-                              borderBottomRightRadius: '999px',
-                            } : {},
-                          }}>
-                            <ListItemIcon sx={{ minWidth: 30, color: isActive ? '#202F32' : 'rgba(255,255,255,0.9)' }}>
-                              {child.icon}
-                            </ListItemIcon>
-                            {isExpanded && (
-                              <ListItemText
-                                primary={child.text}
-                                primaryTypographyProps={{ fontSize: '0.875rem', fontWeight: isActive ? 600 : 500, noWrap: true }}
-                              />
-                            )}
-                          </ListItemButton>
-                        </ListItem>
+                            borderRadius: '8px',
+                            bgcolor: isChildActive ? 'rgba(253, 126, 20, 0.08)' : 'transparent',
+                            color: isChildActive ? '#FD7E14' : '#666',
+                            '&:hover': {
+                              bgcolor: isChildActive ? 'rgba(253, 126, 20, 0.12)' : 'rgba(0,0,0,0.04)',
+                              color: isChildActive ? '#FD7E14' : '#202F32',
+                            },
+                            mb: 0.5,
+                          }}
+                        >
+                          <ListItemIcon sx={{ minWidth: 24, color: 'inherit', mr: 1.5 }}>
+                            {child.icon}
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={child.text}
+                            primaryTypographyProps={{ fontSize: '0.85rem', fontWeight: isChildActive ? 600 : 500 }}
+                          />
+                        </ListItemButton>
                       );
                     })}
                   </List>
@@ -309,57 +350,92 @@ const AdminSidebar = ({ mobileOpen, onMobileClose }) => {
         </List>
       </Box>
 
-      {/* Logout Button */}
-      <Box sx={{ p: 2, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-        <Button
-          fullWidth
-          startIcon={<LogoutIcon />}
-          onClick={handleLogout}
-          sx={{
-            color: 'rgba(255,255,255,0.9)',
-            textTransform: 'none',
-            justifyContent: 'flex-start',
-            px: 2,
-            py: 1.5,
-            borderRadius: '12px',
-            '&:hover': {
-              bgcolor: 'rgba(255,255,255,0.1)',
-            },
-          }}
-        >
-          Logout
-        </Button>
+      {/* Footer / Toggle Section */}
+      <Box sx={{ p: 2, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <Tooltip title={!isExpanded ? 'Logout' : ''} placement="right">
+          <Button
+            fullWidth
+            onClick={handleLogout}
+            sx={{
+              minWidth: 0,
+              justifyContent: isExpanded ? 'flex-start' : 'center',
+              color: '#666',
+              textTransform: 'none',
+              px: isExpanded ? 2 : 0,
+              py: 1,
+              mb: 1,
+              borderRadius: '8px',
+              '&:hover': { bgcolor: 'rgba(0,0,0,0.04)', color: '#d32f2f' },
+            }}
+          >
+            <LogoutIcon sx={{ mr: isExpanded ? 2 : 0, fontSize: '1.2rem' }} />
+            {isExpanded && <Typography variant="body2" sx={{ fontWeight: 500 }}>Logout</Typography>}
+          </Button>
+        </Tooltip>
+
+        {!isMobile && (
+          <Button
+            fullWidth
+            onClick={() => setCollapsed(!collapsed)}
+            sx={{
+              minWidth: 0,
+              justifyContent: 'center',
+              color: '#999',
+              bgcolor: 'rgba(0,0,0,0.02)',
+              py: 0.5,
+              borderRadius: '8px',
+              '&:hover': { bgcolor: 'rgba(0,0,0,0.05)', color: '#666' },
+            }}
+          >
+            {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </Button>
+        )}
       </Box>
     </Box>
   );
 
   return (
-    <>
+    <Box
+      component="nav"
+      sx={{
+        width: { md: isExpanded ? 280 : 80 },
+        flexShrink: { md: 0 },
+        transition: 'width 0.3s ease',
+      }}
+    >
       {isMobile ? (
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={onMobileClose}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
+          ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: 280,
-              overflow: 'visible',
-            },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 },
           }}
         >
           {sidebarContent}
         </Drawer>
       ) : (
-        <Box sx={{ width: isExpanded ? 280 : 80, height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 1200, display: { xs: 'none', md: 'block' }, overflow: 'hidden' }}>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: isExpanded ? 280 : 80,
+              borderRight: 'none',
+              transition: 'width 0.3s ease',
+              overflowX: 'hidden',
+              backgroundColor: 'transparent',
+            },
+          }}
+          open
+        >
           {sidebarContent}
-        </Box>
+        </Drawer>
       )}
-    </>
+    </Box>
   );
 };
 

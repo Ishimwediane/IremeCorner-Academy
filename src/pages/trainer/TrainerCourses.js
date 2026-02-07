@@ -191,13 +191,17 @@ const TrainerCourses = () => {
         </Typography>
         <Button
           variant="contained"
+          size="small"
           startIcon={<AddIcon />}
           onClick={handleOpen}
           sx={{
-            bgcolor: '#C39766',
-            '&:hover': { bgcolor: '#A67A52' },
+            bgcolor: '#FD7E14',
+            borderRadius: 0,
+            py: 0.5,
+            px: 1.5,
+            fontSize: '0.8rem',
+            '&:hover': { bgcolor: '#E56D0F' },
             textTransform: 'none',
-            px: 3,
           }}
         >
           Create New Course
@@ -317,8 +321,8 @@ const TrainerCourses = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} disabled={creating}>Cancel</Button>
-          <Button onClick={handleCreate} variant="contained" disabled={creating}>
+          <Button onClick={handleClose} disabled={creating} size="small">Cancel</Button>
+          <Button onClick={handleCreate} variant="contained" size="small" disabled={creating} sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}>
             {creating ? 'Creating...' : 'Create'}
           </Button>
         </DialogActions>
@@ -327,7 +331,7 @@ const TrainerCourses = () => {
       {/* Statistics Cards */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
@@ -344,7 +348,7 @@ const TrainerCourses = () => {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
@@ -361,7 +365,7 @@ const TrainerCourses = () => {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
@@ -378,7 +382,7 @@ const TrainerCourses = () => {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
@@ -397,7 +401,7 @@ const TrainerCourses = () => {
       </Grid>
 
       {/* Courses Table */}
-      <Paper sx={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+      <Paper sx={{ borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         <TableContainer>
           <Table>
             <TableHead>

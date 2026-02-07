@@ -61,14 +61,14 @@ const AdminLessonView = () => {
       <Button
         startIcon={<ArrowBack />}
         onClick={() => navigate(`/admin/courses/${courseId}`)}
-        sx={{ mb: 3 }}
+        sx={{ mb: 3, color: '#FD7E14', textTransform: 'none' }}
       >
         Back to Course Details
       </Button>
 
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 3 }}>
+          <Paper sx={{ p: 3, borderRadius: 0 }}>
             <Typography variant="h4" gutterBottom>{lesson.title}</Typography>
             <Divider sx={{ my: 2 }} />
 
@@ -94,6 +94,7 @@ const AdminLessonView = () => {
               startIcon={<ArrowBack />}
               onClick={() => navigate(`/admin/courses/${courseId}/lessons/${prevLesson._id}`)}
               disabled={!prevLesson}
+              sx={{ color: '#FD7E14', textTransform: 'none', '&.Mui-disabled': { color: 'action.disabled' } }}
             >
               Previous Lesson
             </Button>
@@ -101,6 +102,7 @@ const AdminLessonView = () => {
               endIcon={<ArrowForward />}
               onClick={() => navigate(`/admin/courses/${courseId}/lessons/${nextLesson._id}`)}
               disabled={!nextLesson}
+              sx={{ color: '#FD7E14', textTransform: 'none', '&.Mui-disabled': { color: 'action.disabled' } }}
             >
               Next Lesson
             </Button>
@@ -108,7 +110,7 @@ const AdminLessonView = () => {
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 2, position: 'sticky', top: 20 }}>
+          <Paper sx={{ p: 2, position: 'sticky', top: 20, borderRadius: 0 }}>
             <Typography variant="h6" gutterBottom>Course Curriculum</Typography>
             <List>
               {lessons.map((l, index) => {
@@ -122,13 +124,13 @@ const AdminLessonView = () => {
                     selected={isCurrent}
                   >
                     <ListItemIcon sx={{ minWidth: 36 }}>
-                      <PlayCircleOutline color={isCurrent ? 'primary' : 'inherit'} />
+                      <PlayCircleOutline sx={{ color: isCurrent ? '#FD7E14' : 'inherit' }} />
                     </ListItemIcon>
                     <ListItemText
                       primary={`Chapter ${index + 1}: ${l.title}`}
                       primaryTypographyProps={{
                         fontWeight: isCurrent ? 'bold' : 'normal',
-                        color: isCurrent ? 'primary.main' : 'text.primary',
+                        color: isCurrent ? '#FD7E14' : 'text.primary',
                       }}
                     />
                   </ListItem>

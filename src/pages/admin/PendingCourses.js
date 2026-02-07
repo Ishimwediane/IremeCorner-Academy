@@ -107,7 +107,7 @@ const PendingCourses = () => {
         renderCell: (params) => (
           <Box>
             <Tooltip title="View Course">
-              <IconButton onClick={() => navigate(`/admin/courses/${params.id}`)}>
+              <IconButton onClick={() => navigate(`/admin/courses/${params.id}`)} sx={{ color: '#FD7E14' }}>
                 <Visibility />
               </IconButton>
             </Tooltip>
@@ -130,7 +130,7 @@ const PendingCourses = () => {
 
   return (
     <Box sx={{ p: 3, width: '100%' }}>
-      <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+      <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
           <TextField
             label="Search Pending Courses"

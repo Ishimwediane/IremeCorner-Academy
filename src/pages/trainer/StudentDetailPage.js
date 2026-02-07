@@ -101,7 +101,7 @@ const StudentDetailPage = () => {
                     Back to Course
                 </Button>
 
-                <Paper sx={{ p: 3 }}>
+                <Paper sx={{ p: 3, borderRadius: 0 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                         <Avatar sx={{ width: 80, height: 80, bgcolor: 'primary.main', fontSize: '2rem' }}>
                             {student.name?.charAt(0).toUpperCase()}
@@ -144,7 +144,7 @@ const StudentDetailPage = () => {
             </Box>
 
             {/* Tabs */}
-            <Paper sx={{ mb: 2 }}>
+            <Paper sx={{ mb: 2, borderRadius: 0 }}>
                 <Tabs value={tab} onChange={(e, newValue) => setTab(newValue)}>
                     <Tab label="Overview" />
                     <Tab label={`Assignments (${studentAssignments.filter(a => a.submission).length})`} />
@@ -155,7 +155,7 @@ const StudentDetailPage = () => {
             {/* Overview Tab */}
             {tab === 0 && (
                 <Box>
-                    <Paper sx={{ p: 3, mb: 3 }}>
+                    <Paper sx={{ p: 3, mb: 3, borderRadius: 0 }}>
                         <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                             Course: {course.title}
                         </Typography>
@@ -192,7 +192,7 @@ const StudentDetailPage = () => {
 
             {/* Assignments Tab */}
             {tab === 1 && (
-                <Paper sx={{ p: 3 }}>
+                <Paper sx={{ p: 3, borderRadius: 0 }}>
                     <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                         Assignment Submissions
                     </Typography>
@@ -256,7 +256,7 @@ const StudentDetailPage = () => {
 
             {/* Quizzes Tab */}
             {tab === 2 && (
-                <Paper sx={{ p: 3 }}>
+                <Paper sx={{ p: 3, borderRadius: 0 }}>
                     <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
                         Quiz Attempts
                     </Typography>

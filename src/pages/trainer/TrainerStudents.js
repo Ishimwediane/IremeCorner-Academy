@@ -266,7 +266,8 @@ const TrainerStudents = () => {
             startIcon={<DownloadIcon />}
             onClick={handleExportData}
             variant="outlined"
-            sx={{ textTransform: 'none' }}
+            size="small"
+            sx={{ textTransform: 'none', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem' }}
           >
             Export
           </Button>
@@ -274,16 +275,22 @@ const TrainerStudents = () => {
             startIcon={<PrintIcon />}
             onClick={handlePrint}
             variant="outlined"
-            sx={{ textTransform: 'none' }}
+            size="small"
+            sx={{ textTransform: 'none', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem' }}
           >
             Print
           </Button>
           <Button
             variant="contained"
+            size="small"
             startIcon={<AddIcon />}
             sx={{
-              bgcolor: '#6366F1',
-              '&:hover': { bgcolor: '#4F46E5' },
+              bgcolor: '#FD7E14',
+              borderRadius: 0,
+              py: 0.5,
+              px: 1.5,
+              fontSize: '0.8rem',
+              '&:hover': { bgcolor: '#E56D0F' },
               textTransform: 'none'
             }}
           >
@@ -293,7 +300,7 @@ const TrainerStudents = () => {
       </Box>
 
       {/* Filters and Search Bar */}
-      <Paper sx={{ p: 2, mb: 3, borderRadius: '12px' }}>
+      <Paper sx={{ p: 2, mb: 3, borderRadius: 0 }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={4}>
             <TextField
@@ -356,7 +363,7 @@ const TrainerStudents = () => {
       </Paper>
 
       {/* Students Table */}
-      <Paper sx={{ borderRadius: '12px' }}>
+      <Paper sx={{ borderRadius: 0 }}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -473,11 +480,12 @@ const TrainerStudents = () => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setCertDialogOpen(false)}>Cancel</Button>
+          <Button onClick={() => setCertDialogOpen(false)} size="small">Cancel</Button>
           <Button
             onClick={handleConfirmIssueCertificate}
             variant="contained"
-            sx={{ bgcolor: '#6366F1' }}
+            size="small"
+            sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}
             disabled={issueCertificateMutation.isLoading}
           >
             {issueCertificateMutation.isLoading ? 'Issuing...' : 'Issue Certificate'}

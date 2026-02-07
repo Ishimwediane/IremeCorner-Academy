@@ -65,11 +65,15 @@ const AdminUserDetail = () => {
 
   return (
     <Box>
-      <Button startIcon={<ArrowBack />} onClick={() => navigate(-1)} sx={{ mb: 3 }}>
+      <Button
+        startIcon={<ArrowBack />}
+        onClick={() => navigate(-1)}
+        sx={{ mb: 3, color: '#FD7E14', textTransform: 'none' }}
+      >
         Back to User List
       </Button>
 
-      <Paper sx={{ p: 3, mb: 3 }}>
+      <Paper sx={{ p: 3, mb: 3, borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={2}>
             <Avatar src={user.avatar} sx={{ width: 100, height: 100, fontSize: '3rem' }}>
@@ -86,7 +90,18 @@ const AdminUserDetail = () => {
                   <Chip label={user.isActive ? 'Active' : 'Inactive'} color={user.isActive ? 'success' : 'default'} size="small" />
                 </Box>
               </Box>
-              <Button variant="outlined" startIcon={<Edit />}>
+              <Button
+                variant="outlined"
+                startIcon={<Edit />}
+                size="small"
+                sx={{
+                  borderRadius: 0,
+                  borderColor: '#FD7E14',
+                  color: '#FD7E14',
+                  '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' },
+                  textTransform: 'none'
+                }}
+              >
                 Edit User
               </Button>
             </Box>
@@ -94,7 +109,7 @@ const AdminUserDetail = () => {
         </Grid>
       </Paper>
 
-      <Paper sx={{ p: 3 }}>
+      <Paper sx={{ p: 3, borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
           {isStudent ? 'Enrolled Courses' : 'Created Courses'}
         </Typography>

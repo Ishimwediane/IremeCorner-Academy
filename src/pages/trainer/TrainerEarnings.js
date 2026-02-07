@@ -79,7 +79,7 @@ const TrainerEarnings = () => {
       {/* Statistics Cards */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box>
@@ -149,7 +149,7 @@ const TrainerEarnings = () => {
       </Grid>
 
       {/* Transactions Table */}
-      <Paper sx={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+      <Paper sx={{ borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         <Box sx={{ p: 3, borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
           <Typography variant="h6" sx={{ fontWeight: 600, color: '#202F32' }}>
             Transaction History

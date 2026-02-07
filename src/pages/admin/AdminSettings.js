@@ -66,13 +66,19 @@ const AdminSettings = () => {
   };
 
   return (
-    <Paper sx={{ display: 'flex', minHeight: '70vh' }}>
+    <Paper sx={{ display: 'flex', minHeight: '70vh', borderRadius: 0 }}>
       <Tabs
         orientation="vertical"
         variant="scrollable"
         value={tab}
         onChange={handleTabChange}
-        sx={{ borderRight: 1, borderColor: 'divider', minWidth: 200 }}
+        sx={{
+          borderRight: 1,
+          borderColor: 'divider',
+          minWidth: 200,
+          '& .MuiTabs-indicator': { backgroundColor: '#FD7E14' },
+          '& .Mui-selected': { color: '#FD7E14 !important' }
+        }}
       >
         <Tab icon={<SettingsIcon />} iconPosition="start" label="General" />
         <Tab icon={<PaletteIcon />} iconPosition="start" label="Appearance" />
@@ -136,7 +142,16 @@ const AdminSettings = () => {
         </TabPanel>
 
         <Box sx={{ p: 3, borderTop: 1, borderColor: 'divider', textAlign: 'right' }}>
-          <Button variant="contained" onClick={handleSave}>
+          <Button
+            variant="contained"
+            onClick={handleSave}
+            sx={{
+              bgcolor: '#FD7E14',
+              borderRadius: 0,
+              textTransform: 'none',
+              '&:hover': { bgcolor: '#E56D0F' }
+            }}
+          >
             Save Settings
           </Button>
         </Box>

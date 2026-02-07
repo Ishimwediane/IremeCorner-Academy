@@ -23,7 +23,7 @@ import MyLearning from './pages/learnerdashboard/MyLearning';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminCourses from './pages/admin/AdminCourses';
 import CreateCourse from './pages/CreateCourse';
-import TrainerDashboard from './pages/TrainerDashboard';
+import TrainerDashboard from './pages/trainer/TrainerDashboard';
 import AdminLayout from './pages/admin/AdminLayout'; // Corrected Path
 import TrainerCourses from './pages/trainer/TrainerCourses';
 import TrainerStudents from './pages/trainer/TrainerStudents';
@@ -49,6 +49,10 @@ import CertificateView from './pages/learnerdashboard/CertificateView';
 import MyCertificates from './pages/learnerdashboard/MyCertificates';
 import MyQuizzes from './pages/learnerdashboard/MyQuizzes';
 import MyAssignments from './pages/learnerdashboard/MyAssignments';
+import LearnerSettings from './pages/learnerdashboard/LearnerSettings';
+import LearnerGroups from './pages/learnerdashboard/LearnerGroups';
+
+
 
 
 import AllUsers from './pages/admin/AllUsers';
@@ -106,6 +110,8 @@ function AppContent() {
                     <Route path="quiz/:quizId" element={<QuizPage />} />
                     <Route path="assignment/:assignmentId" element={<AssignmentPage />} />
                     <Route path="certificates/:id" element={<CertificateView />} />
+                    <Route path="settings" element={<LearnerSettings />} />
+                    <Route path="groups" element={<LearnerGroups />} />
                   </Routes>
                 </LearnerLayout>
               </PrivateRoute>

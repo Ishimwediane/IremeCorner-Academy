@@ -23,6 +23,7 @@ import {
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
+  Edit as EditIcon,
   FilterList as FilterIcon,
 } from '@mui/icons-material';
 import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
@@ -34,14 +35,14 @@ const dayCols = 13; // show ~2 weeks
 
 const PlannerHeader = ({ startDate, setStartDate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => {
   return (
-    <Paper sx={{ p: 2, borderRadius: '16px', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Button startIcon={<FilterIcon />} sx={{ textTransform: 'none' }}>Filter Settings</Button>
+    <Paper sx={{ p: 1.5, borderRadius: 0, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>Assignment Planner</Typography>
       <Select
         size="small"
         value={selectedCourse}
         onChange={(e) => setSelectedCourse(e.target.value)}
         displayEmpty
-        sx={{ ml: 1, minWidth: 200, bgcolor: 'rgba(0,0,0,0.02)', borderRadius: '10px' }}
+        sx={{ ml: 1, minWidth: 200, fontSize: '0.8rem' }}
       >
         <MenuItem value="all">All Courses</MenuItem>
         {courseOptions.map((c) => (
@@ -49,7 +50,7 @@ const PlannerHeader = ({ startDate, setStartDate, courseOptions, selectedCourse,
         ))}
       </Select>
       <Box sx={{ flex: 1 }} />
-      <ButtonGroup size="small" sx={{ mr: 1 }}>
+      <ButtonGroup size="small" sx={{ mr: 1, '& .MuiButton-root': { borderRadius: 0, py: 0.25, px: 1, fontSize: '0.75rem' } }}>
         <Button onClick={() => setStartDate(viewMode === 'month' ? subMonths(startDate, 1) : addDays(startDate, viewMode === 'week' ? -7 : -1))}>Prev</Button>
         <Button onClick={() => setStartDate(new Date())}>Today</Button>
         <Button onClick={() => setStartDate(viewMode === 'month' ? addMonths(startDate, 1) : addDays(startDate, viewMode === 'week' ? 7 : 1))}>Next</Button>
@@ -57,7 +58,7 @@ const PlannerHeader = ({ startDate, setStartDate, courseOptions, selectedCourse,
       <Typography variant="body2" sx={{ color: '#202F32', fontWeight: 600, mr: 1 }}>
         {viewMode === 'month' ? format(startDate, 'MMMM yyyy') : `${format(days[0], 'MMM dd')} – ${format(days[days.length - 1], 'MMM dd')}`}
       </Typography>
-      <ButtonGroup size="small">
+      <ButtonGroup size="small" sx={{ '& .MuiButton-root': { borderRadius: 0, py: 0.25, px: 1, fontSize: '0.75rem' } }}>
         <Button variant={viewMode === 'day' ? 'contained' : 'outlined'} onClick={() => setViewMode('day')}>Day</Button>
         <Button variant={viewMode === 'week' ? 'contained' : 'outlined'} onClick={() => setViewMode('week')}>Week</Button>
         <Button variant={viewMode === 'month' ? 'contained' : 'outlined'} onClick={() => setViewMode('month')}>Month</Button>
@@ -68,66 +69,77 @@ const PlannerHeader = ({ startDate, setStartDate, courseOptions, selectedCourse,
 
 const ScheduleGrid = ({ days, items, viewMode }) => {
   return (
-    <Paper sx={{ p: 2, borderRadius: '16px' }}>
-      <Grid container spacing={0}>
-        <Grid item xs={12}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: `200px repeat(${days.length}, 1fr)`, gap: 0.5 }}>
-            {/* Header row */}
-            <Box />
-            {days.map((d) => (
-              <Box key={d.toISOString()} sx={{ textAlign: 'center', py: 1, color: '#202F32' }}>
-                <Typography variant="caption" sx={{ fontWeight: 600 }}>
-                  {viewMode === 'month' ? format(d, 'dd') : format(d, 'dd EEE')}
-                </Typography>
+    <Paper sx={{ p: 1.5, borderRadius: 0, overflowX: 'auto' }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: `200px repeat(${days.length}, 1fr)`, gap: 0.5, minWidth: '800px' }}>
+        {/* Header row */}
+        <Box />
+        {days.map((d) => (
+          <Box key={d.toISOString()} sx={{ textAlign: 'center', py: 1, color: '#202F32' }}>
+            <Typography variant="caption" sx={{ fontWeight: 600 }}>
+              {viewMode === 'month' ? format(d, 'dd') : format(d, 'dd EEE')}
+            </Typography>
+          </Box>
+        ))}
+        {/* Rows */}
+        {items.map((row) => (
+          <>
+            <Box key={`${row.id}-label`} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 1 }}>
+              <Chip size="small" label={row.courseTag} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766' }} />
+              <Typography variant="body2" sx={{ color: '#202F32', fontWeight: 600 }}>{row.title}</Typography>
+            </Box>
+            {days.map((d, idx) => (
+              <Box key={`${row.id}-${idx}`} sx={{ position: 'relative', minHeight: 56, bgcolor: idx % 2 === 0 ? 'rgba(0,0,0,0.02)' : 'transparent', borderRadius: 1 }}>
+                {format(d, 'yyyy-MM-dd') === format(row.start, 'yyyy-MM-dd') && (
+                  <Box sx={{
+                    position: 'absolute',
+                    left: 4,
+                    right: `${(row.span - 1) * -100}%`,
+                    top: 8,
+                    height: 40,
+                    bgcolor: row.color,
+                    color: '#202F32',
+                    borderRadius: 2,
+                    border: `2px solid ${row.border}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    px: 1.5,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                  }}>
+                    <Typography variant="caption" sx={{ fontWeight: 700 }}>{row.name}</Typography>
+                    <Box sx={{ ml: 'auto', display: 'flex', gap: 0.5 }}>
+                      <Chip label={row.status} color="default" size="small" sx={{ bgcolor: 'white' }} />
+                    </Box>
+                  </Box>
+                )}
               </Box>
             ))}
-            {/* Rows */}
-            {items.map((row) => (
-              <>
-                <Box key={`${row.id}-label`} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 1 }}>
-                  <Chip size="small" label={row.courseTag} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766' }} />
-                  <Typography variant="body2" sx={{ color: '#202F32', fontWeight: 600 }}>{row.title}</Typography>
-                </Box>
-                {days.map((d, idx) => (
-                  <Box key={`${row.id}-${idx}`} sx={{ position: 'relative', minHeight: 56, bgcolor: idx % 2 === 0 ? 'rgba(0,0,0,0.02)' : 'transparent', borderRadius: 1 }}>
-                    {format(d, 'yyyy-MM-dd') === format(row.start, 'yyyy-MM-dd') && (
-                      <Box sx={{
-                        position: 'absolute',
-                        left: 4,
-                        right: `${(row.span - 1) * -100}%`,
-                        top: 8,
-                        height: 40,
-                        bgcolor: row.color,
-                        color: '#202F32',
-                        borderRadius: 2,
-                        border: `2px solid ${row.border}`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        px: 1.5,
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-                      }}>
-                        <Typography variant="caption" sx={{ fontWeight: 700 }}>{row.name}</Typography>
-                        <Box sx={{ ml: 'auto', display: 'flex', gap: 0.5 }}>
-                          <Chip label={row.status} color="default" size="small" sx={{ bgcolor: 'white' }} />
-                        </Box>
-                      </Box>
-                    )}
-                  </Box>
-                ))}
-              </>
-            ))}
-          </Box>
-        </Grid>
-      </Grid>
+          </>
+        ))}
+      </Box>
     </Paper>
   );
 };
 
-const CreateAssignmentDialog = ({ open, onClose, onSaved, courses = [], defaultCourseId }) => {
+const AssignmentDialog = ({ open, onClose, onSaved, courses = [], defaultCourseId, editMode = false, initialData = null }) => {
   const [form, setForm] = useState({ title: '', description: '', course: defaultCourseId || '', dueDate: '' });
+
+  // Update form when initialData changes (for edit mode)
+  useEffect(() => {
+    if (editMode && initialData) {
+      setForm({
+        title: initialData.title || '',
+        description: initialData.description || '',
+        course: initialData.course?._id || initialData.course || defaultCourseId || '',
+        dueDate: initialData.dueDate ? format(new Date(initialData.dueDate), 'yyyy-MM-dd') : '',
+      });
+    } else {
+      setForm({ title: '', description: '', course: defaultCourseId || '', dueDate: '' });
+    }
+  }, [editMode, initialData, defaultCourseId, open]);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Create Assignment</DialogTitle>
+      <DialogTitle>{editMode ? 'Edit Assignment' : 'Create Assignment'}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
           <Grid item xs={12}>
@@ -147,8 +159,8 @@ const CreateAssignmentDialog = ({ open, onClose, onSaved, courses = [], defaultC
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => onSaved(form)} variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Save</Button>
+        <Button onClick={onClose} size="small">Cancel</Button>
+        <Button onClick={() => onSaved(form)} variant="contained" size="small" sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}>Save</Button>
       </DialogActions>
     </Dialog>
   );
@@ -158,7 +170,7 @@ const SummaryCards = ({ stats }) => (
   <Grid container spacing={3} sx={{ mt: 3 }}>
     {stats.map((s) => (
       <Grid item xs={12} sm={6} md={4} key={s.title}>
-        <Card>
+        <Card sx={{ borderRadius: 0 }}>
           <CardContent>
             <Typography variant="caption" sx={{ color: s.color, fontWeight: 700 }}>
               {s.title.toUpperCase()}
@@ -174,6 +186,7 @@ const SummaryCards = ({ stats }) => (
 const TrainerAssignments = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [openCreate, setOpenCreate] = useState(false);
+  const [editingAssignment, setEditingAssignment] = useState(null);
   const [tab, setTab] = useState(0);
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
@@ -186,7 +199,7 @@ const TrainerAssignments = () => {
   useEffect(() => {
     const userId = user?._id || user?.id;
     if (!userId) return;
-    api.get(`/courses?trainer=${userId}`).then((res) => setCourses(res.data?.data || [])).catch(() => {});
+    api.get(`/courses?trainer=${userId}`).then((res) => setCourses(res.data?.data || [])).catch(() => { });
   }, [user]);
 
   // Fetch assignments for selected course
@@ -264,17 +277,17 @@ const TrainerAssignments = () => {
       )}
 
       {tab === 1 && (
-        <Paper sx={{ p: 3, borderRadius: '16px' }}>
+        <Paper sx={{ p: 3, borderRadius: 0 }}>
           <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 1 }}>Submissions</Typography>
           <Typography variant="body2" sx={{ color: '#666' }}>No submissions yet. This section will list submissions per assignment with grading status once wired to the API.</Typography>
         </Paper>
       )}
 
       {tab === 2 && (
-        <Paper sx={{ p: 3, borderRadius: '16px' }}>
+        <Paper sx={{ p: 3, borderRadius: 0 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>All Assignments</Typography>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpenCreate(true)} sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Create Assignment</Button>
+            <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={() => setOpenCreate(true)} sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}>Create Assignment</Button>
           </Box>
           {assignments.length === 0 ? (
             <Typography variant="body2" sx={{ color: '#666' }}>No assignments found.</Typography>
@@ -282,9 +295,18 @@ const TrainerAssignments = () => {
             <Grid container spacing={2}>
               {assignments.map((a) => (
                 <Grid key={a._id} item xs={12} md={6} lg={4}>
-                  <Card>
+                  <Card sx={{ borderRadius: 0 }}>
                     <CardContent>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32' }}>{a.title}</Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32' }}>{a.title}</Typography>
+                        <IconButton
+                          size="small"
+                          onClick={() => setEditingAssignment(a)}
+                          sx={{ color: '#FD7E14', '&:hover': { bgcolor: 'rgba(253, 126, 20, 0.1)' } }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
                       <Typography variant="body2" sx={{ color: '#666', mb: 0.5 }}>{a._course?.title}</Typography>
                       <Chip size="small" label={a.status || 'DUE'} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766', mr: 1 }} />
                       {a.dueDate && (
@@ -299,11 +321,13 @@ const TrainerAssignments = () => {
         </Paper>
       )}
 
-      <CreateAssignmentDialog
+      {/* Create Assignment Dialog */}
+      <AssignmentDialog
         open={openCreate}
         onClose={() => setOpenCreate(false)}
         defaultCourseId={selectedCourse !== 'all' ? selectedCourse : ''}
         courses={courses}
+        editMode={false}
         onSaved={async (form) => {
           try {
             await api.post('/assignments', {
@@ -316,6 +340,30 @@ const TrainerAssignments = () => {
             setRefreshKey((k) => k + 1);
           } catch (e) {
             setOpenCreate(false);
+          }
+        }}
+      />
+
+      {/* Edit Assignment Dialog */}
+      <AssignmentDialog
+        open={!!editingAssignment}
+        onClose={() => setEditingAssignment(null)}
+        defaultCourseId={selectedCourse !== 'all' ? selectedCourse : ''}
+        courses={courses}
+        editMode={true}
+        initialData={editingAssignment}
+        onSaved={async (form) => {
+          try {
+            await api.put(`/assignments/${editingAssignment._id}`, {
+              title: form.title,
+              description: form.description,
+              course: form.course,
+              dueDate: form.dueDate,
+            });
+            setEditingAssignment(null);
+            setRefreshKey((k) => k + 1);
+          } catch (e) {
+            setEditingAssignment(null);
           }
         }}
       />

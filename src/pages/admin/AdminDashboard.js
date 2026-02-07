@@ -63,7 +63,7 @@ const AdminDashboard = () => {
           <Grid container spacing={3}>
             {/* Statistics Cards */}
             <Grid item xs={12} sm={6}>
-              <Card sx={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+              <Card sx={{ borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Box sx={{ bgcolor: 'rgba(156,39,176,0.1)', borderRadius: '12px', p: 1.5, mr: 2 }}>
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
               </Card>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Card sx={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+              <Card sx={{ borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Box sx={{ bgcolor: 'rgba(76,175,80,0.1)', borderRadius: '12px', p: 1.5, mr: 2 }}>
@@ -93,7 +93,7 @@ const AdminDashboard = () => {
               </Card>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Card sx={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+              <Card sx={{ borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Box sx={{ bgcolor: 'rgba(233,30,99,0.1)', borderRadius: '12px', p: 1.5, mr: 2 }}>
@@ -108,11 +108,11 @@ const AdminDashboard = () => {
               </Card>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Card sx={{ borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+              <Card sx={{ borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Box sx={{ bgcolor: 'rgba(195,151,102,0.1)', borderRadius: '12px', p: 1.5, mr: 2 }}>
-                      <Assignment sx={{ color: '#C39766', fontSize: 28 }} />
+                    <Box sx={{ bgcolor: 'rgba(253, 126, 20, 0.1)', borderRadius: '12px', p: 1.5, mr: 2 }}>
+                      <Assignment sx={{ color: '#FD7E14', fontSize: 28 }} />
                     </Box>
                     <Box>
                       <Typography variant="h4" sx={{ fontWeight: 700, color: '#202F32' }}>{stats.certificates?.total || 0}</Typography>
@@ -125,7 +125,7 @@ const AdminDashboard = () => {
 
             {/* Recent Courses for Approval */}
             <Grid item xs={12}>
-              <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+              <Paper sx={{ p: 3, borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <PendingIcon sx={{ mr: 1, color: 'secondary.main' }} />
                   <Typography variant="h6" sx={{ fontWeight: 600, color: '#202F32' }}>
@@ -154,6 +154,15 @@ const AdminDashboard = () => {
                             <Button
                               size="small"
                               variant="contained"
+                              sx={{
+                                bgcolor: '#FD7E14',
+                                borderRadius: 0,
+                                py: 0.5,
+                                px: 1.5,
+                                fontSize: '0.8rem',
+                                '&:hover': { bgcolor: '#E56D0F' },
+                                textTransform: 'none',
+                              }}
                               onClick={() => {
                                 if (window.confirm('Are you sure you want to approve this course?')) {
                                   api.put(`/courses/${course._id}/approve`, { status: 'approved' })
@@ -177,14 +186,14 @@ const AdminDashboard = () => {
               </Paper>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid >
 
         {/* Right Sidebar */}
-        <Grid item xs={12} lg={4}>
+        < Grid item xs={12} lg={4} >
           <Grid container spacing={3}>
             {/* Popular Courses */}
             <Grid item xs={12}>
-              <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+              <Paper sx={{ p: 3, borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <NewReleasesIcon sx={{ mr: 1, color: 'primary.main' }} />
                   <Typography variant="h6" sx={{ fontWeight: 600, color: '#202F32' }}>
@@ -219,8 +228,8 @@ const AdminDashboard = () => {
               </Paper>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </Grid >
+      </Grid >
     </>
   );
 };

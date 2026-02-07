@@ -155,7 +155,7 @@ const AdminCourses = () => {
                 </Alert>
             )}
 
-            <Paper sx={{ mt: 3 }}>
+            <Paper sx={{ mt: 3, borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
                 <Tabs value={currentTab} onChange={(e, newValue) => setCurrentTab(newValue)}>
                     {tabs.map((tab, index) => (
                         <Tab
@@ -286,18 +286,39 @@ const AdminCourses = () => {
                 <DialogActions>
                     {selectedCourse?.status === 'pending' && (
                         <>
-                            <Button onClick={() => handleApprove(selectedCourse._id)} color="success" variant="contained">
+                            <Button
+                                onClick={() => handleApprove(selectedCourse._id)}
+                                variant="contained"
+                                size="small"
+                                sx={{
+                                    bgcolor: '#FD7E14',
+                                    borderRadius: 0,
+                                    textTransform: 'none',
+                                    '&:hover': { bgcolor: '#E56D0F' }
+                                }}
+                            >
                                 Approve
                             </Button>
-                            <Button onClick={() => {
-                                setViewDialogOpen(false);
-                                handleOpenRejectDialog(selectedCourse);
-                            }} color="error" variant="contained">
+                            <Button
+                                onClick={() => {
+                                    setViewDialogOpen(false);
+                                    handleOpenRejectDialog(selectedCourse);
+                                }}
+                                variant="contained"
+                                color="error"
+                                size="small"
+                                sx={{ borderRadius: 0, textTransform: 'none' }}
+                            >
                                 Reject
                             </Button>
                         </>
                     )}
-                    <Button onClick={() => setViewDialogOpen(false)}>Close</Button>
+                    <Button
+                        onClick={() => setViewDialogOpen(false)}
+                        sx={{ color: '#666', borderRadius: 0, textTransform: 'none' }}
+                    >
+                        Close
+                    </Button>
                 </DialogActions>
             </Dialog>
 
@@ -319,8 +340,19 @@ const AdminCourses = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setRejectDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={handleReject} color="error" variant="contained">
+                    <Button
+                        onClick={() => setRejectDialogOpen(false)}
+                        sx={{ color: '#666', borderRadius: 0, textTransform: 'none' }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={handleReject}
+                        color="error"
+                        variant="contained"
+                        size="small"
+                        sx={{ borderRadius: 0, textTransform: 'none' }}
+                    >
                         Reject Course
                     </Button>
                 </DialogActions>

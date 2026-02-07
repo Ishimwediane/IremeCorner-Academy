@@ -84,7 +84,7 @@ const AllCourses = () => {
 
   return (
     <Box sx={{ p: 3, width: '100%' }}>
-      <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+      <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
           <TextField
             label="Search Courses"
@@ -94,7 +94,17 @@ const AllCourses = () => {
             size="small"
             sx={{ minWidth: '300px' }}
           />
-          <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/create-course')}>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => navigate('/create-course')}
+            sx={{
+              bgcolor: '#FD7E14',
+              borderRadius: 0,
+              textTransform: 'none',
+              '&:hover': { bgcolor: '#E56D0F' }
+            }}
+          >
             Create Course
           </Button>
         </Box>

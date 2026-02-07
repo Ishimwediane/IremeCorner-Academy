@@ -86,7 +86,7 @@ const CourseCard = ({ course }) => {
           fullWidth
           variant="contained"
           component={Link}
-          to={`/courses/${course._id}`}
+          to={`/learner/course/${course._id}`}
           sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' }, fontWeight: 600, borderRadius: '8px' }}
         >
           Start Learning

@@ -134,22 +134,22 @@ const CreateQuizDialog = ({ open, onClose, onSaved, courseId, course }) => {
             </Grid>
           ))}
 
-          <Grid item xs={12}><Button onClick={addQuestion} startIcon={<AddIcon />}>Add Another Question</Button></Grid>
+          <Grid item xs={12}><Button onClick={addQuestion} size="small" startIcon={<AddIcon />}>Add Another Question</Button></Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => onSaved(form)} variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Save</Button>
+        <Button onClick={onClose} size="small">Cancel</Button>
+        <Button onClick={() => onSaved(form)} variant="contained" size="small" sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}>Save</Button>
       </DialogActions>
     </Dialog>
   );
 };
 
 const PlannerHeader = ({ startDate, setStartDate, viewMode, setViewMode, days }) => (
-  <Paper sx={{ p: 2, borderRadius: '16px', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Quiz Planner</Typography>
+  <Paper sx={{ p: 1.5, borderRadius: 0, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>Quiz Planner</Typography>
     <Box sx={{ flex: 1 }} />
-    <ButtonGroup size="small" sx={{ mr: 1 }}>
+    <ButtonGroup size="small" sx={{ mr: 1, '& .MuiButton-root': { borderRadius: 0, py: 0.25, px: 1, fontSize: '0.75rem' } }}>
       <Button onClick={() => setStartDate(viewMode === 'month' ? subMonths(startDate, 1) : addDays(startDate, viewMode === 'week' ? -7 : -1))}>Prev</Button>
       <Button onClick={() => setStartDate(new Date())}>Today</Button>
       <Button onClick={() => setStartDate(viewMode === 'month' ? addMonths(startDate, 1) : addDays(startDate, viewMode === 'week' ? 7 : 1))}>Next</Button>
@@ -157,7 +157,7 @@ const PlannerHeader = ({ startDate, setStartDate, viewMode, setViewMode, days })
     <Typography variant="body2" sx={{ color: '#202F32', fontWeight: 600, mr: 1 }}>
       {viewMode === 'month' ? format(startDate, 'MMMM yyyy') : `${format(days[0], 'MMM dd')} – ${format(days[days.length - 1], 'MMM dd')}`}
     </Typography>
-    <ButtonGroup size="small">
+    <ButtonGroup size="small" sx={{ '& .MuiButton-root': { borderRadius: 0, py: 0.25, px: 1, fontSize: '0.75rem' } }}>
       <Button variant={viewMode === 'day' ? 'contained' : 'outlined'} onClick={() => setViewMode('day')}>Day</Button>
       <Button variant={viewMode === 'week' ? 'contained' : 'outlined'} onClick={() => setViewMode('week')}>Week</Button>
       <Button variant={viewMode === 'month' ? 'contained' : 'outlined'} onClick={() => setViewMode('month')}>Month</Button>
@@ -166,7 +166,7 @@ const PlannerHeader = ({ startDate, setStartDate, viewMode, setViewMode, days })
 );
 
 const ScheduleGrid = ({ days, items, viewMode }) => (
-  <Paper sx={{ p: 2, borderRadius: '16px', overflowX: 'auto' }}>
+  <Paper sx={{ p: 1.5, borderRadius: 0, overflowX: 'auto' }}>
     <Box sx={{ display: 'grid', gridTemplateColumns: `200px repeat(${days.length}, 1fr)`, gap: 0.5, minWidth: '800px' }}>
       <Box />
       {days.map((d) => (
@@ -260,7 +260,7 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
         <Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32' }}>All Quizzes</Typography>
-            <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpenCreateQuiz(true)} sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Create Quiz</Button>
+            <Button variant="contained" size="small" startIcon={<AddIcon />} onClick={() => setOpenCreateQuiz(true)} sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}>Create Quiz</Button>
           </Box>
           {quizzes.length === 0 ? (
             <Typography variant="body2" sx={{ color: '#666' }}>No quizzes found for this course.</Typography>
@@ -268,8 +268,8 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
             <Grid container spacing={2}>
               {quizzes.map((q) => (
                 <Grid key={q._id} item xs={12} md={6} lg={4}>
-                  <Card>
-                    <CardContent>
+                  <Card sx={{ borderRadius: 0 }}>
+                    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                       <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32' }}>{q.title}</Typography>
                       <Box sx={{ mb: 2 }}>
                         <Chip size="small" label={`${q.questions?.length || 0} Questions`} sx={{ bgcolor: 'rgba(195,151,102,0.15)', color: '#C39766', mr: 1 }} />
@@ -280,6 +280,7 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
                         variant="outlined"
                         size="small"
                         fullWidth
+                        sx={{ borderRadius: 0 }}
                         onClick={() => setSelectedQuiz(q)}
                       >
                         View Results
@@ -305,7 +306,7 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
                 if (attempts.length === 0) return null;
 
                 return (
-                  <Paper key={quiz._id} sx={{ p: 3, mb: 3, borderRadius: 2 }}>
+                  <Paper key={quiz._id} sx={{ p: 2, mb: 2, borderRadius: 0 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                       <Box>
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>{quiz.title}</Typography>
@@ -316,6 +317,7 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
                       <Button
                         variant="outlined"
                         size="small"
+                        sx={{ borderRadius: 0 }}
                         onClick={() => setSelectedQuiz(quiz)}
                       >
                         View Details
@@ -385,7 +387,7 @@ const QuizTab = ({ courseId, quizzes, course, fetchData }) => {
                 );
               })}
               {quizzes.every(q => (q.attempts || []).length === 0) && (
-                <Paper sx={{ p: 8, textAlign: 'center' }}>
+                <Paper sx={{ p: 6, textAlign: 'center', borderRadius: 0 }}>
                   <QuizIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
                   <Typography variant="h6" color="text.secondary">
                     No quiz attempts yet

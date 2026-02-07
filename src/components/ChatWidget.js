@@ -44,7 +44,7 @@ const ChatWidget = () => {
       setMessages([
         {
           type: 'bot',
-          content: isAuthenticated 
+          content: isAuthenticated
             ? 'Hello! I\'m Nuru, your AI learning assistant. How can I help you today?'
             : 'Hello! I\'m Nuru, your AI learning assistant. Please sign in to start chatting with me!',
         },
@@ -136,7 +136,7 @@ const ChatWidget = () => {
           {/* Header */}
           <Box
             sx={{
-              bgcolor: '#C39766',
+              bgcolor: '#FD7E14',
               color: 'white',
               p: 2,
               display: 'flex',
@@ -197,7 +197,7 @@ const ChatWidget = () => {
                 {msg.type === 'bot' && (
                   <Avatar
                     sx={{
-                      bgcolor: '#C39766',
+                      bgcolor: '#FD7E14',
                       width: 32,
                       height: 32,
                       mt: 0.5,
@@ -211,13 +211,13 @@ const ChatWidget = () => {
                   sx={{
                     p: 1.5,
                     maxWidth: '75%',
-                    bgcolor: msg.type === 'user' ? '#C39766' : 'white',
+                    bgcolor: msg.type === 'user' ? '#FD7E14' : 'white',
                     color: msg.type === 'user' ? 'white' : '#202F32',
-                    borderRadius: msg.type === 'user' 
-                      ? '16px 16px 4px 16px' 
+                    borderRadius: msg.type === 'user'
+                      ? '16px 16px 4px 16px'
                       : '16px 16px 16px 4px',
-                    boxShadow: msg.type === 'user' 
-                      ? 'none' 
+                    boxShadow: msg.type === 'user'
+                      ? 'none'
                       : '0 1px 2px rgba(0,0,0,0.1)',
                   }}
                 >
@@ -258,7 +258,7 @@ const ChatWidget = () => {
               >
                 <Avatar
                   sx={{
-                    bgcolor: '#C39766',
+                    bgcolor: '#FD7E14',
                     width: 32,
                     height: 32,
                     mt: 0.5,
@@ -314,8 +314,8 @@ const ChatWidget = () => {
                   fullWidth
                   startIcon={<LoginIcon />}
                   sx={{
-                    bgcolor: '#C39766',
-                    '&:hover': { bgcolor: '#A67A52' },
+                    bgcolor: '#FD7E14',
+                    '&:hover': { bgcolor: '#E56D0F' },
                     borderRadius: '24px',
                   }}
                   onClick={() => setOpen(false)}
@@ -328,11 +328,11 @@ const ChatWidget = () => {
                   variant="outlined"
                   fullWidth
                   sx={{
-                    borderColor: '#C39766',
-                    color: '#C39766',
+                    borderColor: '#FD7E14',
+                    color: '#FD7E14',
                     '&:hover': {
-                      borderColor: '#A67A52',
-                      bgcolor: 'rgba(195,151,102,0.05)',
+                      borderColor: '#E56D0F',
+                      bgcolor: 'rgba(253, 126, 20, 0.05)',
                     },
                     borderRadius: '24px',
                   }}
@@ -371,10 +371,10 @@ const ChatWidget = () => {
                       borderColor: 'transparent',
                     },
                     '&:hover fieldset': {
-                      borderColor: '#C39766',
+                      borderColor: '#FD7E14',
                     },
                     '&.Mui-focused fieldset': {
-                      borderColor: '#C39766',
+                      borderColor: '#FD7E14',
                     },
                   },
                 }}
@@ -383,10 +383,10 @@ const ChatWidget = () => {
                 type="submit"
                 disabled={!message.trim() || chatMutation.isLoading}
                 sx={{
-                  bgcolor: '#C39766',
+                  bgcolor: '#FD7E14',
                   color: 'white',
                   '&:hover': {
-                    bgcolor: '#A67A52',
+                    bgcolor: '#E56D0F',
                   },
                   '&:disabled': {
                     bgcolor: '#e0e0e0',
@@ -410,15 +410,15 @@ const ChatWidget = () => {
           position: 'fixed',
           bottom: 24,
           right: 24,
-          bgcolor: '#C39766',
+          bgcolor: '#FD7E14',
           color: 'white',
           zIndex: 1300,
           width: 60,
           height: 60,
-          boxShadow: '0 4px 12px rgba(195,151,102,0.4)',
+          boxShadow: '0 4px 12px rgba(253, 126, 20, 0.4)',
           '&:hover': {
-            bgcolor: '#A67A52',
-            boxShadow: '0 6px 16px rgba(195,151,102,0.5)',
+            bgcolor: '#E56D0F',
+            boxShadow: '0 6px 16px rgba(253, 126, 20, 0.5)',
             transform: 'scale(1.05)',
           },
           transition: 'all 0.3s ease',

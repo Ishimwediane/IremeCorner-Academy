@@ -120,12 +120,12 @@ const Course = () => {
     const courseRating = getRatingCategory(course);
     const matchesRating = filters.ratings.length === 0 || (courseRating && filters.ratings.includes(courseRating));
     const matchesFormat = filters.formats.length === 0 || (course.format && filters.formats.includes(course.format));
-    const matchesCertification = filters.certifications.length === 0 || 
+    const matchesCertification = filters.certifications.length === 0 ||
       (filters.certifications.includes('With Certificate') && course.certificate) ||
       (filters.certifications.includes('No Certificate') && !course.certificate);
-    
-    return matchesCategory && matchesLevel && matchesLanguage && matchesPrice && 
-           matchesDuration && matchesRating && matchesFormat && matchesCertification;
+
+    return matchesCategory && matchesLevel && matchesLanguage && matchesPrice &&
+      matchesDuration && matchesRating && matchesFormat && matchesCertification;
   });
 
   // Calculate counts for each category, level, and language
@@ -254,10 +254,10 @@ const Course = () => {
           {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 ||
             filters.prices.length > 0 || filters.durations.length > 0 || filters.ratings.length > 0 ||
             filters.formats.length > 0 || filters.certifications.length > 0) && (
-            <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', fontWeight: 400, ml: 1 }}>
-              (of {totalCourses})
-            </Box>
-          )}
+              <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', fontWeight: 400, ml: 1 }}>
+                (of {totalCourses})
+              </Box>
+            )}
         </Typography>
       </Box>
 
@@ -677,36 +677,36 @@ const Course = () => {
               </Box>
 
               {/* Clear Button */}
-              {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 || 
-                filters.prices.length > 0 || filters.durations.length > 0 || filters.ratings.length > 0 || 
+              {(filters.categories.length > 0 || filters.levels.length > 0 || filters.languages.length > 0 ||
+                filters.prices.length > 0 || filters.durations.length > 0 || filters.ratings.length > 0 ||
                 filters.formats.length > 0 || filters.certifications.length > 0 || filters.search) && (
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => setFilters({ 
-                    search: '', 
-                    categories: [], 
-                    levels: [], 
-                    languages: [],
-                    prices: [],
-                    durations: [],
-                    ratings: [],
-                    formats: [],
-                    certifications: [],
-                  })}
-                  sx={{
-                    borderColor: '#202F32',
-                    color: '#202F32',
-                    mt: 2,
-                    '&:hover': {
-                      borderColor: '#FD7E14',
-                      bgcolor: 'rgba(195,151,102,0.05)',
-                    },
-                  }}
-                >
-                  Clear Filters
-                </Button>
-              )}
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => setFilters({
+                      search: '',
+                      categories: [],
+                      levels: [],
+                      languages: [],
+                      prices: [],
+                      durations: [],
+                      ratings: [],
+                      formats: [],
+                      certifications: [],
+                    })}
+                    sx={{
+                      borderColor: '#202F32',
+                      color: '#202F32',
+                      mt: 2,
+                      '&:hover': {
+                        borderColor: '#FD7E14',
+                        bgcolor: 'rgba(195,151,102,0.05)',
+                      },
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
             </Stack>
           </Paper>
         </Grid>
@@ -833,7 +833,7 @@ const Course = () => {
                         fullWidth
                         variant="contained"
                         component={Link}
-                        to={`/courses/${course._id}`}
+                        to={`/learner/course/${course._id}`}
                         sx={{
                           bgcolor: '#FD7E14',
                           '&:hover': { bgcolor: '#E56D0F' },

@@ -39,10 +39,9 @@ const AdminLayout = ({ children, title = 'Admin Dashboard' }) => {
       <Box
         sx={{
           flex: 1,
-          ml: { xs: 0, md: sidebarCollapsed ? '80px' : '280px' },
-          width: { xs: '100%', md: sidebarCollapsed ? 'calc(100% - 80px)' : 'calc(100% - 280px)' },
           display: 'flex',
           flexDirection: 'column',
+          width: '100%', // Ensure it fits the flex container properly
         }}
       >
         {/* Top Header Bar - Fixed */}
@@ -94,9 +93,9 @@ const AdminLayout = ({ children, title = 'Admin Dashboard' }) => {
               sx={{
                 width: 40,
                 height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
-                color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
+                bgcolor: 'rgba(253, 126, 20, 0.08)',
+                color: '#FD7E14',
+                '&:hover': { bgcolor: 'rgba(253, 126, 20, 0.12)' },
               }}
               title="Notifications"
             >
@@ -106,9 +105,9 @@ const AdminLayout = ({ children, title = 'Admin Dashboard' }) => {
               sx={{
                 width: 40,
                 height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
-                color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
+                bgcolor: 'rgba(253, 126, 20, 0.08)',
+                color: '#FD7E14',
+                '&:hover': { bgcolor: 'rgba(253, 126, 20, 0.12)' },
               }}
               title="Help"
             >
@@ -118,9 +117,9 @@ const AdminLayout = ({ children, title = 'Admin Dashboard' }) => {
               sx={{
                 width: 40,
                 height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
-                color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
+                bgcolor: 'rgba(253, 126, 20, 0.08)',
+                color: '#FD7E14',
+                '&:hover': { bgcolor: 'rgba(253, 126, 20, 0.12)' },
               }}
               title="Settings"
             >
@@ -143,7 +142,7 @@ const AdminLayout = ({ children, title = 'Admin Dashboard' }) => {
           </Container>
         </Box>
       </Box>
-    </Box>
+    </Box >
   );
 };
 

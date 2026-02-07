@@ -5,7 +5,7 @@ import UserTable from './UserTable';
 const AllTrainers = () => {
   return (
     <Box sx={{ p: 3, width: '100%' }}>
-      <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+      <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', borderRadius: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         {/* Filter by role 'trainer' */}
         <UserTable roleFilter="trainer" title="Trainer" />
       </Paper>

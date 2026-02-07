@@ -182,7 +182,16 @@ const UserTable = ({ roleFilter, title }) => {
             }
             label="Show Active Only"
           />
-          <Button variant="contained" startIcon={<Add />}>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            sx={{
+              bgcolor: '#FD7E14',
+              borderRadius: 0,
+              textTransform: 'none',
+              '&:hover': { bgcolor: '#E56D0F' }
+            }}
+          >
             Add {title}
           </Button>
         </Box>

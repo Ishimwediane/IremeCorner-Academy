@@ -22,7 +22,7 @@ import {
 
 const drawTemplate = (ctx, width, height, data, variant) => {
   ctx.clearRect(0, 0, width, height);
-  
+
   const x = 20, y0 = 20, w = width - 40, h = height - 40;
   ctx.textAlign = 'center';
   const centerX = width / 2;
@@ -30,12 +30,12 @@ const drawTemplate = (ctx, width, height, data, variant) => {
   // Background
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, width, height);
-  
+
   // Border
   ctx.strokeStyle = '#2b5cff';
   ctx.lineWidth = 8;
   ctx.strokeRect(x, y0, w, h);
-  
+
   // Inner border
   ctx.strokeStyle = '#2b5cff';
   ctx.lineWidth = 2;
@@ -69,19 +69,19 @@ const drawTemplate = (ctx, width, height, data, variant) => {
   ctx.font = '18px "Times New Roman"';
   const text = data.description || `has successfully completed the course requirements for`;
   ctx.fillText(text, centerX, y0 + 390);
-  
+
   // Course Title
   ctx.fillStyle = '#2b5cff';
   ctx.font = 'bold 28px "Times New Roman"';
   ctx.fillText(data.courseTitle || 'Course Title', centerX, y0 + 440);
 
   // Date and Signature
-  const dateX = x + w/4;
-  const signatureX = x + (w*3)/4;
-  
+  const dateX = x + w / 4;
+  const signatureX = x + (w * 3) / 4;
+
   ctx.fillStyle = '#202F32';
   ctx.font = '16px "Times New Roman"';
-  
+
   ctx.fillText(data.issueDate ? new Date(data.issueDate).toDateString() : 'Date of Issue', dateX, y0 + h - 60);
   ctx.beginPath();
   ctx.moveTo(dateX - 100, y0 + h - 80);
@@ -89,7 +89,7 @@ const drawTemplate = (ctx, width, height, data, variant) => {
   ctx.strokeStyle = '#666';
   ctx.lineWidth = 1;
   ctx.stroke();
-  
+
   if (data.signatureImg) {
     ctx.drawImage(data.signatureImg, signatureX - 80, y0 + h - 140, 160, 60);
   }
@@ -97,7 +97,7 @@ const drawTemplate = (ctx, width, height, data, variant) => {
   ctx.moveTo(signatureX - 100, y0 + h - 80);
   ctx.lineTo(signatureX + 100, y0 + h - 80);
   ctx.stroke();
-  
+
   ctx.fillStyle = '#666';
   ctx.font = '14px "Times New Roman"';
   ctx.fillText('DATE', dateX, y0 + h - 40);
@@ -163,9 +163,9 @@ const TemplateDesigner = ({ course }) => {
           <Grid item xs={12}><TextField fullWidth label="Company Name" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} /></Grid>
           <Grid item xs={12}><TextField fullWidth label="Course Title" value={form.courseTitle} onChange={(e) => setForm({ ...form, courseTitle: e.target.value })} /></Grid>
           <Grid item xs={12}><TextField fullWidth multiline rows={3} label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></Grid>
-          <Grid item xs={12} sm={6}><Button component="label" startIcon={<UploadIcon />} variant="outlined" sx={{ textTransform: 'none', width: '100%' }}>Upload Logo<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setLogoPreview)} /></Button></Grid>
-          <Grid item xs={12} sm={6}><Button component="label" startIcon={<UploadIcon />} variant="outlined" sx={{ textTransform: 'none', width: '100%' }}>Upload Signature<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setSignaturePreview)} /></Button></Grid>
-          <Grid item xs={12}><Button onClick={downloadPNG} variant="contained" startIcon={<DownloadIcon />} sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Download Template</Button></Grid>
+          <Grid item xs={12} sm={6}><Button component="label" size="small" startIcon={<UploadIcon />} variant="outlined" sx={{ textTransform: 'none', width: '100%', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem' }}>Upload Logo<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setLogoPreview)} /></Button></Grid>
+          <Grid item xs={12} sm={6}><Button component="label" size="small" startIcon={<UploadIcon />} variant="outlined" sx={{ textTransform: 'none', width: '100%', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem' }}>Upload Signature<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setSignaturePreview)} /></Button></Grid>
+          <Grid item xs={12}><Button onClick={downloadPNG} variant="contained" size="small" startIcon={<DownloadIcon />} sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}>Download Template</Button></Grid>
         </Grid>
       </Grid>
       <Grid item xs={12} md={7}>

@@ -20,7 +20,7 @@ const TrainerReports = () => {
     <TrainerLayout title="Reports & Analytics">
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Box sx={{ textAlign: 'center', py: 3 }}>
                 <ChartIcon sx={{ fontSize: 60, color: '#C39766', mb: 2 }} />
@@ -32,10 +32,15 @@ const TrainerReports = () => {
                 </Typography>
                 <Button
                   variant="outlined"
+                  size="small"
                   sx={{
-                    borderColor: '#C39766',
-                    color: '#C39766',
-                    '&:hover': { borderColor: '#A67A52', bgcolor: 'rgba(195,151,102,0.05)' },
+                    borderRadius: 0,
+                    borderColor: '#FD7E14',
+                    color: '#FD7E14',
+                    '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' },
+                    py: 0.5,
+                    px: 1.5,
+                    fontSize: '0.8rem'
                   }}
                 >
                   View Report
@@ -45,7 +50,7 @@ const TrainerReports = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Box sx={{ textAlign: 'center', py: 3 }}>
                 <ReportIcon sx={{ fontSize: 60, color: '#2196f3', mb: 2 }} />
@@ -57,10 +62,15 @@ const TrainerReports = () => {
                 </Typography>
                 <Button
                   variant="outlined"
+                  size="small"
                   sx={{
-                    borderColor: '#2196f3',
-                    color: '#2196f3',
-                    '&:hover': { borderColor: '#1976d2', bgcolor: 'rgba(33,150,243,0.05)' },
+                    borderRadius: 0,
+                    borderColor: '#FD7E14',
+                    color: '#FD7E14',
+                    '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' },
+                    py: 0.5,
+                    px: 1.5,
+                    fontSize: '0.8rem'
                   }}
                 >
                   View Report
@@ -70,7 +80,7 @@ const TrainerReports = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Box sx={{ textAlign: 'center', py: 3 }}>
                 <DownloadIcon sx={{ fontSize: 60, color: '#4caf50', mb: 2 }} />
@@ -82,10 +92,15 @@ const TrainerReports = () => {
                 </Typography>
                 <Button
                   variant="outlined"
+                  size="small"
                   sx={{
-                    borderColor: '#4caf50',
-                    color: '#4caf50',
-                    '&:hover': { borderColor: '#388e3c', bgcolor: 'rgba(76,175,80,0.05)' },
+                    borderRadius: 0,
+                    borderColor: '#FD7E14',
+                    color: '#FD7E14',
+                    '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' },
+                    py: 0.5,
+                    px: 1.5,
+                    fontSize: '0.8rem'
                   }}
                 >
                   Export
@@ -96,7 +111,7 @@ const TrainerReports = () => {
         </Grid>
       </Grid>
 
-      <Paper sx={{ mt: 3, p: 3, borderRadius: '16px' }}>
+      <Paper sx={{ mt: 3, p: 3, borderRadius: 0 }}>
         <Typography variant="h6" sx={{ fontWeight: 600, color: '#202F32', mb: 2 }}>
           Analytics Overview
         </Typography>

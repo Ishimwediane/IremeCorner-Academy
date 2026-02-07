@@ -16,49 +16,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      const savedUser = localStorage.getItem('user');
-
-      if (token && savedUser) {
-        try {
-          console.log('Attempting to authenticate with token:', token);
-          // Set user immediately from localStorage to prevent flash
-          const parsedUser = JSON.parse(savedUser);
-          setUser(parsedUser);
-          
-          // Verify token is still valid
-          try {
-            const response = await api.get('/auth/me');
-            console.log('Token verification response:', response);
-            console.log('Token verification successful:', response.data.data);
-            setUser(response.data.data);
-            localStorage.setItem('user', JSON.stringify(response.data.data));
-          } catch (error) {
-            console.error('Token verification failed:', error);
-            // If token is invalid, clear it but don't redirect here
-            // Let the interceptor handle redirect if needed
-            if (error.response?.status === 401) {
-              console.log('Token is invalid, clearing local storage.');
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              setUser(null);
-            } else {
-              console.log('Token verification failed with a non-401 error.');
-            }
-
-          }
-        } catch (error) {
-          // Invalid user data in localStorage
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          setUser(null);
-        }
-      }
-      setLoading(false);
-    };
-
-    checkAuth();
+    // Clear any existing authentication data on app start for security
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    setLoading(false);
   }, []);
 
   const login = async (email, password) => {
@@ -67,11 +29,11 @@ export const AuthProvider = ({ children }) => {
       console.log('Login request data:', { email, password });
       const response = await api.post('/auth/login', { email, password });
       const { user, token } = response.data.data;
-      
+
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       setUser(user);
-      
+
       console.log('Login successful:', { user, token });
 
       return { success: true, user };
@@ -88,11 +50,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.post('/auth/register', userData);
       const { user, token } = response.data.data;
-      
+
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       setUser(user);
-      
+
       return { success: true, user };
     } catch (error) {
       return {

@@ -144,8 +144,9 @@ const CurriculumTab = ({ courseId, lessons, fetchData }) => {
           <Button
             onClick={() => openLessonModal()}
             variant="contained"
+            size="small"
             startIcon={<AddIcon />}
-            sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' }, textTransform: 'none' }}
+            sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' }, textTransform: 'none' }}
           >
             Add Lesson
           </Button>
@@ -158,7 +159,7 @@ const CurriculumTab = ({ courseId, lessons, fetchData }) => {
             </Box>
             <Typography variant="h6" sx={{ fontWeight: 'medium', mb: 1 }}>No lessons yet</Typography>
             <Typography color="text.secondary" sx={{ mb: 2 }}>Start building your curriculum by adding a lesson.</Typography>
-            <Button onClick={() => openLessonModal()} sx={{ color: '#C39766', fontWeight: 'medium' }}>
+            <Button onClick={() => openLessonModal()} size="small" sx={{ color: '#FD7E14', fontWeight: 'medium', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem' }}>
               Create your first lesson
             </Button>
           </Box>
@@ -204,8 +205,8 @@ const CurriculumTab = ({ courseId, lessons, fetchData }) => {
             <Grid item xs={12} sm={6}>
               <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium' }}>Video Source</Typography>
               <Paper variant="outlined" sx={{ display: 'flex', p: 0.5 }}>
-                <Button fullWidth variant={lessonForm.videoType === 'url' ? 'contained' : 'text'} onClick={() => setLessonForm({ ...lessonForm, videoType: 'url' })}>URL</Button>
-                <Button fullWidth variant={lessonForm.videoType === 'file' ? 'contained' : 'text'} onClick={() => setLessonForm({ ...lessonForm, videoType: 'file' })}>Upload</Button>
+                <Button fullWidth size="small" variant={lessonForm.videoType === 'url' ? 'contained' : 'text'} onClick={() => setLessonForm({ ...lessonForm, videoType: 'url' })}>URL</Button>
+                <Button fullWidth size="small" variant={lessonForm.videoType === 'file' ? 'contained' : 'text'} onClick={() => setLessonForm({ ...lessonForm, videoType: 'file' })}>Upload</Button>
               </Paper>
             </Grid>
             <Grid item xs={12} sm={6}><TextField fullWidth label="Duration (minutes)" type="number" value={lessonForm.duration || 0} onChange={e => setLessonForm({ ...lessonForm, duration: parseInt(e.target.value) || 0 })} /></Grid>
@@ -215,7 +216,7 @@ const CurriculumTab = ({ courseId, lessons, fetchData }) => {
               ) : (
                 <Box>
                   <Typography variant="body2" sx={{ mb: 1, fontWeight: 'medium' }}>Upload Video File</Typography>
-                  <Button component="label" fullWidth variant="outlined" startIcon={<UploadCloudIcon />} sx={{ p: 3, borderStyle: 'dashed', textTransform: 'none' }}>
+                  <Button component="label" fullWidth size="small" variant="outlined" startIcon={<UploadCloudIcon />} sx={{ p: 3, borderStyle: 'dashed', textTransform: 'none' }}>
                     {lessonForm.videoFile ? lessonForm.videoFile.name : 'Click to upload or drag and drop'}
                     <input type="file" hidden accept="video/*" onChange={e => { if (e.target.files && e.target.files[0]) { setLessonForm({ ...lessonForm, videoFile: e.target.files[0] }); } }} />
                   </Button>
@@ -232,7 +233,7 @@ const CurriculumTab = ({ courseId, lessons, fetchData }) => {
                 {lessonForm.materials.map((file, idx) => (
                   <Chip key={`new-${idx}`} icon={<UploadCloudIcon />} label={`${file.name} (New)`} color="primary" onDelete={() => { const newMats = [...lessonForm.materials]; newMats.splice(idx, 1); setLessonForm({ ...lessonForm, materials: newMats }); }} />
                 ))}
-                <Button component="label" startIcon={<AddIcon />} size="small" sx={{ alignSelf: 'flex-start' }}>
+                <Button component="label" startIcon={<AddIcon />} size="small" sx={{ alignSelf: 'flex-start', borderRadius: 0 }}>
                   Add Material
                   <input type="file" hidden multiple onChange={e => { if (e.target.files && e.target.files.length > 0) { const newFiles = Array.from(e.target.files); setLessonForm({ ...lessonForm, materials: [...lessonForm.materials, ...newFiles] }); } }} />
                 </Button>
@@ -244,8 +245,8 @@ const CurriculumTab = ({ courseId, lessons, fetchData }) => {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setIsLessonModalOpen(false)}>Cancel</Button>
-          <Button onClick={handleSaveLesson} disabled={saving} variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>
+          <Button onClick={() => setIsLessonModalOpen(false)} size="small">Cancel</Button>
+          <Button onClick={handleSaveLesson} disabled={saving} variant="contained" size="small" sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}>
             {saving ? 'Saving...' : (editingLessonId ? 'Update Lesson' : 'Create Lesson')}
           </Button>
         </DialogActions>

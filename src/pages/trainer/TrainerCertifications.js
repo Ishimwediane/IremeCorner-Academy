@@ -23,7 +23,7 @@ import api from '../../utils/api';
 
 const drawTemplate = (ctx, width, height, data, variant) => {
   ctx.clearRect(0, 0, width, height);
-  
+
   // Common settings for both templates
   const x = 20, y0 = 20, w = width - 40, h = height - 40;
   ctx.textAlign = 'center';
@@ -33,12 +33,12 @@ const drawTemplate = (ctx, width, height, data, variant) => {
     // Background
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
-    
+
     // Border
     ctx.strokeStyle = '#2b5cff';
     ctx.lineWidth = 8;
     ctx.strokeRect(x, y0, w, h);
-    
+
     // Inner border
     ctx.strokeStyle = '#2b5cff';
     ctx.lineWidth = 2;
@@ -72,19 +72,19 @@ const drawTemplate = (ctx, width, height, data, variant) => {
     ctx.font = '18px "Times New Roman"';
     const text = data.description || 'has successfully completed the course requirements';
     ctx.fillText(text, centerX, y0 + 390);
-    
+
     // Course Title
     ctx.fillStyle = '#2b5cff';
     ctx.font = 'bold 28px "Times New Roman"';
     ctx.fillText(data.courseTitle || 'Course Title', centerX, y0 + 440);
 
     // Date and Signature
-    const dateX = x + w/4;
-    const signatureX = x + (w*3)/4;
-    
+    const dateX = x + w / 4;
+    const signatureX = x + (w * 3) / 4;
+
     ctx.fillStyle = '#202F32';
     ctx.font = '16px "Times New Roman"';
-    
+
     // Date
     ctx.fillText(data.issueDate ? new Date(data.issueDate).toDateString() : 'Date of Issue', dateX, y0 + h - 60);
     ctx.beginPath();
@@ -93,7 +93,7 @@ const drawTemplate = (ctx, width, height, data, variant) => {
     ctx.strokeStyle = '#666';
     ctx.lineWidth = 1;
     ctx.stroke();
-    
+
     // Signature
     if (data.signatureImg) {
       ctx.drawImage(data.signatureImg, signatureX - 80, y0 + h - 140, 160, 60);
@@ -102,7 +102,7 @@ const drawTemplate = (ctx, width, height, data, variant) => {
     ctx.moveTo(signatureX - 100, y0 + h - 80);
     ctx.lineTo(signatureX + 100, y0 + h - 80);
     ctx.stroke();
-    
+
     ctx.fillStyle = '#666';
     ctx.font = '14px "Times New Roman"';
     ctx.fillText('DATE', dateX, y0 + h - 40);
@@ -224,7 +224,7 @@ const TemplateDesigner = () => {
   };
 
   return (
-    <Paper sx={{ p: 3, borderRadius: '16px', mb: 3 }}>
+    <Paper sx={{ p: 3, borderRadius: 0, mb: 3 }}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 2 }}>Template Designer</Typography>
@@ -258,16 +258,16 @@ const TemplateDesigner = () => {
               <TextField fullWidth multiline rows={3} label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Button component="label" startIcon={<UploadIcon />} variant="outlined" sx={{ textTransform: 'none', width: '100%' }}>Upload Logo<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setLogoPreview)} /></Button>
+              <Button component="label" startIcon={<UploadIcon />} variant="outlined" size="small" sx={{ textTransform: 'none', width: '100%', borderRadius: 0, borderColor: '#FD7E14', color: '#FD7E14', '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' }, py: 0.5, px: 1.5, fontSize: '0.8rem' }}>Upload Logo<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setLogoPreview)} /></Button>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Button component="label" startIcon={<UploadIcon />} variant="outlined" sx={{ textTransform: 'none', width: '100%' }}>Upload Signature<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setSignaturePreview)} /></Button>
+              <Button component="label" startIcon={<UploadIcon />} variant="outlined" size="small" sx={{ textTransform: 'none', width: '100%', borderRadius: 0, borderColor: '#FD7E14', color: '#FD7E14', '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' }, py: 0.5, px: 1.5, fontSize: '0.8rem' }}>Upload Signature<input type="file" hidden accept="image/*" onChange={(e) => onFile(e, setSignaturePreview)} /></Button>
             </Grid>
             <Grid item xs={12}>
               <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button onClick={saveTemplate} variant="outlined" sx={{ borderColor: '#C39766', color: '#C39766', textTransform: 'none' }}>Save Template</Button>
-                <Button onClick={loadTemplate} variant="outlined" sx={{ textTransform: 'none' }}>Load Template</Button>
-                <Button onClick={downloadPNG} variant="contained" startIcon={<DownloadIcon />} sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' }, textTransform: 'none' }}>Download PNG</Button>
+                <Button onClick={saveTemplate} variant="outlined" size="small" sx={{ borderRadius: 0, borderColor: '#FD7E14', color: '#FD7E14', textTransform: 'none', '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' }, py: 0.5, px: 1.5, fontSize: '0.8rem' }}>Save Template</Button>
+                <Button onClick={loadTemplate} variant="outlined" size="small" sx={{ borderRadius: 0, textTransform: 'none', borderColor: '#FD7E14', color: '#FD7E14', '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' }, py: 0.5, px: 1.5, fontSize: '0.8rem' }}>Load Template</Button>
+                <Button onClick={downloadPNG} variant="contained" startIcon={<DownloadIcon />} size="small" sx={{ bgcolor: '#FD7E14', '&:hover': { bgcolor: '#E56D0F' }, textTransform: 'none', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem' }}>Download PNG</Button>
               </Box>
             </Grid>
           </Grid>
@@ -294,11 +294,11 @@ const VerifyCertificate = () => {
     }
   };
   return (
-    <Paper sx={{ p: 3, borderRadius: '16px', mb: 3 }}>
+    <Paper sx={{ p: 3, borderRadius: 0, mb: 3 }}>
       <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 2 }}>Verify Certificate</Typography>
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
         <TextField value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Enter certificate number" size="small" sx={{ flex: 1 }} />
-        <Button onClick={verify} startIcon={<SearchIcon />} variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>Verify</Button>
+        <Button onClick={verify} startIcon={<SearchIcon />} variant="contained" size="small" sx={{ bgcolor: '#FD7E14', borderRadius: 0, '&:hover': { bgcolor: '#E56D0F' } }}>Verify</Button>
       </Box>
       {result && (
         <Box sx={{ mt: 2 }}>
@@ -322,7 +322,7 @@ const TrainerCertifications = () => {
     <TrainerLayout title="Certification Management">
       <TemplateDesigner />
       <VerifyCertificate />
-      <Card>
+      <Card sx={{ borderRadius: 0 }}>
         <CardContent>
           <Typography variant="body2" sx={{ color: '#666' }}>
             Issued certificates list will appear here when wired to trainer-specific endpoint. You can verify any certificate above by number.

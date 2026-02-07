@@ -222,7 +222,7 @@ const Messages = () => {
                 <List sx={{ flex: 1, overflow: 'auto', p: 0 }}>
                     {conversationsLoading ? (
                         <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-                            <CircularProgress size={30} sx={{ color: '#C39766' }} />
+                            <CircularProgress size={30} sx={{ color: '#FD7E14' }} />
                         </Box>
                     ) : conversations.length === 0 ? (
                         <Box sx={{ textAlign: 'center', py: 8, px: 2 }}>
@@ -247,8 +247,8 @@ const Messages = () => {
                                         borderBottom: 1,
                                         borderColor: 'divider',
                                         '&.Mui-selected': {
-                                            bgcolor: 'rgba(195,151,102,0.1)',
-                                            borderLeft: '4px solid #C39766',
+                                            bgcolor: 'rgba(253, 126, 20, 0.1)',
+                                            borderLeft: '4px solid #FD7E14',
                                         },
                                     }}
                                 >
@@ -267,7 +267,7 @@ const Messages = () => {
                                                 },
                                             }}
                                         >
-                                            <Avatar sx={{ bgcolor: isTrainer ? '#C39766' : '#202F32' }}>
+                                            <Avatar sx={{ bgcolor: isTrainer ? '#FD7E14' : '#202F32' }}>
                                                 {conversation.partner.name?.charAt(0).toUpperCase()}
                                             </Avatar>
                                         </Badge>
@@ -279,7 +279,7 @@ const Messages = () => {
                                                     {conversation.partner.name}
                                                 </Typography>
                                                 {isTrainer && (
-                                                    <School sx={{ fontSize: 16, color: '#C39766' }} />
+                                                    <School sx={{ fontSize: 16, color: '#FD7E14' }} />
                                                 )}
                                             </Box>
                                         }
@@ -306,7 +306,7 @@ const Messages = () => {
                         {/* Chat Header */}
                         <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                <Avatar sx={{ bgcolor: selectedConversation.partner.role === 'trainer' ? '#C39766' : '#202F32' }}>
+                                <Avatar sx={{ bgcolor: selectedConversation.partner.role === 'trainer' ? '#FD7E14' : '#202F32' }}>
                                     {selectedConversation.partner.name?.charAt(0).toUpperCase()}
                                 </Avatar>
                                 <Box>
@@ -320,8 +320,8 @@ const Messages = () => {
                                                 size="small"
                                                 icon={<School />}
                                                 sx={{
-                                                    bgcolor: 'rgba(195,151,102,0.1)',
-                                                    color: '#C39766',
+                                                    bgcolor: 'rgba(253, 126, 20, 0.1)',
+                                                    color: '#FD7E14',
                                                     height: 20,
                                                     fontSize: '0.7rem'
                                                 }}
@@ -342,7 +342,7 @@ const Messages = () => {
                         <Box sx={{ flex: 1, overflow: 'auto', p: 2, bgcolor: '#faf8f5' }}>
                             {messagesLoading ? (
                                 <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-                                    <CircularProgress size={30} sx={{ color: '#C39766' }} />
+                                    <CircularProgress size={30} sx={{ color: '#FD7E14' }} />
                                 </Box>
                             ) : messages.length === 0 ? (
                                 <Box sx={{ textAlign: 'center', py: 8 }}>
@@ -366,7 +366,7 @@ const Messages = () => {
                                                 <Box
                                                     sx={{
                                                         maxWidth: '70%',
-                                                        bgcolor: isOwnMessage ? '#C39766' : 'white',
+                                                        bgcolor: isOwnMessage ? '#FD7E14' : 'white',
                                                         color: isOwnMessage ? 'white' : '#202F32',
                                                         p: 1.5,
                                                         borderRadius: 2,
@@ -423,11 +423,11 @@ const Messages = () => {
                                                 onClick={handleSendMessage}
                                                 disabled={!messageText.trim() || sendMessageMutation.isLoading}
                                                 sx={{
-                                                    bgcolor: '#C39766',
+                                                    bgcolor: '#FD7E14',
                                                     color: 'white',
                                                     width: 40,
                                                     height: 40,
-                                                    '&:hover': { bgcolor: '#A67A52' },
+                                                    '&:hover': { bgcolor: '#E56D0F' },
                                                     '&:disabled': { bgcolor: '#ddd', color: '#999' },
                                                 }}
                                             >

@@ -33,7 +33,7 @@ const CourseListCard = ({ enrollment }) => {
 
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: '16px' }}>
+      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 0, boxShadow: 1 }}>
         {course.thumbnail && (
           <Box
             component="img"
@@ -70,6 +70,7 @@ const CourseListCard = ({ enrollment }) => {
             component={Link}
             to={`/learner/course/${course._id}`}
             startIcon={enrollment.status === 'completed' ? <CheckCircle /> : <PlayArrow />}
+            sx={{ borderRadius: 0, textTransform: 'none', fontSize: '0.8125rem', py: 0.5 }}
           >
             {enrollment.status === 'completed' ? t('myLearning.reviewCourse') : t('myLearning.continueLearning')}
           </Button>
@@ -113,9 +114,24 @@ const MyLearning = () => {
       <Tabs
         value={courseFilterTab}
         onChange={(e, val) => setCourseFilterTab(val)}
-        sx={{ mb: 3 }}
-        textColor="secondary"
-        indicatorColor="secondary"
+        sx={{
+          mb: 3,
+          borderBottom: '1px solid rgba(32,47,50,0.1)',
+          '& .MuiTab-root': {
+            textTransform: 'none',
+            fontWeight: 500,
+            fontSize: '0.95rem',
+            color: 'rgba(32,47,50,0.6)',
+            '&.Mui-selected': {
+              color: '#202F32',
+              fontWeight: 600,
+            },
+          },
+          '& .MuiTabs-indicator': {
+            backgroundColor: '#202F32',
+            height: 3,
+          },
+        }}
       >
         <Tab label={t('myLearning.inProgressTab', { count: inProgress.length })} />
         <Tab label={t('myLearning.completedTab', { count: completed.length })} />

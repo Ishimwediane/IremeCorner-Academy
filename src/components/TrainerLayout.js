@@ -7,8 +7,10 @@ import {
   Menu as MenuIcon,
 } from '@mui/icons-material';
 import TrainerSidebar from './TrainerSidebar';
+import { useTranslation } from 'react-i18next';
 
 const TrainerLayout = ({ children, title = 'Dashboard' }) => {
+  const { i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     try {
@@ -90,13 +92,55 @@ const TrainerLayout = ({ children, title = 'Dashboard' }) => {
 
           {/* Action Icons */}
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            {/* Language Selector */}
+            <Box sx={{ display: 'flex', gap: 0.5, bgcolor: '#F3F4F6', borderRadius: '6px', p: 0.5, mr: 1 }}>
+              <Box
+                onClick={() => i18n.changeLanguage('en')}
+                sx={{
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  bgcolor: i18n.language === 'en' ? '#FD7E14' : 'transparent',
+                  color: i18n.language === 'en' ? 'white' : '#666',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    bgcolor: i18n.language === 'en' ? '#E56D0F' : 'rgba(253, 126, 20, 0.1)',
+                  },
+                }}
+              >
+                EN
+              </Box>
+              <Box
+                onClick={() => i18n.changeLanguage('rw')}
+                sx={{
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  bgcolor: i18n.language === 'rw' ? '#FD7E14' : 'transparent',
+                  color: i18n.language === 'rw' ? 'white' : '#666',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    bgcolor: i18n.language === 'rw' ? '#E56D0F' : 'rgba(253, 126, 20, 0.1)',
+                  },
+                }}
+              >
+                RW
+              </Box>
+            </Box>
+
             <IconButton
               sx={{
                 width: 40,
                 height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
+                bgcolor: 'rgba(253, 126, 20, 0.1)',
                 color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
+                '&:hover': { bgcolor: 'rgba(253, 126, 20, 0.2)' },
               }}
               title="Notifications"
             >
@@ -106,9 +150,9 @@ const TrainerLayout = ({ children, title = 'Dashboard' }) => {
               sx={{
                 width: 40,
                 height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
+                bgcolor: 'rgba(253, 126, 20, 0.1)',
                 color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
+                '&:hover': { bgcolor: 'rgba(253, 126, 20, 0.2)' },
               }}
               title="Help"
             >
@@ -118,9 +162,9 @@ const TrainerLayout = ({ children, title = 'Dashboard' }) => {
               sx={{
                 width: 40,
                 height: 40,
-                bgcolor: 'rgba(195,151,102,0.1)',
+                bgcolor: 'rgba(253, 126, 20, 0.1)',
                 color: '#202F32',
-                '&:hover': { bgcolor: 'rgba(195,151,102,0.2)' },
+                '&:hover': { bgcolor: 'rgba(253, 126, 20, 0.2)' },
               }}
               title="Settings"
             >

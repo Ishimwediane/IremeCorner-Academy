@@ -104,11 +104,31 @@ const AdminCourseDetail = () => {
             </Box>
           </Box>
         </Box>
-        <Button variant="outlined">Preview Course</Button>
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{
+            borderRadius: 0,
+            borderColor: '#FD7E14',
+            color: '#FD7E14',
+            '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' },
+            textTransform: 'none'
+          }}
+        >
+          Preview Course
+        </Button>
       </Box>
 
-      <Paper sx={{ borderBottom: 1, borderColor: 'divider', borderRadius: '12px 12px 0 0' }}>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none' } }}>
+      <Paper sx={{ borderBottom: 1, borderColor: 'divider', borderRadius: 0 }}>
+        <Tabs
+          value={activeTab}
+          onChange={(e, newValue) => setActiveTab(newValue)}
+          sx={{
+            '& .MuiTab-root': { textTransform: 'none' },
+            '& .MuiTabs-indicator': { backgroundColor: '#FD7E14' },
+            '& .Mui-selected': { color: '#FD7E14 !important' }
+          }}
+        >
           <Tab icon={<LayoutIcon />} iconPosition="start" label="Curriculum" />
           <Tab icon={<SettingsIcon />} iconPosition="start" label="Course Info & Settings" />
           <Tab icon={<AssignmentIcon />} iconPosition="start" label="Assignments" />
@@ -118,7 +138,7 @@ const AdminCourseDetail = () => {
         </Tabs>
       </Paper>
 
-      <Paper sx={{ minHeight: '600px', p: 3, borderRadius: '0 0 12px 12px' }}>
+      <Paper sx={{ minHeight: '600px', p: 3, borderRadius: 0 }}>
         {activeTab === 0 && <CurriculumTab courseId={id} lessons={lessons} fetchData={fetchData} />}
         {activeTab === 1 && <CourseSettingsTab course={course} fetchData={fetchData} />}
         {activeTab === 2 && <AssignmentTab courseId={id} assignments={assignments} course={course} fetchData={fetchData} />}

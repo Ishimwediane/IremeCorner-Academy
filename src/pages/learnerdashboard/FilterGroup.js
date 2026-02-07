@@ -16,7 +16,7 @@ const FilterGroup = ({ title, items, selectedItems, counts, onFilterChange, show
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 2 }}>
-        <Typography sx={{ color: '#202F32', fontWeight: 700, fontSize: '1rem' }}>
+        <Typography sx={{ color: '#202F32', fontWeight: 700, fontSize: '0.9rem' }}>
           {title}
         </Typography>
         {showInfoIcon && <Info sx={{ fontSize: 16, color: 'rgba(32,47,50,0.5)' }} />}
@@ -29,15 +29,20 @@ const FilterGroup = ({ title, items, selectedItems, counts, onFilterChange, show
               <Checkbox
                 checked={selectedItems.includes(item)}
                 onChange={() => onFilterChange(item)}
-                sx={{ color: '#202F32', '&.Mui-checked': { color: '#C39766' } }}
+                size="small"
+                sx={{
+                  color: 'rgba(32,47,50,0.6)',
+                  p: 0.5,
+                  '&.Mui-checked': { color: '#202F32' }
+                }}
               />
             }
             label={
-              <Typography sx={{ color: '#202F32', fontSize: '0.95rem' }}>
+              <Typography sx={{ color: '#202F32', fontSize: '0.85rem' }}>
                 {item} <Box component="span" sx={{ color: 'rgba(32,47,50,0.6)', ml: 0.5 }}>({counts[item] || 0})</Box>
               </Typography>
             }
-            sx={{ mb: 1 }}
+            sx={{ mb: 0.5, ml: 0 }}
           />
         ))}
       </FormGroup>
@@ -46,14 +51,15 @@ const FilterGroup = ({ title, items, selectedItems, counts, onFilterChange, show
           component="button"
           onClick={() => setShowMore(!showMore)}
           sx={{
-            color: '#C39766',
-            textDecoration: 'underline',
-            fontSize: '0.9rem',
+            color: 'rgba(32,47,50,0.7)',
+            textDecoration: 'none',
+            fontSize: '0.8rem',
             mt: 1,
             cursor: 'pointer',
             border: 'none',
             background: 'none',
-            '&:hover': { color: '#A67A52' },
+            fontWeight: 500,
+            '&:hover': { color: '#202F32', textDecoration: 'underline' },
           }}
         >
           {showMore ? 'Show less' : 'Show more'}

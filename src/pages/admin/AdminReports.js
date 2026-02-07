@@ -69,7 +69,7 @@ const AdminReports = () => {
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {/* Summary Stats */}
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Typography variant="body2" color="text.secondary">Total Users</Typography>
               <Typography variant="h4" fontWeight="700">{stats.users?.total || 0}</Typography>
@@ -77,7 +77,7 @@ const AdminReports = () => {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Typography variant="body2" color="text.secondary">Total Courses</Typography>
               <Typography variant="h4" fontWeight="700">{stats.courses?.total || 0}</Typography>
@@ -85,7 +85,7 @@ const AdminReports = () => {
           </Card>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card sx={{ borderRadius: 0 }}>
             <CardContent>
               <Typography variant="body2" color="text.secondary">Enrollments</Typography>
               <Typography variant="h4" fontWeight="700">{stats.enrollments?.total || 0}</Typography>
@@ -94,20 +94,33 @@ const AdminReports = () => {
         </Grid>
       </Grid>
 
-      <Paper sx={{ p: 3, borderRadius: '16px' }}>
+      <Paper sx={{ p: 3, borderRadius: 0 }}>
         <Typography variant="h6" sx={{ fontWeight: 700, color: '#202F32', mb: 3 }}>
           Generate Reports
         </Typography>
         <Grid container spacing={3}>
           {reportCards.map((card, index) => (
             <Grid item xs={12} md={6} key={index}>
-              <Card sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
+              <Card sx={{ display: 'flex', alignItems: 'center', p: 2, borderRadius: 0 }}>
                 <Box sx={{ mr: 2 }}>{card.icon}</Box>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" fontWeight="600">{card.title}</Typography>
                   <Typography variant="body2" color="text.secondary">{card.description}</Typography>
                 </Box>
-                <Button variant="outlined" onClick={card.action}>Generate</Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={card.action}
+                  sx={{
+                    borderRadius: 0,
+                    borderColor: '#FD7E14',
+                    color: '#FD7E14',
+                    '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' },
+                    textTransform: 'none'
+                  }}
+                >
+                  Generate
+                </Button>
               </Card>
             </Grid>
           ))}

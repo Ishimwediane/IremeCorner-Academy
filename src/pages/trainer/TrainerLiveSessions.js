@@ -48,13 +48,17 @@ const TrainerLiveSessions = () => {
         </Typography>
         <Button
           variant="contained"
+          size="small"
           startIcon={<AddIcon />}
           onClick={() => setOpenDialog(true)}
           sx={{
-            bgcolor: '#C39766',
-            '&:hover': { bgcolor: '#A67A52' },
+            bgcolor: '#FD7E14',
+            borderRadius: 0,
+            py: 0.5,
+            px: 1.5,
+            fontSize: '0.8rem',
+            '&:hover': { bgcolor: '#E56D0F' },
             textTransform: 'none',
-            px: 3,
           }}
         >
           Schedule Session
@@ -64,7 +68,7 @@ const TrainerLiveSessions = () => {
       <Grid container spacing={3}>
         {sessions.length === 0 ? (
           <Grid item xs={12}>
-            <Paper sx={{ p: 4, textAlign: 'center', borderRadius: '16px' }}>
+            <Paper sx={{ p: 4, textAlign: 'center', borderRadius: 0 }}>
               <VideoCallIcon sx={{ fontSize: 60, color: '#C39766', opacity: 0.3, mb: 2 }} />
               <Typography variant="h6" sx={{ fontWeight: 600, color: '#202F32', mb: 1 }}>
                 No Live Sessions Scheduled
@@ -74,11 +78,16 @@ const TrainerLiveSessions = () => {
               </Typography>
               <Button
                 variant="contained"
+                size="small"
                 startIcon={<AddIcon />}
                 onClick={() => setOpenDialog(true)}
                 sx={{
-                  bgcolor: '#C39766',
-                  '&:hover': { bgcolor: '#A67A52' },
+                  bgcolor: '#FD7E14',
+                  borderRadius: 0,
+                  py: 0.5,
+                  px: 1.5,
+                  fontSize: '0.8rem',
+                  '&:hover': { bgcolor: '#E56D0F' },
                 }}
               >
                 Schedule Session
@@ -88,7 +97,7 @@ const TrainerLiveSessions = () => {
         ) : (
           sessions.map((session) => (
             <Grid item xs={12} md={6} key={session.id}>
-              <Card>
+              <Card sx={{ borderRadius: 0 }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2 }}>
                     <Box>
@@ -127,11 +136,16 @@ const TrainerLiveSessions = () => {
                   </Box>
                   <Button
                     variant="contained"
+                    size="small"
                     startIcon={<PlayIcon />}
                     fullWidth
                     sx={{
-                      bgcolor: '#C39766',
-                      '&:hover': { bgcolor: '#A67A52' },
+                      bgcolor: '#FD7E14',
+                      borderRadius: 0,
+                      py: 0.5,
+                      px: 1.5,
+                      fontSize: '0.8rem',
+                      '&:hover': { bgcolor: '#E56D0F' },
                       textTransform: 'none',
                     }}
                   >
@@ -169,8 +183,8 @@ const TrainerLiveSessions = () => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          <Button variant="contained" sx={{ bgcolor: '#C39766', '&:hover': { bgcolor: '#A67A52' } }}>
+          <Button onClick={() => setOpenDialog(false)} size="small">Cancel</Button>
+          <Button variant="contained" size="small" sx={{ bgcolor: '#FD7E14', borderRadius: 0, py: 0.5, px: 1.5, fontSize: '0.8rem', '&:hover': { bgcolor: '#E56D0F' } }}>
             Schedule
           </Button>
         </DialogActions>

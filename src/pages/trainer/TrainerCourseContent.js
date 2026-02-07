@@ -129,7 +129,7 @@ const TrainerCourseContent = () => {
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <IconButton onClick={() => navigate('/trainer/courses')} sx={{ bgcolor: 'white', border: '1px solid #e0e0e0' }}>
+          <IconButton onClick={() => navigate('/trainer/courses')} sx={{ bgcolor: 'white', border: '1px solid #e0e0e0', borderRadius: 0 }}>
             <ArrowBackIcon />
           </IconButton>
           <Box>
@@ -148,14 +148,14 @@ const TrainerCourseContent = () => {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="outlined">
+          <Button variant="outlined" size="small" sx={{ borderRadius: 0 }}>
             Preview Course
           </Button>
         </Box>
       </Box>
 
       {/* Tabs */}
-      <Paper sx={{ borderBottom: 1, borderColor: 'divider', borderRadius: '12px 12px 0 0' }}>
+      <Paper sx={{ borderBottom: 1, borderColor: 'divider', borderRadius: 0 }}>
         <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ '& .MuiTab-root': { textTransform: 'none' } }}>
           <Tab icon={<LayoutIcon />} iconPosition="start" label="Curriculum" />
           <Tab icon={<SettingsIcon />} iconPosition="start" label="Course Info & Settings" />
@@ -168,7 +168,7 @@ const TrainerCourseContent = () => {
       </Paper>
 
       {/* Content Area */}
-      <Paper sx={{ minHeight: '600px', p: 3, borderRadius: '0 0 12px 12px' }}>
+      <Paper sx={{ minHeight: '600px', p: 3, borderRadius: 0 }}>
 
         {/* CURRICULUM TAB */}
         {activeTab === 0 && (

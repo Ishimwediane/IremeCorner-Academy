@@ -16,7 +16,8 @@ const MarkdownRenderer = ({ content }) => {
         <Box>
             {lines.map((line, index) => {
                 // Match markdown image: ![alt](url)
-                const imageMatch = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+                // Updated regex to handle URLs with parentheses and special characters
+                const imageMatch = line.match(/^!\[([^\]]*)\]\((.+)\)\s*$/);
                 if (imageMatch) {
                     const [, alt, src] = imageMatch;
                     console.log(`🖼️ Image found at line ${index}:`, alt, '→', src.trim());
@@ -32,7 +33,11 @@ const MarkdownRenderer = ({ content }) => {
                                     boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                                 }}
                                 onError={(e) => {
+                                    console.error('❌ Failed to load image:', src.trim());
                                     e.target.style.display = 'none';
+                                }}
+                                onLoad={() => {
+                                    console.log('✅ Image loaded successfully:', src.trim());
                                 }}
                             />
                             {alt && (

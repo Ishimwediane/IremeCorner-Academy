@@ -42,7 +42,7 @@ const TrainerSettings = () => {
     <TrainerLayout title="Settings">
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 3, borderRadius: '16px' }}>
+          <Paper sx={{ p: 3, borderRadius: 0 }}>
             <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Avatar
                 sx={{
@@ -61,9 +61,13 @@ const TrainerSettings = () => {
                 startIcon={<CameraIcon />}
                 size="small"
                 sx={{
-                  borderColor: '#C39766',
-                  color: '#C39766',
-                  '&:hover': { borderColor: '#A67A52', bgcolor: 'rgba(195,151,102,0.05)' },
+                  borderRadius: 0,
+                  borderColor: '#FD7E14',
+                  color: '#FD7E14',
+                  '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' },
+                  py: 0.5,
+                  px: 1.5,
+                  fontSize: '0.8rem'
                 }}
               >
                 Change Photo
@@ -82,7 +86,7 @@ const TrainerSettings = () => {
         </Grid>
 
         <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 3, borderRadius: '16px' }}>
+          <Paper sx={{ p: 3, borderRadius: 0 }}>
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#202F32', mb: 3 }}>
               Profile Information
             </Typography>
@@ -134,12 +138,16 @@ const TrainerSettings = () => {
                   <Button
                     type="submit"
                     variant="contained"
+                    size="small"
                     startIcon={<SaveIcon />}
                     sx={{
-                      bgcolor: '#C39766',
-                      '&:hover': { bgcolor: '#A67A52' },
+                      bgcolor: '#FD7E14',
+                      borderRadius: 0,
+                      py: 0.5,
+                      px: 1.5,
+                      fontSize: '0.8rem',
+                      '&:hover': { bgcolor: '#E56D0F' },
                       textTransform: 'none',
-                      px: 4,
                     }}
                   >
                     Save Changes
@@ -149,7 +157,7 @@ const TrainerSettings = () => {
             </form>
           </Paper>
 
-          <Paper sx={{ p: 3, borderRadius: '16px', mt: 3 }}>
+          <Paper sx={{ p: 3, borderRadius: 0, mt: 3 }}>
             <Typography variant="h6" sx={{ fontWeight: 600, color: '#202F32', mb: 3 }}>
               Change Password
             </Typography>
@@ -181,11 +189,16 @@ const TrainerSettings = () => {
               <Grid item xs={12}>
                 <Button
                   variant="outlined"
+                  size="small"
                   sx={{
-                    borderColor: '#C39766',
-                    color: '#C39766',
-                    '&:hover': { borderColor: '#A67A52', bgcolor: 'rgba(195,151,102,0.05)' },
+                    borderRadius: 0,
+                    borderColor: '#FD7E14',
+                    color: '#FD7E14',
+                    '&:hover': { borderColor: '#E56D0F', color: '#E56D0F' },
                     textTransform: 'none',
+                    py: 0.5,
+                    px: 1.5,
+                    fontSize: '0.8rem'
                   }}
                 >
                   Update Password
