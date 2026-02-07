@@ -28,7 +28,7 @@ import { format, isToday, isYesterday } from 'date-fns';
 import io from 'socket.io-client';
 import TrainerLayout from '../../components/TrainerLayout';
 
-const SOCKET_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+const SOCKET_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 const TrainerMessages = () => {
   const { user } = useAuth();

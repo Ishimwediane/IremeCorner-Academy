@@ -22,7 +22,7 @@ import {
     Alert
 } from '@mui/material';
 import { Visibility, Check, Close } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../../utils/api';
 
 const AdminCourses = () => {
     const [courses, setCourses] = useState([]);
@@ -47,10 +47,7 @@ const AdminCourses = () => {
 
     const fetchCourses = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/courses', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.get('/courses');
 
             if (response.data.success) {
                 setCourses(response.data.data);
@@ -74,11 +71,9 @@ const AdminCourses = () => {
 
     const handleApprove = async (courseId) => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.patch(
-                `http://localhost:5000/api/courses/${courseId}/approve`,
-                { status: 'approved' },
-                { headers: { Authorization: `Bearer ${token}` } }
+            const response = await api.patch(
+                `/courses/${courseId}/approve`,
+                { status: 'approved' }
             );
 
             if (response.data.success) {
@@ -95,14 +90,12 @@ const AdminCourses = () => {
         if (!selectedCourse) return;
 
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.patch(
-                `http://localhost:5000/api/courses/${selectedCourse._id}/approve`,
+            const response = await api.patch(
+                `/courses/${selectedCourse._id}/approve`,
                 {
                     status: 'rejected',
                     rejectionReason: rejectionReason
-                },
-                { headers: { Authorization: `Bearer ${token}` } }
+                }
             );
 
             if (response.data.success) {
