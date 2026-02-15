@@ -336,7 +336,7 @@ const CourseDetail = () => {
                           <Box>
                             <Typography variant="h6">{course.trainer.name || 'Trainer'}</Typography>
                             <Typography variant="body2" color="text.secondary">
-                              {course.trainer.email || 'trainer@iremecorner.com'}
+                              {course.trainer.email || 'trainer@iremehub.com'}
                             </Typography>
                           </Box>
                         </Box>

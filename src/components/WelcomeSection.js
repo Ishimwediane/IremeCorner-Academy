@@ -75,7 +75,7 @@ const WelcomeSection = () => {
               mb: 5,
             }}
           >
-            Join IremeCorner to access premium courses, connects with expert trainers, and build the skills that matter. Your growth starts here, today.
+            Join IremeHub to access premium courses, connects with expert trainers, and build the skills that matter. Your growth starts here, today.
           </Typography>
           <Button
             variant="contained"

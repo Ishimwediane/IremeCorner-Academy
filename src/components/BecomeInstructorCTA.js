@@ -34,7 +34,7 @@ const BecomeInstructorCTA = () => {
               >
                 Become a Teacher at <br />
                 <Box component="span" sx={{ color: '#FD7E14' }}>
-                  IremeCorner
+                  IremeHub
                 </Box>
               </Typography>
 
@@ -47,7 +47,7 @@ const BecomeInstructorCTA = () => {
                   lineHeight: 1.6,
                 }}
               >
-                At IremeCorner, we believe in empowering learners with expert knowledge, and that starts with exceptional
+                At IremeHub, we believe in empowering learners with expert knowledge, and that starts with exceptional
                 teachers. If you're an industry professional, educator, or thought leader with a passion for teaching,
                 you can make a global impact by sharing your skills and insights with students worldwide.
               </Typography>
@@ -61,7 +61,7 @@ const BecomeInstructorCTA = () => {
                   fontSize: '1.25rem', // Added usage of reduced size via manual override if needed or just relying on h5 default
                 }}
               >
-                Why Teach at IremeCorner?
+                Why Teach at IremeHub?
               </Typography>
 
               <Grid container spacing={1}>

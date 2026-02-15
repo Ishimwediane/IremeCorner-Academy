@@ -422,7 +422,7 @@ const About = () => {
                 mx: 'auto',
               }}
             >
-              Discover the features that make IremeCorner Academy the best choice for your learning journey
+              Discover the features that make IremeHub Academy the best choice for your learning journey
             </Typography>
           </Box>
 

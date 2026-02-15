@@ -168,7 +168,7 @@ const AdminSidebar = ({ mobileOpen, onMobileClose }) => {
           }}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#202F32', lineHeight: 1 }}>
-            IremeCorner
+            IremeHub
           </Typography>
           <Typography variant="caption" sx={{ color: '#999', display: 'block', mt: 0 }}>
             Admin Portal

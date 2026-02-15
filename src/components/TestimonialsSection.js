@@ -45,7 +45,7 @@ const TestimonialsSection = () => {
                 }}
               >
                 People Say <br />
-                About <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>IremeCorner</Box>
+                About <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>IremeHub</Box>
                 <Box
                   sx={{
                     position: 'absolute',
@@ -69,7 +69,7 @@ const TestimonialsSection = () => {
                   mb: 4,
                 }}
               >
-                One-stop solution for any eLearning center, online courses. People love IremeCorner because they can create
+                One-stop solution for any eLearning center, online courses. People love IremeHub because they can create
                 their sites with ease here.
               </Typography>
 

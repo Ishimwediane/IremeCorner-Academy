@@ -188,7 +188,7 @@ const Auth = () => {
               }}
             >
               <Typography variant="h4" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
-                IremeCorner Academy
+                IremeHub Academy
               </Typography>
               <Typography variant="body1" sx={{ color: 'white', opacity: 0.9 }}>
                 Empower your future through learning.
@@ -208,7 +208,7 @@ const Auth = () => {
             }}
           >
             <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, color: '#1A1A1A', textAlign: 'center' }}>
-              Welcome to IremeCorner!
+              Welcome to IremeHub!
             </Typography>
 
             {/* Toggle Switch */}

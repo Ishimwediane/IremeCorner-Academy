@@ -51,6 +51,7 @@ import MyQuizzes from './pages/learnerdashboard/MyQuizzes';
 import MyAssignments from './pages/learnerdashboard/MyAssignments';
 import LearnerSettings from './pages/learnerdashboard/LearnerSettings';
 import LearnerGroups from './pages/learnerdashboard/LearnerGroups';
+import LearnerCareerGuidance from './pages/learnerdashboard/LearnerCareerGuidance';
 
 
 
@@ -111,6 +112,7 @@ function AppContent() {
                     <Route path="certificates/:id" element={<CertificateView />} />
                     <Route path="settings" element={<LearnerSettings />} />
                     <Route path="groups" element={<LearnerGroups />} />
+                    <Route path="career-guidance" element={<LearnerCareerGuidance />} />
                   </Routes>
                 </LearnerLayout>
               </PrivateRoute>

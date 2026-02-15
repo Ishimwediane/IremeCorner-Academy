@@ -97,7 +97,7 @@ const Contact = () => {
                   <LocationOn sx={{ fontSize: 24, mt: 0.5, flexShrink: 0 }} />
                   <Box>
                     <Typography sx={{ fontSize: '1rem', lineHeight: 1.6 }}>
-                      IremeCorner Academy
+                      IremeHub Academy
                       <br />
                       123 Education Street
                       <br />
@@ -110,7 +110,7 @@ const Contact = () => {
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                   <Email sx={{ fontSize: 24, flexShrink: 0 }} />
                   <Typography sx={{ fontSize: '1rem' }}>
-                    info@iremecorner.com
+                    info@iremehub.com
                   </Typography>
                 </Box>
 

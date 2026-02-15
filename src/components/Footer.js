@@ -33,7 +33,7 @@ const Footer = () => {
                   letterSpacing: 1,
                 }}
               >
-                IREMECORNER
+                IREMEHUB
               </Typography>
             </Box>
 
@@ -118,13 +118,13 @@ const Footer = () => {
                 mb: 2,
               }}
             >
-              IremeCorner Academy, 123 Education Street
+              IremeHub Academy, 123 Education Street
               <br />
               Learning City, LC 12345
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Typography sx={{ color: '#666', fontSize: '0.95rem' }}>
-                <Box component="span" sx={{ color: '#1A1A1A', fontWeight: 600 }}>Email:</Box> info@iremecorner.com
+                <Box component="span" sx={{ color: '#1A1A1A', fontWeight: 600 }}>Email:</Box> info@iremehub.com
               </Typography>
               <Typography sx={{ color: '#666', fontSize: '0.95rem' }}>
                 <Box component="span" sx={{ color: '#1A1A1A', fontWeight: 600 }}>Phone:</Box> +1 (234) 567-8900
@@ -154,7 +154,7 @@ const Footer = () => {
               textAlign: { xs: 'center', md: 'left' },
             }}
           >
-            Powered by IremeCorner Academy © {new Date().getFullYear()} All Rights Reserved.
+            Powered by IremeHub Academy © {new Date().getFullYear()} All Rights Reserved.
           </Typography>
 
           {/* Payment Methods */}

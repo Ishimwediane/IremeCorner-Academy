@@ -101,7 +101,7 @@ const TrainerSidebar = ({ mobileOpen, onMobileClose }) => {
         </Box>
         {!collapsed && (
           <Typography variant="h6" sx={{ fontWeight: 700, color: '#FD7E14' }}>
-            IremeCorner
+            IremeHub
           </Typography>
         )}
       </Box>

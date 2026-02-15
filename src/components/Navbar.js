@@ -99,7 +99,7 @@ const Navbar = () => {
               fontSize: '1.25rem'
             }}
           >
-            IremeCorner
+            IremeHub
           </Typography>
         </Box>
 

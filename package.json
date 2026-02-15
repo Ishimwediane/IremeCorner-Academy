@@ -1,7 +1,7 @@
 {
-  "name": "iremecorner-academy-frontend",
+  "name": "iremehub-academy-frontend",
   "version": "1.0.0",
-  "description": "Frontend for IremeCorner Academy E-Learning Platform",
+  "description": "Frontend for IremeHub Academy E-Learning Platform",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",

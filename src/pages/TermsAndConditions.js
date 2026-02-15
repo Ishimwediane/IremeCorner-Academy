@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Container, Box, Typography, Grid, Paper } from '@mui/material';
 
 const sections = [
-  { id: 'welcome', title: 'Welcome to IremeCorner', content: 'Welcome to IremeCorner Academy. By accessing or using our platform, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.' },
-  { id: 'account', title: 'Account Terms', content: 'To use certain features of IremeCorner, you must create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to provide accurate, current, and complete information during registration and to update such information to keep it accurate, current, and complete.' },
-  { id: 'company', title: 'Company Terms', content: 'IremeCorner Academy reserves the right to modify, suspend, or discontinue any aspect of the platform at any time. We may also impose limits on certain features or restrict your access to parts or all of the platform without notice or liability.' },
+  { id: 'welcome', title: 'Welcome to IremeHub', content: 'Welcome to IremeHub Academy. By accessing or using our platform, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.' },
+  { id: 'account', title: 'Account Terms', content: 'To use certain features of IremeHub, you must create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to provide accurate, current, and complete information during registration and to update such information to keep it accurate, current, and complete.' },
+  { id: 'company', title: 'Company Terms', content: 'IremeHub Academy reserves the right to modify, suspend, or discontinue any aspect of the platform at any time. We may also impose limits on certain features or restrict your access to parts or all of the platform without notice or liability.' },
   { id: 'activation', title: 'Account Activation', content: 'Your account will be activated upon successful registration. For trainer accounts, additional verification may be required. We reserve the right to refuse service, terminate accounts, or remove content at our sole discretion.' },
 ];
 
@@ -150,7 +150,7 @@ const TermsAndConditions = () => {
                       mt: 3,
                     }}
                   >
-                    IremeCorner Services Agreement
+                    IremeHub Services Agreement
                   </Typography>
                   <Typography
                     sx={{
@@ -159,7 +159,7 @@ const TermsAndConditions = () => {
                       mb: 2,
                     }}
                   >
-                    This agreement governs your use of IremeCorner Academy's online learning platform. By using our services, you acknowledge that you have read, understood, and agree to be bound by these terms.
+                    This agreement governs your use of IremeHub Academy's online learning platform. By using our services, you acknowledge that you have read, understood, and agree to be bound by these terms.
                   </Typography>
                 </Box>
               )}
@@ -225,7 +225,7 @@ const TermsAndConditions = () => {
                       mb: 2,
                     }}
                   >
-                    IremeCorner Academy reserves the right to modify, update, or discontinue any feature of the platform at any time. We will make reasonable efforts to notify users of significant changes, but are not obligated to do so.
+                    IremeHub Academy reserves the right to modify, update, or discontinue any feature of the platform at any time. We will make reasonable efforts to notify users of significant changes, but are not obligated to do so.
                   </Typography>
                 </Box>
               )}

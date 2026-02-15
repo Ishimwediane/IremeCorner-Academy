@@ -14,6 +14,7 @@ import {
     Menu as MenuIcon,
     ChevronLeft,
     ChevronRight,
+    Psychology,
 } from '@mui/icons-material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -45,6 +46,7 @@ const LearnerDashboardLayout = ({ children }) => {
         { text: 'Lesson', icon: <MenuBook />, path: '/learner/courses', section: 'overview' },
         { text: 'Task', icon: <Assignment />, path: '/learner/my-learning', section: 'overview' },
         { text: 'Group', icon: <Groups />, path: '/learner/groups', section: 'overview' },
+        { text: 'Career Guidance', icon: <Psychology />, path: '/learner/career-guidance', section: 'overview' },
     ];
 
     const settingsItems = [
@@ -71,7 +73,7 @@ const LearnerDashboardLayout = ({ children }) => {
                 </Box>
                 {!collapsed && (
                     <Typography variant="h6" sx={{ fontWeight: 700, color: '#FD7E14' }}>
-                        IremeCorner
+                        IremeHub
                     </Typography>
                 )}
             </Box>

@@ -43,8 +43,8 @@ const AdminSettings = () => {
   const { user } = useAuth();
   const [tab, setTab] = useState(0);
   const [settings, setSettings] = useState({
-    siteName: 'IremeCorner Academy',
-    siteEmail: 'contact@iremecorner.com',
+    siteName: 'IremeHub Academy',
+    siteEmail: 'contact@iremehub.com',
     allowRegistration: true,
   });
 

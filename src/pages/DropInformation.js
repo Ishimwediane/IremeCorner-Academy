@@ -186,7 +186,7 @@ const DropInformation = () => {
                     <span>
                       I agree to the{' '}
                       <MuiLink component={Link} to="/terms" target="_blank" underline="hover" sx={{ color: '#C39766', fontWeight: 600 }}>
-                        IremeCorner Tutor Terms
+                        IremeHub Tutor Terms
                       </MuiLink>
                     </span>
                   }

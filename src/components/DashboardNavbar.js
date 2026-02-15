@@ -168,7 +168,7 @@ const DashboardNavbar = () => {
               fontSize: '1.2rem',
             }}
           >
-            IremeCorner Academy
+            IremeHub Academy
           </Typography>
         </Box>
 
@@ -266,37 +266,37 @@ const DashboardNavbar = () => {
           open={Boolean(learnerMenuAnchor)}
           onClose={handleLearnerMenuClose}
         >
-          <MenuItem 
-            component={Link} 
-            to="/my-courses" 
+          <MenuItem
+            component={Link}
+            to="/my-courses"
             onClick={handleLearnerMenuClose}
           >
             <School sx={{ mr: 1, fontSize: 20 }} />
             My Courses
           </MenuItem>
-          <MenuItem 
-            component={Link} 
-            to="/learner/courses" 
+          <MenuItem
+            component={Link}
+            to="/learner/courses"
             onClick={handleLearnerMenuClose}
           >
             <Explore sx={{ mr: 1, fontSize: 20 }} />
             Explore Courses
           </MenuItem>
-          <MenuItem 
+          <MenuItem
             onClick={handleLearnerMenuClose}
             sx={{ opacity: 0.6 }}
           >
             <Assignment sx={{ mr: 1, fontSize: 20 }} />
             My Assignments
           </MenuItem>
-          <MenuItem 
+          <MenuItem
             onClick={handleLearnerMenuClose}
             sx={{ opacity: 0.6 }}
           >
             <Quiz sx={{ mr: 1, fontSize: 20 }} />
             Quiz
           </MenuItem>
-          <MenuItem 
+          <MenuItem
             onClick={handleLearnerMenuClose}
             sx={{ opacity: 0.6 }}
           >

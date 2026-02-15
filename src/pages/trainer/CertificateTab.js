@@ -106,7 +106,7 @@ const drawTemplate = (ctx, width, height, data, variant) => {
 
 const TemplateDesigner = ({ course }) => {
   const canvasRef = useRef(null);
-  const [form, setForm] = useState({ companyName: 'IremeCorner Academy', courseTitle: course?.title || '', description: `has successfully completed all requirements for the course:` });
+  const [form, setForm] = useState({ companyName: 'IremeHub Academy', courseTitle: course?.title || '', description: `has successfully completed all requirements for the course:` });
   const [logoPreview, setLogoPreview] = useState(null);
   const [signaturePreview, setSignaturePreview] = useState(null);
 
