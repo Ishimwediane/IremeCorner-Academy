@@ -24,6 +24,8 @@ import {
 import { Visibility, Check, Close } from '@mui/icons-material';
 import api from '../../utils/api';
 
+const tabs = ['All', 'Pending', 'Approved', 'Rejected'];
+
 const AdminCourses = () => {
     const [courses, setCourses] = useState([]);
     const [filteredCourses, setFilteredCourses] = useState([]);
@@ -35,7 +37,31 @@ const AdminCourses = () => {
     const [rejectionReason, setRejectionReason] = useState('');
     const [alert, setAlert] = useState({ show: false, message: '', severity: 'success' });
 
-    const tabs = ['All', 'Pending', 'Approved', 'Rejected'];
+
+
+    const fetchCourses = React.useCallback(async () => {
+        try {
+            const response = await api.get('/courses');
+
+            if (response.data.success) {
+                setCourses(response.data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching courses:', error);
+            showAlert('Failed to fetch courses', 'error');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const filterCourses = React.useCallback(() => {
+        if (currentTab === 0) {
+            setFilteredCourses(courses);
+        } else {
+            const status = tabs[currentTab].toLowerCase();
+            setFilteredCourses(courses.filter(course => course.status === status));
+        }
+    }, [courses, currentTab]);
 
     useEffect(() => {
         fetchCourses();
@@ -60,29 +86,7 @@ const AdminCourses = () => {
         setTimeout(() => setAlert({ show: false, message: '', severity: 'success' }), 3000);
     };
 
-    const fetchCourses = React.useCallback(async () => {
-        try {
-            const response = await api.get('/courses');
 
-            if (response.data.success) {
-                setCourses(response.data.data);
-            }
-        } catch (error) {
-            console.error('Error fetching courses:', error);
-            showAlert('Failed to fetch courses', 'error');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const filterCourses = React.useCallback(() => {
-        if (currentTab === 0) {
-            setFilteredCourses(courses);
-        } else {
-            const status = tabs[currentTab].toLowerCase();
-            setFilteredCourses(courses.filter(course => course.status === status));
-        }
-    }, [courses, currentTab, tabs]);
 
     const handleApprove = async (courseId) => {
         try {

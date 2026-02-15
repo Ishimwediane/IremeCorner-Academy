@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Container,
-  Grid,
+
   Paper,
   Typography,
   Box,
@@ -15,7 +15,7 @@ import {
   Button,
   Stack,
   Chip,
-  Divider,
+
   Card,
   CardContent,
   IconButton,
@@ -63,7 +63,7 @@ const CourseContent = () => {
   );
 
   // Fetch assignments for the lesson
-  const { data: assignments, isLoading: assignmentsLoading } = useQuery(
+  const { data: assignments } = useQuery(
     ['assignments', lessonId],
     async () => {
       const response = await api.get(`/assignments/lesson/${lessonId}`);
@@ -93,7 +93,7 @@ const CourseContent = () => {
   );
 
   // Fetch quizzes for the selected lesson
-  const { data: quizzes, isLoading: quizzesLoading } = useQuery(
+  const { data: quizzes } = useQuery(
     ['quizzes', lessonId],
     async () => {
       const response = await api.get(`/quizzes/lesson/${lessonId}`);
@@ -103,7 +103,7 @@ const CourseContent = () => {
   );
 
   // Fetch live sessions for the course
-  const { data: liveSessions, isLoading: liveSessionsLoading } = useQuery(
+  const { data: liveSessions } = useQuery(
     ['liveSessions', courseId],
     async () => {
       const response = await api.get(`/live-sessions/course/${courseId}`);
@@ -145,6 +145,8 @@ const CourseContent = () => {
     (c.course._id || c.course) === courseId
   );
 
+  const completedLessonIds = useMemo(() => new Set(progressData?.filter(p => p.isCompleted).map(p => p.lesson) || []), [progressData]);
+
   useEffect(() => {
     if (lessonId && courseData) {
       const lesson = courseData.lessons?.find(l => l._id === lessonId);
@@ -161,7 +163,7 @@ const CourseContent = () => {
   }, [lessonId, courseData, courseId, navigate, completedLessonIds]);
 
   const lessons = courseData?.lessons || [];
-  const completedLessonIds = useMemo(() => new Set(progressData?.filter(p => p.isCompleted).map(p => p.lesson) || []), [progressData]);
+
 
   const handleLessonClick = (lesson) => {
     setSelectedLesson(lesson);

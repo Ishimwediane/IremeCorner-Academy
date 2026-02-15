@@ -61,7 +61,7 @@ export const useCourseFilters = () => {
     }
   );
 
-  const allCourses = coursesData?.data || [];
+  const allCourses = useMemo(() => coursesData?.data || [], [coursesData]);
   const totalCourses = coursesData?.count || allCourses.length;
 
   const filteredCourses = useMemo(() => {
@@ -79,7 +79,7 @@ export const useCourseFilters = () => {
         (filters.certifications.includes('No Certificate') && !course.certificate);
 
       return matchesCategory && matchesLevel && matchesLanguage && matchesPrice &&
-             matchesDuration && matchesRating && matchesFormat && matchesCertification;
+        matchesDuration && matchesRating && matchesFormat && matchesCertification;
     });
   }, [allCourses, filters]);
 

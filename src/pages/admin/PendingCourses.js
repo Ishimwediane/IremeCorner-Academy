@@ -50,17 +50,17 @@ const PendingCourses = () => {
     }
   );
 
-  const handleApprove = (id) => {
+  const handleApprove = React.useCallback((id) => {
     if (window.confirm('Are you sure you want to approve this course?')) {
       updateStatusMutation.mutate({ id, status: 'approved' });
     }
-  };
+  }, [updateStatusMutation]);
 
-  const handleReject = (id) => {
+  const handleReject = React.useCallback((id) => {
     if (window.confirm('Are you sure you want to reject this course? This action cannot be undone.')) {
       updateStatusMutation.mutate({ id, status: 'rejected' });
     }
-  };
+  }, [updateStatusMutation]);
 
   const columns = useMemo(
     () => [

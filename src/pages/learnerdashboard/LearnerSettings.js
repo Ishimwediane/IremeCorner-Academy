@@ -24,7 +24,7 @@ import { toast } from 'react-toastify';
 
 const LearnerSettings = () => {
     const { user, updateUser } = useAuth();
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: user?.name || '',

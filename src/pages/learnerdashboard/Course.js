@@ -61,11 +61,7 @@ const Course = () => {
   const [showMoreCategories, setShowMoreCategories] = useState(false);
   const [showMoreLevels, setShowMoreLevels] = useState(false);
   const [showMoreLanguages, setShowMoreLanguages] = useState(false);
-  const [showMorePrices, setShowMorePrices] = useState(false);
-  const [showMoreDurations, setShowMoreDurations] = useState(false);
-  const [showMoreRatings, setShowMoreRatings] = useState(false);
-  const [showMoreFormats, setShowMoreFormats] = useState(false);
-  const [showMoreCertifications, setShowMoreCertifications] = useState(false);
+
 
   const { data: coursesData, isLoading } = useQuery(
     ['courses', filters],

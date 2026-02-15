@@ -51,9 +51,9 @@ const UserTable = ({ roleFilter, title }) => {
     }
   );
 
-  const handleStatusChange = (id, isActive) => {
+  const handleStatusChange = React.useCallback((id, isActive) => {
     updateUserStatus.mutate({ id, isActive: !isActive });
-  };
+  }, [updateUserStatus]);
 
   const deleteUserMutation = useMutation(
     (id) => api.delete(`/admin/users/${id}`),
@@ -64,11 +64,11 @@ const UserTable = ({ roleFilter, title }) => {
     }
   );
 
-  const handleDelete = (id) => {
+  const handleDelete = React.useCallback((id) => {
     if (window.confirm('Are you sure you want to permanently delete this user? This action cannot be undone.')) {
       deleteUserMutation.mutate(id);
     }
-  };
+  }, [deleteUserMutation]);
 
   const columns = useMemo(
     () => [

@@ -10,7 +10,7 @@ import {
     CircularProgress,
     Chip,
 } from '@mui/material';
-import { Quiz, CheckCircle } from '@mui/icons-material';
+import { Quiz } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
@@ -19,7 +19,7 @@ import { useAuth } from '../../context/AuthContext';
 const MyQuizzes = ({ showHeader = true }) => {
     const navigate = useNavigate();
     const { user } = useAuth();
-    const [tabValue, setTabValue] = useState(0);
+
 
     const { data: assessmentsData, isLoading } = useQuery(
         ['my-assessments', user?._id],
@@ -38,8 +38,7 @@ const MyQuizzes = ({ showHeader = true }) => {
     // We might need to check if they are submitted to separate them.
     // For this implementation, I will list all and let status chips show state.
 
-    const pendingQuizzes = quizzes.filter(q => !q.submitted); // Assuming 'submitted' property exists or similar
-    const completedQuizzes = quizzes.filter(q => q.submitted);
+
 
     if (isLoading) {
         return (
