@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -22,8 +22,7 @@ import {
   Drawer,
 } from '@mui/material';
 import {
-  PlayCircleOutline,
-  DescriptionOutlined,
+
   CheckCircle,
   ArrowBack,
   Download,
@@ -159,10 +158,10 @@ const CourseContent = () => {
       setSelectedLesson(firstIncompleteLesson);
       navigate(`/learner/course/${courseId}/lessons/${firstIncompleteLesson._id}`, { replace: true });
     }
-  }, [lessonId, courseData, courseId, navigate]);
+  }, [lessonId, courseData, courseId, navigate, completedLessonIds]);
 
   const lessons = courseData?.lessons || [];
-  const completedLessonIds = new Set(progressData?.filter(p => p.isCompleted).map(p => p.lesson) || []);
+  const completedLessonIds = useMemo(() => new Set(progressData?.filter(p => p.isCompleted).map(p => p.lesson) || []), [progressData]);
 
   const handleLessonClick = (lesson) => {
     setSelectedLesson(lesson);

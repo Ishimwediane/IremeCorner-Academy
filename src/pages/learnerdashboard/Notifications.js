@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -120,11 +120,11 @@ const Notifications = () => {
     markAllAsRead.mutate();
   };
 
-  const filteredNotifications = tabValue === 0 
-    ? notifications 
-    : tabValue === 1 
-    ? notifications.filter(n => !n.isRead)
-    : notifications.filter(n => n.isRead);
+  const filteredNotifications = tabValue === 0
+    ? notifications
+    : tabValue === 1
+      ? notifications.filter(n => !n.isRead)
+      : notifications.filter(n => n.isRead);
 
   const unreadNotifications = notifications.filter(n => !n.isRead);
   const readNotifications = notifications.filter(n => n.isRead);
@@ -176,11 +176,11 @@ const Notifications = () => {
       {/* Tabs */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tabValue} onChange={handleTabChange} sx={{ mb: -1 }}>
-          <Tab 
-            label={`All (${notifications.length})`} 
+          <Tab
+            label={`All (${notifications.length})`}
             sx={{ textTransform: 'none', fontWeight: 600 }}
           />
-          <Tab 
+          <Tab
             label={
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 Unread ({unreadNotifications.length})
@@ -198,8 +198,8 @@ const Notifications = () => {
             }
             sx={{ textTransform: 'none', fontWeight: 600 }}
           />
-          <Tab 
-            label={`Read (${readNotifications.length})`} 
+          <Tab
+            label={`Read (${readNotifications.length})`}
             sx={{ textTransform: 'none', fontWeight: 600 }}
           />
         </Tabs>
@@ -220,8 +220,8 @@ const Notifications = () => {
             {tabValue === 1 ? 'No unread notifications' : tabValue === 2 ? 'No read notifications' : 'No notifications yet'}
           </Typography>
           <Typography variant="body2" sx={{ color: 'rgba(32,47,50,0.6)' }}>
-            {tabValue === 1 
-              ? 'You\'re all caught up!' 
+            {tabValue === 1
+              ? 'You\'re all caught up!'
               : 'You\'ll see notifications here when there\'s activity'}
           </Typography>
         </Card>
@@ -364,7 +364,7 @@ const Notifications = () => {
           </MenuItem>
         )}
         {selectedNotification && (
-          <MenuItem 
+          <MenuItem
             onClick={() => handleDelete(selectedNotification)}
             sx={{ color: 'error.main' }}
           >

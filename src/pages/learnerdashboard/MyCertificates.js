@@ -15,7 +15,7 @@ import { Download, RemoveRedEye, VerifiedUser } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
-import LearnerLayout from './LearnerLayout';
+
 
 const MyCertificates = ({ showHeader = true }) => {
     const navigate = useNavigate();

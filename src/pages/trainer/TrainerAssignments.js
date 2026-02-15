@@ -22,7 +22,6 @@ import {
 } from '@mui/material';
 import {
   Add as AddIcon,
-  Delete as DeleteIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
 import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
@@ -30,7 +29,7 @@ import TrainerLayout from '../../components/TrainerLayout';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 
-const dayCols = 13; // show ~2 weeks
+
 
 const PlannerHeader = ({ startDate, setStartDate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => {
   return (

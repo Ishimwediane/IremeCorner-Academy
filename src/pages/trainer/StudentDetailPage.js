@@ -17,7 +17,6 @@ import {
     Tabs,
     Tab,
     CircularProgress,
-    IconButton,
     Button,
 } from '@mui/material';
 import { ArrowBack, Assignment as AssignmentIcon, Quiz as QuizIcon } from '@mui/icons-material';

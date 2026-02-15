@@ -30,15 +30,7 @@ const QuizResultsModal = ({ open, onClose, quiz }) => {
 
     const attempts = quiz.attempts || [];
 
-    // Group attempts by student
-    const attemptsByStudent = attempts.reduce((acc, attempt) => {
-        const studentId = attempt.student._id || attempt.student;
-        if (!acc[studentId]) {
-            acc[studentId] = [];
-        }
-        acc[studentId].push(attempt);
-        return acc;
-    }, {});
+
 
     const handleExpandClick = (attemptId) => {
         setExpandedAttempt(expandedAttempt === attemptId ? null : attemptId);

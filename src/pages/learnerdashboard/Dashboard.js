@@ -74,9 +74,9 @@ const Dashboard = () => {
 
   const enrollments = enrollmentsData?.data || [];
   const notifications = notificationsData?.data || [];
-  const inProgressCourses = enrollments.filter(
+  const inProgressCourses = React.useMemo(() => enrollments.filter(
     (e) => e.status === 'in-progress' || e.status === 'enrolled'
-  );
+  ), [enrollments]);
   const completedCourses = enrollments.filter((e) => e.status === 'completed');
   const certificatesCount = completedCourses.filter((e) => e.certificateIssued).length;
 

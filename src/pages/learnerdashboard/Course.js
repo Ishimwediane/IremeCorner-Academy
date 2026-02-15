@@ -24,6 +24,7 @@ import {
   Search,
   School,
   TrendingUp,
+
 } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import api from '../../utils/api';

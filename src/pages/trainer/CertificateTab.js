@@ -8,7 +8,6 @@ import {
   TextField,
   Tabs,
   Tab,
-  MenuItem,
   List,
   ListItem,
   ListItemText,
@@ -136,6 +135,7 @@ const TemplateDesigner = ({ course }) => {
       drawTemplate(ctx, canvas.width, canvas.height, dataWithImages, 'award');
     };
     render();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, logoPreview, signaturePreview]);
 
   const downloadPNG = () => {

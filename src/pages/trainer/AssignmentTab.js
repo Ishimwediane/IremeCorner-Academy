@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Grid,
@@ -16,7 +16,6 @@ import {
   MenuItem,
   Tabs,
   Tab,
-  Select,
   ButtonGroup,
   Table,
   TableHead,
@@ -141,7 +140,8 @@ const AssignmentTab = ({ courseId, assignments, course, fetchData }) => {
     }
   };
 
-  const assignmentPlannerItems = React.useMemo(() => assignments.map((a, idx) => ({
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const assignmentPlannerItems = useMemo(() => assignments.map((a, idx) => ({
     id: a._id || `a-${idx}`,
     title: 'Course', // You might want to pass the course title as a prop
     courseTag: 'EN', // You might want to pass the course level as a prop
@@ -151,7 +151,7 @@ const AssignmentTab = ({ courseId, assignments, course, fetchData }) => {
     span: 1,
     color: 'rgba(124,77,255,0.08)',
     border: '#7b68ee',
-  })), [assignments, startDate]);
+  })), [assignments]);
 
   const plannerDays = React.useMemo(() => {
     if (viewMode === 'day') return [startDate];

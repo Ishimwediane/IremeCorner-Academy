@@ -8,11 +8,9 @@ import {
     Button,
     Box,
     CircularProgress,
-    Tabs,
-    Tab,
     Chip,
 } from '@mui/material';
-import { Quiz, CheckCircle, Warning } from '@mui/icons-material';
+import { Quiz, CheckCircle } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
