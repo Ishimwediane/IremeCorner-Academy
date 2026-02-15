@@ -45,18 +45,7 @@ const Dashboard = () => {
     }
   );
 
-  const { data: notificationsData } = useQuery(
-    'notifications',
-    async () => {
-      const response = await api.get('/notifications?limit=5');
-      return response.data;
-    },
-    {
-      refetchOnWindowFocus: false,
-      retry: false,
-      staleTime: 1 * 60 * 1000,
-    }
-  );
+
 
   const { data: assessmentsData } = useQuery(
     ['my-assessments', user?._id],
@@ -72,8 +61,8 @@ const Dashboard = () => {
 
   const upcomingTasks = (assessmentsData?.assignments || []).concat(assessmentsData?.quizzes || []);
 
-  const enrollments = enrollmentsData?.data || [];
-  const notifications = notificationsData?.data || [];
+  const enrollments = React.useMemo(() => enrollmentsData?.data || [], [enrollmentsData]);
+
   const inProgressCourses = React.useMemo(() => enrollments.filter(
     (e) => e.status === 'in-progress' || e.status === 'enrolled'
   ), [enrollments]);
