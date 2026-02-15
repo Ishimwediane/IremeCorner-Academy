@@ -39,13 +39,28 @@ const AdminCourses = () => {
 
     useEffect(() => {
         fetchCourses();
-    }, []);
+    }, [fetchCourses]);
 
     useEffect(() => {
         filterCourses();
-    }, [currentTab, courses]);
+    }, [filterCourses]);
 
-    const fetchCourses = async () => {
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'approved': return 'success';
+            case 'rejected': return 'error';
+            case 'pending': return 'warning';
+            case 'draft': return 'default';
+            default: return 'default';
+        }
+    };
+
+    const showAlert = (message, severity) => {
+        setAlert({ show: true, message, severity });
+        setTimeout(() => setAlert({ show: false, message: '', severity: 'success' }), 3000);
+    };
+
+    const fetchCourses = React.useCallback(async () => {
         try {
             const response = await api.get('/courses');
 
@@ -58,16 +73,16 @@ const AdminCourses = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const filterCourses = () => {
+    const filterCourses = React.useCallback(() => {
         if (currentTab === 0) {
             setFilteredCourses(courses);
         } else {
             const status = tabs[currentTab].toLowerCase();
             setFilteredCourses(courses.filter(course => course.status === status));
         }
-    };
+    }, [courses, currentTab, tabs]);
 
     const handleApprove = async (courseId) => {
         try {
@@ -108,21 +123,6 @@ const AdminCourses = () => {
         } catch (error) {
             console.error('Error rejecting course:', error);
             showAlert('Failed to reject course', 'error');
-        }
-    };
-
-    const showAlert = (message, severity) => {
-        setAlert({ show: true, message, severity });
-        setTimeout(() => setAlert({ show: false, message: '', severity: 'success' }), 3000);
-    };
-
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'approved': return 'success';
-            case 'rejected': return 'error';
-            case 'pending': return 'warning';
-            case 'draft': return 'default';
-            default: return 'default';
         }
     };
 

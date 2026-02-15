@@ -6,15 +6,12 @@ import {
   Typography,
   Button,
   TextField,
-  Tabs,
-  Tab,
   Card,
   CardContent,
   MenuItem,
 } from '@mui/material';
 import {
   Download as DownloadIcon,
-  CardMembership as CertificateIcon,
   UploadFile as UploadIcon,
   Search as SearchIcon,
 } from '@mui/icons-material';
@@ -167,24 +164,24 @@ const TemplateDesigner = () => {
   const [logoPreview, setLogoPreview] = useState(null);
   const [signaturePreview, setSignaturePreview] = useState(null);
 
-  const getImages = async () => {
-    const data = { ...form };
-    if (logoPreview) {
-      const img = new Image();
-      img.src = logoPreview;
-      await new Promise((r) => (img.onload = r));
-      data.logoImg = img;
-    }
-    if (signaturePreview) {
-      const img = new Image();
-      img.src = signaturePreview;
-      await new Promise((r) => (img.onload = r));
-      data.signatureImg = img;
-    }
-    return data;
-  };
-
   useEffect(() => {
+    const getImages = async () => {
+      const data = { ...form };
+      if (logoPreview) {
+        const img = new Image();
+        img.src = logoPreview;
+        await new Promise((r) => (img.onload = r));
+        data.logoImg = img;
+      }
+      if (signaturePreview) {
+        const img = new Image();
+        img.src = signaturePreview;
+        await new Promise((r) => (img.onload = r));
+        data.signatureImg = img;
+      }
+      return data;
+    };
+
     const render = async () => {
       const canvas = canvasRef.current;
       if (!canvas) return;

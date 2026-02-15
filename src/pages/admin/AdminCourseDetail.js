@@ -40,7 +40,7 @@ const AdminCourseDetail = () => {
   const [liveSessions, setLiveSessions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = React.useCallback(async () => {
     if (!id) return;
     setLoading(true);
     try {
@@ -68,11 +68,11 @@ const AdminCourseDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [fetchData]);
 
   if (loading) {
     return (

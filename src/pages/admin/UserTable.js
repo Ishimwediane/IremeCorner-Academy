@@ -149,7 +149,7 @@ const UserTable = ({ roleFilter, title }) => {
         ),
       },
     ],
-    [handleDelete]
+    [handleDelete, handleStatusChange]
   );
 
   return (

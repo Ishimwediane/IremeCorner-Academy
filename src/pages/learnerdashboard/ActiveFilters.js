@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Chip, Stack } from '@mui/material';
-import { Close } from '@mui/icons-material';
 
 const ActiveFilters = ({ filters, onRemoveFilter, onClearAll }) => {
     const getActiveFilters = () => {

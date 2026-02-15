@@ -21,7 +21,6 @@ import {
   People as PeopleIcon,
 } from '@mui/icons-material';
 import AssignmentTab from './AssignmentTab';
-import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import QuizTab from './QuizTab';
 import LiveSessionTab from './LiveSessionTab';
@@ -44,9 +43,8 @@ const TrainerCourseContent = () => {
   const [certificates, setCertificates] = useState([]);
   const [liveSessions, setLiveSessions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = React.useCallback(async () => {
     if (!courseId) return;
     try {
       // Fetch course first
@@ -75,11 +73,11 @@ const TrainerCourseContent = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [courseId]);
 
   useEffect(() => {
     fetchData();
-  }, [courseId]);
+  }, [fetchData]);
 
   const handleCreateLessonLocal = (newLessonData) => {
     const newLesson = {

@@ -24,7 +24,7 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 
 const ChatWidget = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState(() => [

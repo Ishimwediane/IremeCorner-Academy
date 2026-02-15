@@ -24,14 +24,12 @@ import {
   Add as AddIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
-  FilterList as FilterIcon,
 } from '@mui/icons-material';
 import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import TrainerLayout from '../../components/TrainerLayout';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 
-const dayCols = 13;
 
 const PlannerHeader = ({ startDate, setStartDate, courseOptions, selectedCourse, setSelectedCourse, viewMode, setViewMode, days }) => (
   <Paper sx={{ p: 1.5, borderRadius: 0, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>

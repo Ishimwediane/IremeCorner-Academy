@@ -36,7 +36,6 @@ import {
   Search as SearchIcon,
   MoreVert as MoreVertIcon,
   Add as AddIcon,
-  FilterList as FilterIcon,
   Download as DownloadIcon,
   Print as PrintIcon,
   Edit as EditIcon,
@@ -74,7 +73,7 @@ const TrainerStudents = () => {
     { enabled: !!(user?._id || user?.id) }
   );
 
-  const courses = coursesData?.data || [];
+  const courses = useMemo(() => coursesData?.data || [], [coursesData]);
 
   // Get all unique students across all courses
   const allStudents = useMemo(() => {

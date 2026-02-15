@@ -11,7 +11,6 @@ import {
   IconButton,
   Tooltip,
   Paper,
-  Button,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Visibility, CheckCircle, Cancel } from '@mui/icons-material';
@@ -125,7 +124,7 @@ const PendingCourses = () => {
         ),
       },
     ],
-    [navigate]
+    [navigate, handleApprove, handleReject]
   );
 
   return (

@@ -19,7 +19,6 @@ import {
   Send,
   Search,
   MoreVert,
-  School,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useAuth } from '../../context/AuthContext';

@@ -24,7 +24,6 @@ import {
   Add as AddIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
-  FilterList as FilterIcon,
 } from '@mui/icons-material';
 import { format, addDays, eachDayOfInterval, startOfMonth, endOfMonth, addMonths, subMonths } from 'date-fns';
 import TrainerLayout from '../../components/TrainerLayout';
@@ -166,22 +165,7 @@ const AssignmentDialog = ({ open, onClose, onSaved, courses = [], defaultCourseI
   );
 };
 
-const SummaryCards = ({ stats }) => (
-  <Grid container spacing={3} sx={{ mt: 3 }}>
-    {stats.map((s) => (
-      <Grid item xs={12} sm={6} md={4} key={s.title}>
-        <Card sx={{ borderRadius: 0 }}>
-          <CardContent>
-            <Typography variant="caption" sx={{ color: s.color, fontWeight: 700 }}>
-              {s.title.toUpperCase()}
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#666', mt: 0.5 }}>{s.subtitle}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-    ))}
-  </Grid>
-);
+
 
 const TrainerAssignments = () => {
   const [startDate, setStartDate] = useState(new Date());

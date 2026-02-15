@@ -20,7 +20,7 @@ import {
     IconButton,
     Button,
 } from '@mui/material';
-import { ArrowBack, CheckCircle, Cancel, Assignment as AssignmentIcon, Quiz as QuizIcon } from '@mui/icons-material';
+import { ArrowBack, Assignment as AssignmentIcon, Quiz as QuizIcon } from '@mui/icons-material';
 import api from '../../utils/api';
 import TrainerLayout from '../../components/TrainerLayout';
 import { format } from 'date-fns';

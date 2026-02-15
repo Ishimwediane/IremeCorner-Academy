@@ -37,7 +37,7 @@ import { useAuth } from '../../context/AuthContext';
 const AdminSidebar = ({ mobileOpen, onMobileClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 

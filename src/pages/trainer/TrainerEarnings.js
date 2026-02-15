@@ -39,7 +39,7 @@ const TrainerEarnings = () => {
     { enabled: !!(user?._id || user?.id) }
   );
 
-  const courses = coursesData?.data || [];
+  const courses = useMemo(() => coursesData?.data || [], [coursesData]);
 
   // Calculate earnings
   const earnings = useMemo(() => {

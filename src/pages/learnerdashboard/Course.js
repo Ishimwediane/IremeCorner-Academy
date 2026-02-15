@@ -26,7 +26,6 @@ import {
   TrendingUp,
 } from '@mui/icons-material';
 import { useQuery } from 'react-query';
-import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 
 const categories = [
@@ -47,7 +46,6 @@ const formats = ['Video', 'Text', 'Interactive', 'Mixed'];
 const certifications = ['With Certificate', 'No Certificate'];
 
 const Course = () => {
-  const { user } = useAuth();
   const [filters, setFilters] = useState({
     search: '',
     categories: [],

@@ -12,14 +12,12 @@ import {
     Grid,
     Card,
     CardContent,
-    Chip,
     IconButton,
 } from '@mui/material';
 import {
     Send as SendIcon,
     SmartToy,
     Psychology,
-    School,
     Work,
     Lightbulb,
 } from '@mui/icons-material';

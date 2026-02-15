@@ -46,7 +46,6 @@ const AssignmentPage = () => {
   const {
     mutate: submitAssignment,
     isLoading: isSubmitting,
-    isSuccess,
     isError: isSubmissionError,
     error: submissionError,
   } = useMutation(

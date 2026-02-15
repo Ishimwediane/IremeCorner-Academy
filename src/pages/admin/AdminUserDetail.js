@@ -15,11 +15,9 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Divider,
 } from '@mui/material';
 import { ArrowBack, School, Person, Edit } from '@mui/icons-material';
 import api from '../../utils/api';
-import { format } from 'date-fns';
 
 const AdminUserDetail = () => {
   const { id } = useParams();
